@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd Party
+    'django_bootstrap5',
+    'mdeditor',
+
+    # APPS
+    'infos.apps.InfosConfig',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rise_info',
-        'USER': 'tmc',
+        'USER': 'root',
         'PASSWORD': 'mjk2r7h4u5',
         'HOST': 'localhost',
         'PORT': '3306',
