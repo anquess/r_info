@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     # 3rd Party
     'django_bootstrap5',
     'mdeditor',
+    'pygments_renderer',
+    'django_extensions',
 
     # APPS
     'infos.apps.InfosConfig',
@@ -143,3 +145,14 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+# ファイルアップロード用
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/media/'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+MDEDITOR_CONFIGS = {
+    'default': {
+        'language': 'en',
+    }
+}
