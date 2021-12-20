@@ -4,8 +4,10 @@ from django.conf import settings            # mdeditor
 from django.conf.urls import url            # mdeditor
 from django.conf.urls.static import static  # mdeditor
 
+from rise_info import views
 
 urlpatterns = [
+    path("", views.top, name="top"),
     path('admin/', admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path('infos/', include('infos.urls')),

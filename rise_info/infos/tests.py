@@ -20,7 +20,7 @@ class InfoListTest(TestCase):
     
     def test_info_list_return_200_and_expected_title(self) -> None:
         response = self.client.get("/infos/")
-        self.assertContains(response, "信頼性情報" , status_code=200)
+        self.assertContains(response, "信頼性情報一覧" , status_code=200)
         
     def test_info_list_uses_expected_template(self) ->None:
         response = self.client.get("/infos/")
@@ -58,7 +58,6 @@ class EditInfoTest(TestCase):
         addMockInfo(self)
 
     def test_should_use_expected_template(self):
-        
         response = self.client.get(self.response.url + 'edit/')
         self.assertTemplateUsed(response, "infos/info_edit.html")
 

@@ -5,7 +5,7 @@
 <html lang="ja">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>信頼性情報</title>
+    <title>信頼性ＨＰ</title>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% block extraheader %}{% endblock %}
@@ -13,16 +13,28 @@
 <body>
 <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
     <div class="container justify-content-between">
-        <a href="/" class="navbar-brand">信頼性情報</a>
+        <a href="/" class="navbar-brand">信頼性ＨＰ</a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">信頼性情報</a> </li>
+        </ul>
         <ul class="navbar-nav mr-md-2">
-            {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">ログアウト</a></li>
-                {% if user.username == 'root' %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">会員登録</a></li>
-                {% endif %}    
-            {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">ログイン</a></li>
-            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    ユーザ管理
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% if user.is_authenticated %}
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
+                    <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
+                        {% if user.username == 'root' %}
+                            <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
+                        {% endif %}
+                    {% else %}
+                    <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
+                    {% endif %}
+        
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>
