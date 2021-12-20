@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     'django_extensions',
 
     # APPS
-    'infos.apps.InfosConfig',
     'accounts.apps.AccountsConfig',
+    'infos.apps.InfosConfig',
+    'offices.apps.OfficesConfig',
 ]
 
 MIDDLEWARE = [

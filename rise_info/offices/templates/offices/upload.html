@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% load markdown_extras %}
+  <h1>ファイルをアップロード</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">アップロード</button>
+  </form>
+  {% if offices %}
+    <table class="table">
+      <thead>
+      <tr>
+          <th>官署コード</th>
+          <th>官署名</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for office in offices|dictsort:"slug" %}
+        <tr>
+          <td>{{ office.slug }}</td>
+          <td>{{ office.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+   </table>
+
+  {% else %}
+    <p>官署はまだ登録されていません。</p>
+  {% endif %}
+
+{% endblock %}
