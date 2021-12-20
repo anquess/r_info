@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .forms import UploadFileForm
 import sys
 
-from .models import Office
+from .models import Office, offices_csv_import
 
 def file_upload(request):
     if request.method == 'POST':
@@ -29,3 +29,4 @@ def handle_uploaded_file(file_obj):
             sys.stderr.write("*** handle_uploaded_file *** ccc ***\n")
             destination.write(chunk)
             sys.stderr.write("*** handle_uploaded_file *** eee ***\n")
+    offices_csv_import()
