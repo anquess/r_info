@@ -46,11 +46,15 @@ def info_edit(request, info_id):
                 return redirect('info_detail', info_id=info_id)
         else:
             form = InfoForm(instance=info)
-        return render(request, 'infos/info_edit.html', {'form': form})
+        return render(request, 'infos/info_edit.html', {'form': form })
 
     else:
         return HttpResponseForbidden("この権限では編集は許可されていません。")
 
 def info_detail(request, info_id):
+    if hasattr(request, "user"):
+        auth = isInTmcGroup(request.user)
+    else:
+        auth = None
     info = get_object_or_404(Info, pk=info_id)
-    return render(request, 'infos/info_detail.html', {'info': info})
+    return render(request, 'infos/info_detail.html', {'info': info, 'auth':auth})
