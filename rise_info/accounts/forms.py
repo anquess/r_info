@@ -12,4 +12,4 @@ class MyPasswordChangeForm(PasswordChangeForm):
 class UserAddForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'groups')
+        fields = ('username', 'first_name','last_name' , 'password1', 'password2', 'groups')

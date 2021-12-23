@@ -1,9 +1,9 @@
-import datetime
 from django.db import models
 from django.urls import reverse
 from rise_info.baseModels import BaseManager
 
 from histories.models import HistoryDB
+from accounts.models import createUser
 
 import csv
 import pytz
@@ -18,7 +18,7 @@ def offices_csv_import():
         reader = csv.DictReader(f)
         offices = [ row for row in reader ]
     for row in offices:
-        if row['UNYOSTS_KBN'] == '0' and row['HOSHUINUMU_FLG'] == 1 and row['KANSHO_CD'] == row['JOCHUKANSHO_CD']:
+        if (row['UNYOSTS_KBN'] == '0' and row['HOSHUINUMU_FLG'] == '1'and row['KANSHO_CD'] == row['JOCHUKANSHO_CD']):
             office = Office.objects.get_or_none(slug=row['KANSHO_CD'])
             if row['DATASHUSEI_DATE']:
                 sysupdtime = dt.strptime(row['DATASHUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
@@ -31,12 +31,16 @@ def offices_csv_import():
                     office.update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
                     office.save()
             else:
-                Office.objects.create(
+                office = Office.objects.create(
                     slug=row['KANSHO_CD'],
                     name=row['KANSHO_NM'],
                     shortcut_name=row['KANSHO_SNM'],
                     update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
                 )
+                createUser(office)
+
+                
+
 
 class Office(models.Model):
     objects = BaseManager()

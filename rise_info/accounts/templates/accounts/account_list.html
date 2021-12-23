@@ -4,6 +4,7 @@
 <div class="welcome">
     <h1>ユーザー一覧</h1>
 </div>
+<a class="btn btn-primary" href="/admin/" target="admin">詳細管理画面</a>
 <a class="btn btn-primary float-end" href="{% url 'account_new' %}">＋</a>
 {% if users %}
     <table class="table">
@@ -29,5 +30,4 @@
 {% else %}
     <p>ユーザは登録されていません。</p>
 {% endif %}
-<a class="btn btn-primary" href="/admin/">詳細管理画面</a>
 {% endblock %}
