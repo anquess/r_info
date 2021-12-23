@@ -1,19 +1,24 @@
 import datetime
 from django.db import models
 from django.urls import reverse
-from django.db.models import Max
+from rise_info.baseModels import BaseManager
+
+from histories.models import HistoryDB
 
 import csv
-from datetime import datetime as dt, tzinfo
 import pytz
+from datetime import datetime as dt
 
 
 def offices_csv_import():
+    history = HistoryDB.objects.get_or_none(slug='office')
+    if history:
+        last_update_at = history.update_at
     with open('uploads/documents/Offices.csv', 'rt', encoding='cp932') as f:
         reader = csv.DictReader(f)
         offices = [ row for row in reader ]
     for row in offices:
-        if row['UNYOSTS_KBN'] != '2':
+        if row['UNYOSTS_KBN'] == '0' and row['HOSHUINUMU_FLG'] == 1 and row['KANSHO_CD'] == row['JOCHUKANSHO_CD']:
             office = Office.objects.get_or_none(slug=row['KANSHO_CD'])
             if row['DATASHUSEI_DATE']:
                 sysupdtime = dt.strptime(row['DATASHUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
@@ -32,17 +37,6 @@ def offices_csv_import():
                     shortcut_name=row['KANSHO_SNM'],
                     update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
                 )
-
-class BaseManager(models.Manager):
-    def get_or_none(self, **kwargs):
-        """
-        検索にヒットすればそのモデルを、しなければNoneを返します。
-        """
-        try:
-            return self.get_queryset().get(**kwargs)
-        except self.model.DoesNotExist:
-            return None
-
 
 class Office(models.Model):
     objects = BaseManager()
