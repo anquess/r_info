@@ -6,7 +6,7 @@ from datetime import datetime as dt
 def csvFormatCheck(csvRow, checkLists) -> bool:
     for check in checkLists:
         if not check in csvRow:
-            raise Http404('CSVデータに項目%sがありません', check)
+            raise Http404('CSVデータに項目%sがありません' % check)
     return True
 
 def getSysupdtime(row) -> dt:

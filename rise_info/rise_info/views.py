@@ -5,5 +5,6 @@ from django.shortcuts import render
 def top(request):
     return render(request, "top.html")
 
-def handler400(request, exception):
-    return render(request, '400.html', {}, status=400)
+def handler404(request, exception):
+    context = {"msg": exception}
+    return render(request, '404.html', context, status=404)
