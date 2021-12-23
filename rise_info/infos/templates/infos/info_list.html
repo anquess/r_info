@@ -19,14 +19,18 @@
         <tr>
             <th>タイトル</th>
             <th>投稿日</th>
+            <th>編集</th>
         </tr>
         </thead>
         <tbody>
         {% for info in infos %}
         <tr>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.created_at }}</th>            
-        </tr>
+            <th>{{ info.created_at }}</th>
+            {% if auth %}
+                <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a></th>
+            {% endif %}
+                </tr>
         {% endfor %}
         </tbody>
     </table>

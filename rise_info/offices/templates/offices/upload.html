@@ -6,7 +6,7 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">アップロード</button>
+    <button class="btn btn-primary" type="submit">アップロード</button>
   </form>
   {% if offices %}
     <table class="table">

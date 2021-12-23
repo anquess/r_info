@@ -1,21 +1,23 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, resolve_url
 
 from infos.models import Info
 from infos.forms import InfoForm
 from accounts.views import isInTmcGroup
 
+def getAuth(request) -> bool:
+    if hasattr(request, "user"):
+        return isInTmcGroup(request.user)
+    else:
+        return False
+
 @login_required
 def info_list(request):
     infos = Info.objects.all()
-    if hasattr(request, "user"):
-        auth = isInTmcGroup(request.user)
-    else:
-        auth = None
     context = {
         "infos": infos,
-        "auth": auth
+        "auth": getAuth(request)
         }
     return render(request, "infos/info_list.html", context)
 
@@ -53,4 +55,8 @@ def info_edit(request, info_id):
 
 def info_detail(request, info_id):
     info = get_object_or_404(Info, pk=info_id)
-    return render(request, 'infos/info_detail.html', {'info': info})
+    context ={
+        'info': info,
+        "auth": getAuth(request),
+    }
+    return render(request, 'infos/info_detail.html', context)
