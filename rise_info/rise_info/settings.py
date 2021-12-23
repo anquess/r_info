@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # APPS
     'accounts.apps.AccountsConfig',
+    'histories.apps.HistoriesConfig',
     'infos.apps.InfosConfig',
     'offices.apps.OfficesConfig',
 ]

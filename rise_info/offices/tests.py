@@ -1,8 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
+from datetime import datetime as dt
+import pytz
+
 from accounts.tests import login
 from .models import Office, offices_csv_import
+from histories.models import getLastUpdateAt
 
 class NoLoginOfficeListTest(TestCase):
     def test_no_login_office_list_return_402_and_expected_title(self) -> None:
@@ -23,8 +27,10 @@ class OfficeListTest(TestCase):
 
 class OfficeCsvImportTest(TestCase):
     def test_csv_import_test(self):
+        self.assertEqual(getLastUpdateAt('office'), dt(2001,1,1,0,0,0,0))
         self.assertEqual(Office.objects.all().count(), 0)
         self.assertEqual(User.objects.all().count(), 0)
         offices_csv_import()
         self.assertLess(0, Office.objects.all().count())
         self.assertLess(0, User.objects.all().count())
+        self.assertLess(dt(2001,1,1,0,0,0,0,pytz.timezone('Asia/Tokyo')), getLastUpdateAt('office'))        
