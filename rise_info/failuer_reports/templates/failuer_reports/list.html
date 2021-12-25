@@ -26,7 +26,7 @@
         {% for info in infos %}
         <tr>
             <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.sammary }}</th>
+            <th>{{ info.sammary | linebreaksbr}}</th>
             <th>{{ info.created_at }}</th>
             <th>{{ info.created_by }}</th>
             {% if user == info.created_by %}
