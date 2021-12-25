@@ -6,8 +6,6 @@ from infos.models import Info
 from infos.forms import InfoForm
 from accounts.views import isInTmcGroup, addTmcAuth
 
-
-
 @login_required
 def info_list(request):
     infos = Info.objects.all()

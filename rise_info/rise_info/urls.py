@@ -10,6 +10,7 @@ urlpatterns = [
     path("", views.top, name="top"),
     path('admin/', admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("failuer_reports/", include("failuer_reports.urls")),
     path('infos/', include('infos.urls')),
     path('offices/', include('offices.urls')),
     url(r'mdeditor/', include('mdeditor.urls')), # mdeditor

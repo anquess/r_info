@@ -6,14 +6,11 @@ from infos.views import info_edit
 from infos.models import Info
 from accounts.tests import login
 
-UserModel = get_user_model()
-
 def addMockInfo(testCase) -> None:
     testCase.client.force_login(testCase.user)
     data = {'title': 'タイトル', 'sammary': '概要'}
     testCase.response = testCase.client.post("/infos/new/", data)
     
-
 class InfoListTest(TestCase):
     def setUp(self) -> None:
         login(self)
