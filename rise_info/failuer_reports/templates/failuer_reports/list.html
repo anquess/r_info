@@ -10,9 +10,7 @@
 <div class="welcome">
     <h1>障害通報一覧</h1>
 </div>
-{% if auth %}
-    <a class="btn btn-primary float-end" href="{% url 'info_new' %}">＋</a>
-{% endif %}
+<a class="btn btn-primary float-end" href="{% url 'failuer_report_new' %}">＋</a>
 {% if infos %}
     <table class="table">
         <thead>
@@ -20,18 +18,20 @@
             <th>タイトル</th>
             <th>概要</th>
             <th>投稿日</th>
+            <th>官署</th>
             <th>編集</th>
         </tr>
         </thead>
         <tbody>
         {% for info in infos %}
         <tr>
-            <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
+            <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary }}</th>
             <th>{{ info.created_at }}</th>
-            {% if auth %}
-                <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a>
-                    <a class="btn btn-danger" href="{% url 'info_del' info.id %}">削除</a></th>
+            <th>{{ info.created_by }}</th>
+            {% if user == info.created_by %}
+                <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">編集</a>
+                    <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}">削除</a></th>
             {% endif %}
                 </tr>
         {% endfor %}
