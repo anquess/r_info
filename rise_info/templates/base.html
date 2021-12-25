@@ -11,6 +11,7 @@
     {% block extraheader %}{% endblock %}
 </head>
 <body>
+<div class="container-fluid">
 <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
     <div class="container justify-content-between">
         <a href="/" class="navbar-brand">信頼性ＨＰ</a>
@@ -43,9 +44,17 @@
 </nav>
 <main>
     <div class="container">
+        {% if msg %}
+            <div class="card"><div class="card-body">
+                <h5 class="card-title">メッセージ</h5>
+                <p class="card-text">{{ msg }}</p>
+            </div></div>
+            
+        {% endif %}
         {% block main %}{% endblock %}
     </div>
 </main>
+</div>
 </body>
         {% block add_js %}{% endblock %}
 </html>
