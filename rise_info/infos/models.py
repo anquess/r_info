@@ -1,11 +1,12 @@
-from django.conf import settings
 from django.db import models
 from django_currentuser.db.models import CurrentUserField
-from django_currentuser.middleware import (get_current_user, get_current_authenticated_user)
+from django_currentuser.middleware import (get_current_authenticated_user)
 
+from rise_info.baseModels import BaseManager
 from mdeditor.fields import MDTextField
 
 class Info(models.Model):
+    objects = BaseManager()
     title = models.CharField(verbose_name='タイトル', default="", null=False, blank=False, max_length=128)
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
     content = MDTextField(verbose_name='内容', default="", null=False, blank=True)
