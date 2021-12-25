@@ -39,27 +39,34 @@ class CreateInfoTest(TestCase):
         info = Info.objects.get(title='タイトル')
         self.assertEqual('概要', info.sammary)
 
+def detail_and_edit_common_setUp(testCase, isEdit:bool):
+    login(testCase)
+    addMockInfo(testCase)
+    info = Info.objects.get_or_none(title="タイトル")
+    if info:
+        if isEdit:
+            testCase.response = testCase.client.get("/infos/%s/edit/" % info.id)        
+        else:
+            testCase.response = testCase.client.get("/infos/%s/" % info.id)
+    else:
+        testCase.fail('あるはずのMockInfoが見つからない')
+
+
 class InfoDetailTest(TestCase):
     def setUp(self) -> None:
-        login(self)
-        addMockInfo(self)
+        detail_and_edit_common_setUp(self, False)
 
     def test_should_use_expected_template(self):
-        response = self.client.get(self.response.url)
-        self.assertTemplateUsed(response, "infos/info_detail.html")
-
+        self.assertTemplateUsed(self.response, "infos/info_detail.html")
     def test_detail_page_returns_200_and_expected_heading(self):
-        response = self.client.get(self.response.url)
-        self.assertContains(response, "タイトル", status_code=200)
+        self.assertContains(self.response, "タイトル", status_code=200)
 
 class EditInfoTest(TestCase):
     def setUp(self) -> None:
-        login(self)
-        addMockInfo(self)
+        detail_and_edit_common_setUp(self, True)
 
     def test_should_use_expected_template(self):
-        response = self.client.get(self.response.url + 'edit/')
-        self.assertTemplateUsed(response, "infos/info_edit.html")
+        self.assertTemplateUsed(self.response, "infos/info_edit.html")
 
 class DetailInfoTest(TestCase):
     def test_should_resolve_info_edit(self):
