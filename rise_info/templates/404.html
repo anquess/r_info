@@ -2,5 +2,18 @@
 
 {% block main %}
 <h3>エラー</h3>
-<p>{{ msg }}</p>
+<p>お探しのページは見つからない又は、エラーが生じています。</p>
+<div class="card">
+    <div class="row g-0">
+        <div class="col-md-2">
+        <img src="/media/sorry.jpg" alt="sorry" class="card-img-top">
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">詳細情報</h5>
+                <p class="card-text">{{ errmsg }}</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

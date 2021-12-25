@@ -10,6 +10,6 @@ def top(request):
     return render(request, "top.html", context)
 
 def handler404(request, exception):
-    context = {"msg": exception}
+    context = {"errmsg": exception}
     context = addTmcAuth(context, request.user)
     return render(request, '404.html', context, status=404)
