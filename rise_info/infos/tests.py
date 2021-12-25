@@ -70,3 +70,20 @@ class InfoModelTest(TestCase):
     def test_is_empty(self) -> None:
         infos = Info.objects.all()
         self.assertEqual(infos.count(), 0)
+
+class InfoDelTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+        addMockInfo(self)
+
+    def test_info_del_count(self):
+        try:
+            info = Info.objects.get(title='タイトル')
+        except:
+            self.fail('あるはずのmockInfoが見つからない')
+        self.client.get("/infos/" + str(info.pk) + "/del/")
+        try:
+            info = Info.objects.get(title='タイトル')
+        except:
+            return None
+        self.fail('ないはずのmockInfoが見つかった')
