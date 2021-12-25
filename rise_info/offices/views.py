@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 
 import sys
 
 from .forms import UploadFileForm
 from .models import Office, offices_csv_import
-from accounts.views import isInTmcGroup
+from accounts.views import isInTmcGroup, addTmcAuth
 
 @login_required
 def file_upload(request):
@@ -22,9 +22,10 @@ def file_upload(request):
         else:
             offices = Office.objects.all()
             form = UploadFileForm()
-        return render(request, 'offices/upload.html', {'form': form, 'offices': offices })
+        context = addTmcAuth({'form': form, 'offices': offices }, request.user)
+        return render(request, 'offices/upload.html', context)
     else:
-        return HttpResponseForbidden("この権限では許可されていません。")
+        raise Http404("この権限では許可されていません。")
 
 def handle_uploaded_file(file_obj):
     sys.stderr.write("*** handle_uploaded_file *** aaa ***\n")
