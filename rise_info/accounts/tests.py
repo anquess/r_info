@@ -32,6 +32,12 @@ def login(testCase) -> None:
         testTMCAcountCreate(testCase)
     testCase.client.force_login(testCase.user)
 
+def loginTestAccount(testCase) -> None:
+    if not hasattr(testCase, 'user'):
+        testAcountCreate(testCase)
+    testCase.client.force_login(testCase.user)
+
+
 def addMockUser(testCase) -> None:
     testCase.client.force_login(testCase.user)
     data = {
