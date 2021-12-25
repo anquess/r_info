@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.contrib.auth.models import User
 
 from datetime import datetime as dt
@@ -25,6 +25,7 @@ class OfficeListTest(TestCase):
         response = self.client.get("/offices/")
         self.assertTemplateUsed(response, "offices/upload.html")
 
+@tag('slowTest')
 class OfficeCsvImportTest(TestCase):
     def test_csv_import_test(self):
         self.assertEqual(getLastUpdateAt('office'), dt(2001,1,1,0,0,0,0))

@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, User
 from django.shortcuts import get_object_or_404
 
 # Create your tests here.
-def testAcountCreate(testCase):
+def testTMCAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="test_user",
         password="top_secret_pass0001",
@@ -12,15 +12,24 @@ def testAcountCreate(testCase):
     group=Group.objects.create(name="TMC")
     group.user_set.add(testCase.user)
 
+def testAcountCreate(testCase):
+    testCase.user = User.objects.create(
+        username="test_user2",
+        password="top_secret_pass0002",
+    )
+
 def rootAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="root",
         password="root_secret_pass0001",
     )
+    group=Group.objects.create(name="TMC")
+    group.user_set.add(testCase.user)
+
 
 def login(testCase) -> None:
     if not hasattr(testCase, 'user'):
-        testAcountCreate(testCase)
+        testTMCAcountCreate(testCase)
     testCase.client.force_login(testCase.user)
 
 def addMockUser(testCase) -> None:
@@ -37,11 +46,11 @@ class WithoutRootLoginAccountNewPageTest(TestCase):
         response = self.client.get("/accounts/new/")
         self.assertEqual(response.status_code, 302)
     
-    def test_not_allow_login_return_403(self):
+    def test_not_allow_login_return_404(self):
         testAcountCreate(self)
         login(self)
         response = self.client.get("/accounts/new/")
-        self.assertContains(response,"許可されていません" , status_code=403)
+        self.assertContains(response,"許可されていません" , status_code=404)
     
 class WithRootLoginAccountNewPageTest(TestCase):
     def setUp(self) -> None:
@@ -68,7 +77,7 @@ class WithRootLoginAccountNewPageTest(TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         response = self.client.get("/accounts/new/")
-        self.assertContains(response,"許可されていません" , status_code=403)
+        self.assertContains(response,"許可されていません" , status_code=404)
 
 class AccountListTest(TestCase):
     def setUp(self) -> None:
@@ -86,7 +95,7 @@ class AccountListTest(TestCase):
 
 class PassWordChangeTest(TestCase):
     def setUp(self) -> None:
-        testAcountCreate(self)
+        testTMCAcountCreate(self)
         login(self)
         return super().setUp()
     
@@ -120,6 +129,6 @@ class UserDelTest(TestCase):
         return super().setUp()
     
     def test_del_test_Acount(self) -> None:
-        pk = get_object_or_404(User, username="test_user").pk
+        pk = get_object_or_404(User, username="test_user2").pk
         response = self.client.get("/accounts/" + str(pk) + "/del/")
-        self.assertNotContains(response,"test_user", status_code=302)
+        self.assertNotContains(response,"test_user2", status_code=302)
