@@ -43,7 +43,7 @@ def info_edit(request, info_id):
                 return redirect('info_list')
         else:
             form = InfoForm(instance=info)
-        return render(request, 'infos/info_edit.html', {'form': form})
+        return render(request, 'infos/info_edit.html', {'form': form })
 
     else:
         raise Http404("この権限では編集は許可されていません。")
