@@ -14,6 +14,7 @@
       <tr>
           <th>官署コード</th>
           <th>官署名</th>
+          <th>削除</th>
       </tr>
       </thead>
       <tbody>
@@ -21,6 +22,7 @@
         <tr>
           <td>{{ office.slug }}</td>
           <td>{{ office.name }}</td>
+          <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}">削除</a></th>
         </tr>
       {% endfor %}
     </tbody>

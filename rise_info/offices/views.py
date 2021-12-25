@@ -1,12 +1,28 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 import sys
 
 from .forms import UploadFileForm
 from .models import Office, offices_csv_import
 from accounts.views import isInTmcGroup, addTmcAuth
+
+@login_required
+def office_del(request, office_id):
+    if isInTmcGroup(request.user):
+        office=Office.objects.get_or_none(pk=office_id)
+        if office:
+            office.delete()
+        else:
+            raise Http404("削除対象は既に削除されています")
+    else:
+        raise Http404("この権限では許可されていません。")
+    offices = Office.objects.all()
+    form = UploadFileForm()
+    context = addTmcAuth({'form': form, 'offices': offices }, request.user)
+    return redirect('office')
+
 
 @login_required
 def file_upload(request):
