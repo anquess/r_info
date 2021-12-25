@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load pygmentize %}
+
+{% block header %}
+<style>{% pygments_css %}</style>
+{% endblock %}
+
+{% block main %}
+
+<div class="welcome">
+    <h1>障害通報一覧</h1>
+</div>
+{% if auth %}
+    <a class="btn btn-primary float-end" href="{% url 'info_new' %}">＋</a>
+{% endif %}
+{% if infos %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>タイトル</th>
+            <th>概要</th>
+            <th>投稿日</th>
+            <th>編集</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for info in infos %}
+        <tr>
+            <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
+            <th>{{ info.sammary }}</th>
+            <th>{{ info.created_at }}</th>
+            {% if auth %}
+                <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a>
+                    <a class="btn btn-danger" href="{% url 'info_del' info.id %}">削除</a></th>
+            {% endif %}
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>信頼性情報はまだ投稿されていません。</p>
+{% endif %}
+{% endblock %}
