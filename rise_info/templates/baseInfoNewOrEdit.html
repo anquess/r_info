@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block extraheader %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
 {% endblock %}
 {% block main %}
 {% block title %}{% endblock %}
@@ -12,7 +12,7 @@
     {% block sammary %}{% endblock %}
     <label for="id_content" class="form-label">内容</label>
     <textarea name="content" cols="40" rows="10" id="id_content">{{ form.content.value }}</textarea>
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="/static/simplemde/simplemde.min.js"></script>
     <script>
         const simplemde = new SimpleMDE({
             element: document.getElementById("id_content"),
