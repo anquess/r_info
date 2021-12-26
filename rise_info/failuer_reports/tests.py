@@ -1,11 +1,26 @@
 from django.test import TestCase
+from django.urls import resolve
 
 from .models import FailuerReport
+from .views import failuer_report_edit
 from accounts.tests import loginTestAccount
 
 def addMockFailuereReports(testCase) -> None:
     data = {'title': 'タイトル', 'sammary': '概要'}
     testCase.response = testCase.client.post("/failuer_reports/new/", data)
+
+def detail_and_edit_common_setUp(testCase, isEdit:bool):
+    loginTestAccount(testCase)
+    addMockFailuereReports(testCase)
+    info = FailuerReport.objects.get_or_none(title="タイトル")
+    if info:
+        if isEdit:
+            testCase.response = testCase.client.get("/failuer_reports/%s/edit/" % info.id)        
+        else:
+            testCase.response = testCase.client.get("/failuer_reports/%s/" % info.id)
+    else:
+        testCase.fail('あるはずのMockInfoが見つからない')
+
 
 class FaluerReportsListTest(TestCase):
     def setUp(self) -> None:
@@ -31,3 +46,46 @@ class CreateFailureReportTest(TestCase):
         addMockFailuereReports(self)
         info = FailuerReport.objects.get(title='タイトル')
         self.assertEqual('概要', info.sammary)
+
+class FailuerReportsDetailTest(TestCase):
+    def setUp(self) -> None:
+        detail_and_edit_common_setUp(self, False)
+
+    def test_should_use_expected_template(self):
+        self.assertTemplateUsed(self.response, "failuer_reports/detail.html")
+    def test_detail_page_returns_200_and_expected_heading(self):
+        self.assertContains(self.response, "タイトル", status_code=200)
+
+class EditFailuerReportsTest(TestCase):
+    def setUp(self) -> None:
+        detail_and_edit_common_setUp(self, True)
+
+    def test_should_use_expected_template(self):
+        self.assertTemplateUsed(self.response, "failuer_reports/edit.html")
+
+class DetailFailuerReportsTest(TestCase):
+    def test_should_resolve_info_edit(self):
+        found = resolve("/failuer_reports/1/edit/")
+        self.assertEqual(failuer_report_edit, found.func)
+
+class InfoModelTest(TestCase):
+    def test_is_empty(self) -> None:
+        infos = FailuerReport.objects.all()
+        self.assertEqual(infos.count(), 0)
+
+class InfoDelTest(TestCase):
+    def setUp(self) -> None:
+        loginTestAccount(self)
+        addMockFailuereReports(self)
+
+    def test_info_del_count(self):
+        try:
+            info = FailuerReport.objects.get(title='タイトル')
+        except:
+            self.fail('あるはずのmockInfoが見つからない')
+        self.client.get("/failuer_reports/" + str(info.pk) + "/del/")
+        try:
+            info = FailuerReport.objects.get(title='タイトル')
+        except:
+            return None
+        self.fail('ないはずのmockInfoが見つかった')

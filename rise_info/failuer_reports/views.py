@@ -41,9 +41,11 @@ def failuer_report_edit(request, info_id):
             if form.is_valid():
                 form.save()
                 return redirect('failuer_report_list')
+            else:
+                raise Http404('値がおかしい')
         else:
             form = FailuerReportForm(instance=info)
-        return render(request, 'infos/failuer_report_edit.html', {'form': form })
+        return render(request, 'failuer_reports/edit.html', {'form': form })
 
     else:
         raise Http404("このデータがありません")
@@ -56,7 +58,7 @@ def failuer_report_detail(request, info_id):
             'info': info,
         }
         context = addTmcAuth(context, request.user)
-        return render(request, 'infos/failuer_report_detail.html', context)
+        return render(request, 'failuer_reports/detail.html', context)
     else:
         raise Http404('該当Infoはありません。')
 
