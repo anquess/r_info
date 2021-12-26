@@ -11,27 +11,35 @@
     <div class="col-2">
         <label for="id_is_operatinal_impact.label" class="form-label">運用への影響有無</label>
         {% if form.is_operatinal_impact.value %}
-            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" checked/>
+            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" onclick='clickCheck(this.id, "id_operatinal_impact")' checked/>
+        </div>
+        <div class="col-10">
+            <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.flight_operatinal.value }}" placeholder='運用への影響' aria-label="運用への影響"/>
+        </div>    
         {% else %}
-            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact"/>
+            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" onclick='clickCheck(this.id, "id_operatinal_impact")'/>
+        </div>
+        <div class="col-10">
+            <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.flight_operatinal.value }}" placeholder='運用への影響' aria-label="運用への影響" disabled/>
+        </div>
         {% endif %}    
-    </div>
-    <div class="col-10">
-        <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.flight_operatinal.value }}" placeholder='運用への影響' aria-label="運用への影響"/>
-    </div>
 </div>
 <div class="row mt-1">
     <div class="col-2">
     <label for="id_is_flight_impact.label" class="form-label">運航への影響有無</label>
     {% if form.is_flight_impact.value %}
-        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" checked/>
-    {% else %}
-        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact"/>
-    {% endif %}
+        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" onclick='clickCheck(this.id, "id_flight_impact")' checked/>
     </div>
     <div class="col-10">
-    <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響"/>
+        <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
     </div>
+    {% else %}
+        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" onclick='clickCheck(this.id, "id_flight_impact")'/>
+    </div>
+    <div class="col-10">
+        <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" disabled/>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -39,4 +47,34 @@
 <button class="btn btn-primary" type="submit" value="post">変更</button>
 {% endblock %}
 
-{% block add_js %}{% endblock %}
+{% block add_js2 %}
+<script>
+    function clickCheck(checked_id, text_id){
+        if(document.getElementById(checked_id).checked === true){
+            document.getElementById(text_id).removeAttribute('disabled');
+        }else{
+            document.getElementById(text_id).setAttribute('disabled', true);
+            document.getElementById(text_id).value="";
+        }
+    }
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#id_sammary').maxlength({
+                alwaysShow: true,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+            $('#id_operatinal_impact').maxlength({
+                alwaysShow: true,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+            $('#id_flight_impact').maxlength({
+                alwaysShow: true,
+                warningClass: "label label-success",
+                limitReachedClass: "label label-danger"
+            });
+        });
+    </script>
+{% endblock %}

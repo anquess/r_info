@@ -11,17 +11,41 @@
     <input type="text" class="form-control" name="title" maxlength="128" required id="id_title" value="{{ form.title.value }}">
     {% block sammary %}{% endblock %}
     <label for="id_content" class="form-label">内容</label>
-    <textarea name="content" cols="40" rows="10" id="id_content">{{ form.content.value }}</textarea>
+    <textarea name="content" cols="40" rows="10" id="id_content" data-maxlength="4096">{{ form.content.value }}</textarea>
     <script src="/static/simplemde/simplemde.min.js"></script>
     <script>
         const simplemde = new SimpleMDE({
             element: document.getElementById("id_content"),
             toolbar: ["heading-1", "heading-2", "bold", "italic", "strikethrough", "|",
             "horizontal-rule", "unordered-list", "ordered-list", "code", "table", "image", "|",
-            "preview", "fullscreen", "side-by-side", "guid"]});
+            "preview", "fullscreen", "side-by-side", {
+                name : "guid",
+                className : "fa fa-question-circle",
+                action : function (){window.open("https://simplemde.com/markdown-guide", "_blank");},
+                title : "help"
+            }]});
     </script>
     {% block btn %}{% endblock %}
 </form>
 {% endblock %}
 
-{% block add_js %}{% endblock %}
+{% block add_js %}
+<script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
+<script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#id_title').maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+        $('#id_content').maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    });
+</script>
+{% block add_js2 %}
+{% endblock %}
+{% endblock %}
