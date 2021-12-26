@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     # 3rd Party
     'django_bootstrap5',
-    'mdeditor',
     'pygments_renderer',
     'django_extensions',
 

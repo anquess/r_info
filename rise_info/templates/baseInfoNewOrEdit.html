@@ -1,15 +1,24 @@
 {% extends "base.html" %}
-
+{% block extraheader %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% endblock %}
 {% block main %}
 {% block title %}{% endblock %}
 <form method="post">
     {% csrf_token %}
     {{ form.media }}
     <label for="id_title" class="form-label">タイトル</label>
-    <input type="text" class="form-control" name="title" maxlength="128" required id="id_title">
+    <input type="text" class="form-control" name="title" maxlength="128" required id="id_title" value="{{ form.title.value }}">
     {% block sammary %}{% endblock %}
     <label for="id_content" class="form-label">内容</label>
-    {{ form.content }}
+    <textarea name="content" cols="40" rows="10" id="id_content">{{ form.content.value }}</textarea>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script>
+        const simplemde = new SimpleMDE({
+            element: document.getElementById("id_content"),
+            toolbar: ["heading-1", "heading-2", "bold", "italic", "strikethrough", "|",
+            "horizontal-rule", "unordered-list", "ordered-list", "code", "table", "|", "preview", "fullscreen", "side-by-side", "guid"]});
+    </script>
     {% block btn %}{% endblock %}
 </form>
 {% endblock %}

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load markdown_extras %}
 {% load static %} 
 {% block extraheader %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/a11y-dark.min.css">
@@ -14,7 +13,7 @@
     {% block sammary %}{% endblock %}
     <div class="card"><div class="card-body">
         <h5 class="card-title">詳細</h5>
-        {{ info.content | markdown_to_html | safe }}
+        {{ info.get_content_as_markdown | safe }}
     </div></div>
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>

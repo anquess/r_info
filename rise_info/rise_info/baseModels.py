@@ -1,11 +1,12 @@
 from django.db import models
 from django.http import Http404
+from django.utils.safestring import mark_safe
 from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
 from datetime import datetime as dt
-
-from mdeditor.fields import MDTextField
+import markdown
+#from mdeditor.fields import MDTextField
 
 
 def csvFormatCheck(csvRow, checkLists) -> bool:
@@ -34,7 +35,8 @@ class BaseManager(models.Manager):
 class CommonInfo(models.Model):
     objects = BaseManager()
     title = models.CharField(verbose_name='タイトル', default="", null=False, blank=False, max_length=128)
-    content = MDTextField(verbose_name='内容', default="", null=False, blank=True)
+    #content = MDTextField(verbose_name='内容', default="", null=False, blank=True)
+    content = models.TextField(verbose_name='内容', default="", null=False, blank=True)
     created_by = CurrentUserField(verbose_name='登録者',on_update=True, related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
     created_at = models.DateTimeField(verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
     updated_at = models.DateTimeField(verbose_name='更新日', auto_now=True, null=False, blank=False)
@@ -50,3 +52,8 @@ class CommonInfo(models.Model):
             self.created_by = get_current_authenticated_user()
         self.updated_by = get_current_authenticated_user()
         super(CommonInfo, self).save(*args, **kwargs)
+
+    def get_content_as_markdown(self):
+        md = markdown.Markdown(
+            extensions=['extra', 'admonition', 'sane_lists', 'toc'])
+        return md.convert(self.content)

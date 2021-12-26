@@ -9,6 +9,7 @@ local_settings.py
 db.sqlite3
 uploads
 rise_info/static/admin
+rise_info/static/bootstrap-maxlength
 rise_info/static/django_extensions
 rise_info/static/mdeditor
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
