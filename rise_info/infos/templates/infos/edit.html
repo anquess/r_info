@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block sammary %}
-<p>{{ form.sammary.label }}: {{ form.sammary }}</p>
+<label for="id_sammary" class="form-label">概要</label>
+<textarea name="sammary" class="form-control" cols="40" rows="3" maxlength="512" id="id_sammary">{{ form.sammary.value }}</textarea>
 {% endblock %}
 
 {% block btn %}
