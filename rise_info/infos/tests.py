@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import resolve
 
@@ -21,7 +20,7 @@ class InfoListTest(TestCase):
         
     def test_info_list_uses_expected_template(self) ->None:
         response = self.client.get("/infos/")
-        self.assertTemplateUsed(response, "infos/info_list.html")
+        self.assertTemplateUsed(response, "infos/list.html")
 
 class CreateInfoTest(TestCase):
     def setUp(self) -> None:
@@ -54,7 +53,7 @@ class InfoDetailTest(TestCase):
         detail_and_edit_common_setUp(self, False)
 
     def test_should_use_expected_template(self):
-        self.assertTemplateUsed(self.response, "infos/info_detail.html")
+        self.assertTemplateUsed(self.response, "infos/detail.html")
     def test_detail_page_returns_200_and_expected_heading(self):
         self.assertContains(self.response, "タイトル", status_code=200)
 
@@ -63,7 +62,7 @@ class EditInfoTest(TestCase):
         detail_and_edit_common_setUp(self, True)
 
     def test_should_use_expected_template(self):
-        self.assertTemplateUsed(self.response, "infos/info_edit.html")
+        self.assertTemplateUsed(self.response, "infos/edit.html")
 
 class DetailInfoTest(TestCase):
     def test_should_resolve_info_edit(self):

@@ -1,0 +1,16 @@
+{% extends "baseDetail.html" %}
+
+{% block sammary %}
+    <div class="card"><div class="card-body">
+        <h5>概要</h5>
+        {{ info.sammary | linebreaksbr }}
+    </div></div>
+{% endblock %}
+
+{% block btn %}
+    <th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
+    {% if auth %}
+        <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a></th>
+        <th><a class="btn btn-danger" href="{% url 'info_del' info.id %}">削除</a></th>
+    {% endif %}
+{% endblock %}

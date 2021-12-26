@@ -1,0 +1,15 @@
+{% extends "baseInfoNewOrEdit.html" %}
+
+{% block title %}
+<h1>信頼性情報の登録</h1>
+{% endblock %}
+
+{% block sammary %}
+<p>{{ form.sammary.label }}: {{ form.sammary }}</p>
+{% endblock %}
+
+{% block btn %}
+<button class="btn btn-primary" type="submit" value="post">登録</button>
+{% endblock %}
+
+{% block add_js %}{% endblock %}

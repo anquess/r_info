@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% block title %}{% endblock %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    <p>{{ form.title.label }}: {{ form.title }}</p>
+    {% block sammary %}{% endblock %}
+    <p>{{ form.content.label }}: {{ form.content }}</p>
+    {% block btn %}{% endblock %}
+</form>
+{% endblock %}
+
+{% block add_js %}{% endblock %}

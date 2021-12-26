@@ -11,10 +11,7 @@
     <div class="card"><div class="card-body">
     <h2>{{ info.title }}</h2>
     </div></div>
-    <div class="card"><div class="card-body">
-        <h5>概要</h5>
-        {{ info.sammary | linebreaksbr }}
-    </div></div>
+    {% block sammary %}{% endblock %}
     <div class="card"><div class="card-body">
         <h5>詳細</h5>
         {{ info.content | markdown_to_html | safe }}
@@ -25,11 +22,7 @@
         <div class="col-3">投稿日時:{{ info.updated_at }}</div>
         <div class="col-3">投稿者:{{ info.updated_by }}</div>
     </div>
-    <th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
-    {% if auth %}
-        <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a></th>
-        <th><a class="btn btn-danger" href="{% url 'info_del' info.id %}">削除</a></th>
-    {% endif %}
+    {% block btn %}{% endblock %}
 </div>
 {% endblock %}
 {% block add_js %}

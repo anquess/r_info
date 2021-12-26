@@ -11,7 +11,7 @@ def info_list(request):
     infos = Info.objects.all()
     context = {'infos':infos}
     context = addTmcAuth(context, request.user)
-    return render(request, "infos/info_list.html", context)    
+    return render(request, "infos/list.html", context)    
 
 @login_required
 def info_new(request):
@@ -28,23 +28,27 @@ def info_new(request):
         else:
             form = InfoForm()
             context = addTmcAuth({'form': form}, request.user)
-        return render(request, "infos/info_new.html", context)
+        return render(request, "infos/new.html", context)
     else:
         raise Http404("この権限では登録は許可されていません。")
 
 @login_required
 def info_edit(request, info_id):
-    info = get_object_or_404(Info, pk=info_id)
     if isInTmcGroup(request.user):
-        if request.method == "POST":
-            form = InfoForm(request.POST, instance=info)
-            if form.is_valid():
-                form.save()
-                return redirect('info_list')
+        info = Info.objects.get_or_none(pk=info_id)
+        if info:
+            if request.method == "POST":
+                form = InfoForm(request.POST, instance=info)
+                if form.is_valid():
+                    form.save()
+                    return redirect('info_list')
+                else:
+                    raise Http404('値がおかしい')
+            else:
+                form = InfoForm(instance=info)
+            return render(request, 'infos/edit.html', {'form': form })
         else:
-            form = InfoForm(instance=info)
-        return render(request, 'infos/info_edit.html', {'form': form })
-
+            raise Http404("対象のInfoはありません。")
     else:
         raise Http404("この権限では編集は許可されていません。")
 
@@ -56,7 +60,7 @@ def info_detail(request, info_id):
             'info': info,
         }
         context = addTmcAuth(context, request.user)
-        return render(request, 'infos/info_detail.html', context)
+        return render(request, 'infos/detail.html', context)
     else:
         raise Http404('該当Infoはありません。')
 
