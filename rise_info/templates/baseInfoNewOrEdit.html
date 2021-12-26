@@ -5,9 +5,11 @@
 <form method="post">
     {% csrf_token %}
     {{ form.media }}
-    <p>{{ form.title.label }}: {{ form.title }}</p>
+    <label for="id_title" class="form-label">タイトル</label>
+    <input type="text" class="form-control" name="title" maxlength="128" required id="id_title">
     {% block sammary %}{% endblock %}
-    <p>{{ form.content.label }}: {{ form.content }}</p>
+    <label for="id_content" class="form-label">内容</label>
+    {{ form.content }}
     {% block btn %}{% endblock %}
 </form>
 {% endblock %}
