@@ -8,6 +8,7 @@ class FailuerReportForm(forms.ModelForm):
         fields = (
             'title',
             'sammary',
+            'is_rich_text',
             'content', 
             'is_operatinal_impact',
             'operatinal_impact',

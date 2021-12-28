@@ -13,7 +13,11 @@
     {% block sammary %}{% endblock %}
     <div class="card"><div class="card-body">
         <h5 class="card-title">詳細</h5>
-        {{ info.get_content_as_markdown | safe }}
+        {% if info.is_rich_text %}
+            {{ info.get_content_as_markdown | safe }}
+        {% else %}
+            {{ info.content | linebreaksbr }}
+        {% endif %}
     </div></div>
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>

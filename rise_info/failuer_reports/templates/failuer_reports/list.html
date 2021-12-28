@@ -26,9 +26,9 @@
         {% for info in infos %}
         <tr>
             <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.sammary | linebreaksbr}}</th>
-            <th>{{ info.created_at }}</th>
-            <th>{{ info.created_by }}</th>
+            <th>{{ info.sammary | linebreaksbr }}</th>
+            <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.created_by.last_name }}</th>
             {% if user == info.created_by %}
                 <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">編集</a>
                     <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}">削除</a></th>

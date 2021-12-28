@@ -5,4 +5,4 @@ from infos.models import Info
 class InfoForm(forms.ModelForm):
     class Meta:
         model = Info
-        fields = ('title', 'sammary', 'content')
+        fields = ('title', 'sammary', 'is_rich_text', 'content')

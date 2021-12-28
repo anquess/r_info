@@ -10,20 +10,36 @@
     <label for="id_title" class="form-label">タイトル</label>
     <input type="text" class="form-control" name="title" maxlength="128" required id="id_title" value="{{ form.title.value }}">
     {% block sammary %}{% endblock %}
+    <div class="row mt-1">
+        <div class="col-2">
+        <label for="id_is_rich_text.label" class="form-label">リッチテキスト有無</label>
+        <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)'/>
+        </div>
+    </div>
     <label for="id_content" class="form-label">内容</label>
     <textarea name="content" cols="40" rows="10" id="id_content" data-maxlength="4096">{{ form.content.value }}</textarea>
     <script src="/static/simplemde/simplemde.min.js"></script>
     <script>
-        const simplemde = new SimpleMDE({
-            element: document.getElementById("id_content"),
-            toolbar: ["heading-1", "heading-2", "bold", "italic", "strikethrough", "|",
-            "horizontal-rule", "unordered-list", "ordered-list", "code", "table", "image", "|",
-            "preview", "fullscreen", "side-by-side", {
-                name : "guid",
-                className : "fa fa-question-circle",
-                action : function (){window.open("https://simplemde.com/markdown-guide", "_blank");},
-                title : "help"
-            }]});
+        var simplemde;
+        function makeSimplemde(check) {
+            if(check){
+                return new SimpleMDE({
+                    element: document.getElementById("id_content"),
+                    toolbar: ["heading-1", "heading-2", "bold", "italic", "strikethrough", "|",
+                    "horizontal-rule", "unordered-list", "ordered-list", "code", "table", "image", "|",
+                    "preview", "fullscreen", "side-by-side", {
+                        name : "guid",
+                        className : "fa fa-question-circle",
+                        action : function (){window.open("https://simplemde.com/markdown-guide", "_blank");},
+                        title : "help"
+                    }]
+                });
+            }else{
+                simplemde.toTextArea();
+                return null;
+            }
+        }
+        simplemde = makeSimplemde(document.getElementById("id_is_rich_text").checked);
     </script>
     {% block btn %}{% endblock %}
 </form>
