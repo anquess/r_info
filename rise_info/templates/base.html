@@ -11,7 +11,7 @@
 <body>
 <div class="container-fluid">
 <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
-    <div class="container justify-content-between">
+    <div class="d-flex container-fluid justify-content-between">
         <a href="/" class="navbar-brand">信頼性ＨＰ</a>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">信頼性情報</a> </li>
@@ -41,12 +41,11 @@
                     {% else %}
                     <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
                     {% endif %}
-        
                 </ul>
             </li>
         </ul>
     </div>
-</nav>
+</nav></div>
 <main>
     <div class="container-fluid">
         {% if msg %}

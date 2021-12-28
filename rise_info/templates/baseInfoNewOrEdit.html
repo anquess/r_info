@@ -13,7 +13,11 @@
     <div class="row mt-1">
         <div class="col-2">
         <label for="id_is_rich_text.label" class="form-label">リッチテキスト有無</label>
-        <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)'/>
+        {% if form.is_rich_text.value %}
+            <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)' checked />
+        {% else %}
+            <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)' />
+        {% endif %}
         </div>
     </div>
     <label for="id_content" class="form-label">内容</label>
