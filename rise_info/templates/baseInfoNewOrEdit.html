@@ -4,7 +4,7 @@
 {% endblock %}
 {% block main %}
 {% block title %}{% endblock %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
     <label for="id_title" class="form-label">タイトル</label>
@@ -13,14 +13,10 @@
     <div class="row mt-1">
         <div class="col-2">
         <label for="id_is_rich_text.label" class="form-label">リッチテキスト有無</label>
-        {% if form.is_rich_text.value %}
-            <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)' checked />
-        {% else %}
-            <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)' />
-        {% endif %}
+        <input type="checkbox" class="form-is_rich_text" name="is_rich_text" id="id_is_rich_text" onclick='simplemde = makeSimplemde(this.checked)' {% if form.is_rich_text.value %} checked {% endif %} />
         </div>
     </div>
-    <label for="id_content" class="form-label">内容</label>
+    <label for="id_content" class="form-label">内容</label><br>
     <textarea name="content" cols="40" rows="10" id="id_content" data-maxlength="4096">{{ form.content.value }}</textarea>
     <script src="/static/simplemde/simplemde.min.js"></script>
     <script>

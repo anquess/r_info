@@ -8,38 +8,22 @@
 <label for="id_sammary" class="form-label">概要</label>
 <textarea name="sammary" class="form-control" cols="40" rows="3" maxlength="512" id="id_sammary">{{ form.sammary.value }}</textarea>
 <div class="row mt-1">
-    <div class="col-2">
+    <div class="col-3">
         <label for="id_is_operatinal_impact.label" class="form-label">運用への影響有無</label>
-        {% if form.is_operatinal_impact.value %}
-            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" onclick='clickCheck(this.id, "id_operatinal_impact")' checked/>
+        <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" onclick='clickCheck(this.id, "id_operatinal_impact")' {% if form.is_operatinal_impact.value %} checked {% endif %}/>
         </div>
-        <div class="col-10">
-            <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.flight_operatinal.value }}" placeholder='運用への影響' aria-label="運用への影響"/>
+        <div class="col-9">
+            <input {% if form.is_operatinal_impact.value %} type="text" {% else %} type="hidden" {% endif %} class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.operatinal_impact.value }}" placeholder='運用への影響' aria-label="運用への影響" />
         </div>    
-        {% else %}
-            <input type="checkbox" class="form-check-input" name="is_operatinal_impact" id="id_is_operatinal_impact" onclick='clickCheck(this.id, "id_operatinal_impact")'/>
-        </div>
-        <div class="col-10">
-            <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.flight_operatinal.value }}" placeholder='運用への影響' aria-label="運用への影響" disabled/>
-        </div>
-        {% endif %}    
 </div>
 <div class="row mt-1">
-    <div class="col-2">
+    <div class="col-3">
     <label for="id_is_flight_impact.label" class="form-label">運航への影響有無</label>
-    {% if form.is_flight_impact.value %}
-        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" onclick='clickCheck(this.id, "id_flight_impact")' checked/>
+    <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" onclick='clickCheck(this.id, "id_flight_impact")' {% if form.is_flight_impact.value %} checked {% endif %}/>
     </div>
-    <div class="col-10">
-        <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
+    <div class="col-9">
+        <input {% if form.is_flight_impact.value %} type="text" {% else %} type="hidden" {% endif %} class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
     </div>
-    {% else %}
-        <input type="checkbox" class="form-check-input" name="is_flight_impact" id="id_is_flight_impact" onclick='clickCheck(this.id, "id_flight_impact")'/>
-    </div>
-    <div class="col-10">
-        <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" disabled/>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
 
@@ -51,10 +35,10 @@
 <script>
     function clickCheck(checked_id, text_id){
         if(document.getElementById(checked_id).checked === true){
-            document.getElementById(text_id).removeAttribute('disabled');
+            document.getElementById(text_id).type = 'text';
         }else{
-            document.getElementById(text_id).setAttribute('disabled', true);
-            document.getElementById(text_id).value="";
+            document.getElementById(text_id).value = '';
+            document.getElementById(text_id).type ='hidden';
         }
     }
     </script>
