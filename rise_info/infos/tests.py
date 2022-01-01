@@ -101,20 +101,27 @@ class AddInfoAttachmentTest(TestCase):
         addMockInfo(self)
         shutil.copy('uploads/sorry.jpg','abc.jpg')
         shutil.copy('uploads/user.png','abc.png')
-    def tearDown(self) -> None:
-        os.remove('abc.jpg')
-        os.remove('abc.png')
-        return super().tearDown()
-    def test_create_info_attachment(self):
         try:
-            info = Info.objects.get(title='タイトル')
+            self.info = Info.objects.get(title='タイトル')
         except:
             self.fail('あるはずのmockInfoが見つからない')
         if not os.path.isfile("abc.jpg"):
             self.fail('mockInfoAttachmentsファイル(abc.jpg)が見つからない')
-        self.info_attach = InfoAttachmentFile.objects.create(info=info, attachment=File(open('abc.jpg','rb')))
-        self.assertTrue(os.path.isfile(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+    def tearDown(self) -> None:
+        os.remove('abc.jpg')
+        os.remove('abc.png')
+        return super().tearDown()
+    def test_delete_info_attachment(self):
+        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+        info_pk = self.info.pk
+        attach_pk = self.info_attach.pk
+        self.info_attach.delete()
+        self.info_attach.save()
+        self.assertFalse(os.path.isfile(f"uploads/info/{str(info_pk)}/{str(attach_pk)}/abc.jpg"))
+    def test_create_info_attachment(self):
+        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+        self.assertTrue(os.path.isfile(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         self.info_attach.attachment = File(open('abc.png','rb'))
         self.info_attach.save()
-        self.assertFalse(os.path.isfile(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
-        os.remove(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.png")
+        self.assertFalse(os.path.isfile(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+        os.remove(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.png")

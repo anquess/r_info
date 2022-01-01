@@ -1,6 +1,6 @@
 from django.db import models
 
-from rise_info.baseModels import CommonInfo
+from rise_info.baseModels import CommonInfo, Attachment, file_upload_path
 
 class FailuerReport(CommonInfo):
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
@@ -14,3 +14,9 @@ class FailuerReport(CommonInfo):
     
     class Meta:
         db_table = 'failuer_reports'
+
+class FailuerReportAttachmentFile(Attachment):
+    info = models.ForeignKey(FailuerReport , on_delete=models.CASCADE)
+    upload_path = 'fail_rep'
+    class Meta:
+        db_table = 'fail_report_attachments'

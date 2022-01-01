@@ -1,9 +1,13 @@
 from django.test import TestCase
 from django.urls import resolve
+from django.core.files.base import File
 
-from .models import FailuerReport
+from .models import FailuerReport, FailuerReportAttachmentFile
 from .views import failuer_report_edit
 from accounts.tests import loginTestAccount
+
+import shutil
+import os
 
 def addMockFailuereReports(testCase) -> None:
     data = {'title': 'タイトル', 'sammary': '概要'}
@@ -89,3 +93,27 @@ class InfoDelTest(TestCase):
         except:
             return None
         self.fail('ないはずのmockInfoが見つかった')
+
+class AddReportAttachmentTest(TestCase):
+    def setUp(self) -> None:
+        loginTestAccount(self)
+        addMockFailuereReports(self)
+        shutil.copy('uploads/sorry.jpg','abc.jpg')
+        shutil.copy('uploads/user.png','abc.png')
+        try:
+            self.info = FailuerReport.objects.get(title='タイトル')
+        except:
+            self.fail('あるはずのmockReportsが見つからない')
+        if not os.path.isfile("abc.jpg"):
+            self.fail('mockReportAttachmentsファイル(abc.jpg)が見つからない')
+        self.info_attach = FailuerReportAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+    def tearDown(self) -> None:
+        os.remove('abc.jpg')
+        os.remove('abc.png')
+        return super().tearDown()
+    def test_create_report_attachment(self):
+        self.assertTrue(os.path.isfile(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+        self.info_attach.attachment = File(open('abc.png','rb'))
+        self.info_attach.save()
+        self.assertFalse(os.path.isfile(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+        os.remove(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.png")

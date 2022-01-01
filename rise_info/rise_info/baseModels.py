@@ -77,6 +77,11 @@ class Attachment(models.Model):
             self.attachment = upload_file
             if "force_insert" in kwargs:
                 kwargs.pop("force_insert")
-        elif os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
-            shutil.rmtree(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
+        self.file_delete()
         super().save(*args, **kwargs)
+    def delete(self, *args, **kwargs):
+        self.file_delete()
+        super().delete(*args, **kwargs)
+    def file_delete(self) -> None:
+        if os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
+            shutil.rmtree(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
