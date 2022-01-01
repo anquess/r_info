@@ -6,7 +6,7 @@ import os
 import shutil
 
 from infos.views import info_edit
-from infos.models import Info, InfoAttachment
+from infos.models import Info, InfoAttachmentFile
 from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
@@ -112,7 +112,7 @@ class AddInfoAttachmentTest(TestCase):
             self.fail('あるはずのmockInfoが見つからない')
         if not os.path.isfile("abc.jpg"):
             self.fail('mockInfoAttachmentsファイル(abc.jpg)が見つからない')
-        self.info_attach = InfoAttachment.objects.create(info=info, attachment=File(open('abc.jpg','rb')))
+        self.info_attach = InfoAttachmentFile.objects.create(info=info, attachment=File(open('abc.jpg','rb')))
         self.assertTrue(os.path.isfile(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         self.info_attach.attachment = File(open('abc.png','rb'))
         self.info_attach.save()

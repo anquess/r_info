@@ -5,6 +5,8 @@ from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
 from datetime import datetime as dt
+import os
+import shutil
 import markdown
 
 def csvFormatCheck(csvRow, checkLists) -> bool:
@@ -55,3 +57,26 @@ class CommonInfo(models.Model):
         md = markdown.Markdown(
             extensions=['extra', 'admonition', 'sane_lists', 'toc'])
         return md.convert(self.content)
+
+def file_upload_path(instance, filename):
+    return f"{instance.upload_path}/{str(instance.info.pk)}/{str(instance.pk)}/{filename}"
+
+class Attachment(models.Model):
+    objects = BaseManager()
+    upload_path = ''
+    info = models.ForeignKey(CommonInfo , on_delete=models.CASCADE)
+    attachment = models.FileField(verbose_name='ファイル名', upload_to=file_upload_path)
+    class Meta:
+        abstract= True
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            upload_file = self.attachment
+            self.attachment = None
+            super().save(*args, **kwargs)
+            self.attachment = upload_file
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
+        elif os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
+            shutil.rmtree(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
+        super().save(*args, **kwargs)
