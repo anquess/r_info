@@ -1,8 +1,12 @@
 from django.test import TestCase
 from django.urls import resolve
+from django.core.files.base import File
+
+import os
+import shutil
 
 from infos.views import info_edit
-from infos.models import Info
+from infos.models import Info, InfoAttachment
 from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
@@ -90,3 +94,27 @@ class InfoDelTest(TestCase):
         except:
             return None
         self.fail('ないはずのmockInfoが見つかった')
+
+class AddInfoAttachmentTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+        addMockInfo(self)
+        shutil.copy('uploads/sorry.jpg','abc.jpg')
+        shutil.copy('uploads/user.png','abc.png')
+    def tearDown(self) -> None:
+        os.remove('abc.jpg')
+        os.remove('abc.png')
+        return super().tearDown()
+    def test_create_info_attachment(self):
+        try:
+            info = Info.objects.get(title='タイトル')
+        except:
+            self.fail('あるはずのmockInfoが見つからない')
+        if not os.path.isfile("abc.jpg"):
+            self.fail('mockInfoAttachmentsファイル(abc.jpg)が見つからない')
+        self.info_attach = InfoAttachment.objects.create(info=info, attachment=File(open('abc.jpg','rb')))
+        self.assertTrue(os.path.isfile(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+        self.info_attach.attachment = File(open('abc.png','rb'))
+        self.info_attach.save()
+        self.assertFalse(os.path.isfile(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
+        os.remove(f"uploads/info/{str(info.pk)}/{str(self.info_attach.pk)}/abc.png")

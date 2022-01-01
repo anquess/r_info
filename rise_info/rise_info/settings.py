@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'histories.apps.HistoriesConfig',
     'infos.apps.InfosConfig',
     'offices.apps.OfficesConfig',
+
+    'django_cleanup.apps.CleanupConfig',
+
 ]
 
 MIDDLEWARE = [
