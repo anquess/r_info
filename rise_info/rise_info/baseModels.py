@@ -61,20 +61,20 @@ class CommonInfo(models.Model):
 def file_upload_path(instance, filename):
     return f"{instance.upload_path}/{str(instance.info.pk)}/{str(instance.pk)}/{filename}"
 
-class Attachment(models.Model):
+class BaseAttachment(models.Model):
     objects = BaseManager()
     upload_path = ''
     info = models.ForeignKey(CommonInfo , on_delete=models.CASCADE)
-    attachment = models.FileField(verbose_name='ファイル名', upload_to=file_upload_path)
+    file = models.FileField(verbose_name='ファイル名', upload_to=file_upload_path)
     class Meta:
         abstract= True
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            upload_file = self.attachment
-            self.attachment = None
+            upload_file = self.file
+            self.file = None
             super().save(*args, **kwargs)
-            self.attachment = upload_file
+            self.file = upload_file
             if "force_insert" in kwargs:
                 kwargs.pop("force_insert")
         self.file_delete()

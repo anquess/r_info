@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-from infos.models import Info, InfoAttachmentFile
+from infos.models import Info, InfoFile
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 
@@ -36,7 +36,7 @@ def info_edit(request, info_id):
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
-    files = InfoAttachmentFile.objects.filter(info=info)
+    files = InfoFile.objects.filter(info=info)
     if info:
         context ={
             'info': info,

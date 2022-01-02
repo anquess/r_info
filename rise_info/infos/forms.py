@@ -1,7 +1,6 @@
 from django import forms
-from django.db.models import fields
 
-from infos.models import Info, InfoAttachmentFile
+from infos.models import Info, InfoFile
 
 class InfoForm(forms.ModelForm):
     class Meta:
@@ -9,5 +8,5 @@ class InfoForm(forms.ModelForm):
         fields = ('title', 'sammary', 'is_rich_text', 'content')
 
 FileFormSet = forms.inlineformset_factory(
-    Info, InfoAttachmentFile, fields='__all__', extra=1,
+    Info, InfoFile, fields='__all__', extra=1,
 )

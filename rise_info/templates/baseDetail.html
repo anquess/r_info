@@ -20,7 +20,7 @@
         {% endif %}
     </div></div>
     {% for file in files %}
-    <a href="/media/{{ file.attachment }}">{{ file.attachment.name }}</a>
+        <p><a href="/media/{{ file.file }}">/media/{{ file.file.name }}</a></p>
     {% endfor %}
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>

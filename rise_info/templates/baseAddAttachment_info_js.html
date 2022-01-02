@@ -1,20 +1,27 @@
 <script>
 $(function(){
-    var totalManageElement = $('input#id_infoattachmentfile_set-TOTAL_FORMS');
+    var totalManageElement = $('input#id_infofile_set-TOTAL_FORMS');
     var currentFileCount = parseInt(totalManageElement.val());
     $('button#add').on('click', function(){
+        var pElement = $('<p>');
+        var labelElement = $('<label>',{
+            for: 'id_infofile_set-' + currentFileCount + '-file',
+        });
         var nameElement = $('<input>', {
             type: 'name',
-            name: 'infoattachmentfile_set-' + currentFileCount + '-attachment',
-            id: 'id_infoattachmentfile_set-' + currentFileCount + '-attachment',
+            name: 'infofile_set-' + currentFileCount + '-file',
+            id: 'id_infofile_set-' + currentFileCount + '-file',
         });
         var fileElement = $('<input>', {
             type: 'file',
-            name: 'infoattachmentfile_set-' + currentFileCount + '-attachment',
-            id: 'id_infoattachmentfile_set-' + currentFileCount + '-attachment',
+            name: 'infofile_set-' + currentFileCount + '-file',
+            id: 'id_infofile_set-' + currentFileCount + '-file',
         });
-        $('div#file-area').append(nameElement);
-        $('div#file-area').append(fileElement);
+        labelElement.text('ファイル名:');
+        pElement.append(labelElement);
+        pElement.append(fileElement);
+        $('div#file-area').append(pElement);
+        $('div#file-area').append('<hr>');
         currentFileCount += 1;
         totalManageElement.attr('value', currentFileCount);
     });

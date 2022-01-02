@@ -1,5 +1,5 @@
 from django.contrib import admin
-from infos.models import Info, InfoAttachmentFile
+from infos.models import Info, InfoFile
 
 admin.site.register(Info)
-admin.site.register(InfoAttachmentFile)
+admin.site.register(InfoFile)
