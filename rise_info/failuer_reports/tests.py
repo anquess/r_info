@@ -1,8 +1,8 @@
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from django.core.files.base import File
 
-from .models import FailuerReport, FailuerReportAttachmentFile
+from .models import FailuerReport, FailRepoFile
 from .views import failuer_report_edit
 from accounts.tests import loginTestAccount
 
@@ -87,14 +87,16 @@ class InfoDelTest(TestCase):
             info = FailuerReport.objects.get(title='タイトル')
         except:
             self.fail('あるはずのmockInfoが見つからない')
-        self.client.get("/failuer_reports/" + str(info.pk) + "/del/")
+        response = self.client.get("/failuer_reports/" + str(info.pk) + "/del/")
+        self.assertRedirects(response, reverse('failuer_report_list') , status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+
         try:
             info = FailuerReport.objects.get(title='タイトル')
         except:
             return None
         self.fail('ないはずのmockInfoが見つかった')
 
-class AddReportAttachmentTest(TestCase):
+class AddReportFailRepoFileTest(TestCase):
     def setUp(self) -> None:
         loginTestAccount(self)
         addMockFailuereReports(self)
@@ -105,15 +107,15 @@ class AddReportAttachmentTest(TestCase):
         except:
             self.fail('あるはずのmockReportsが見つからない')
         if not os.path.isfile("abc.jpg"):
-            self.fail('mockReportAttachmentsファイル(abc.jpg)が見つからない')
-        self.info_attach = FailuerReportAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+            self.fail('mockReportFailRepoFilesファイル(abc.jpg)が見つからない')
+        self.info_attach = FailRepoFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
     def tearDown(self) -> None:
         os.remove('abc.jpg')
         os.remove('abc.png')
         return super().tearDown()
     def test_create_report_attachment(self):
         self.assertTrue(os.path.isfile(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
-        self.info_attach.attachment = File(open('abc.png','rb'))
+        self.info_attach.file = File(open('abc.png','rb'))
         self.info_attach.save()
         self.assertFalse(os.path.isfile(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         os.remove(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.png")

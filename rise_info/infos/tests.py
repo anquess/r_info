@@ -1,12 +1,12 @@
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from django.core.files.base import File
 
 import os
 import shutil
 
 from infos.views import info_edit
-from infos.models import Info, InfoAttachmentFile
+from infos.models import Info, InfoFile
 from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
@@ -14,8 +14,8 @@ def addMockInfo(testCase) -> None:
     data = {
         'title': 'タイトル',
         'sammary': '概要',
-        'infoattachmentfile_set-TOTAL_FORMS': 1,
-        'infoattachmentfile_set-INITIAL_FORMS': 0,
+        'infofile_set-TOTAL_FORMS': 1,
+        'infofile_set-INITIAL_FORMS': 0,
         }
     testCase.response = testCase.client.post("/infos/new/", data)
     
@@ -93,14 +93,15 @@ class InfoDelTest(TestCase):
             info = Info.objects.get(title='タイトル')
         except:
             self.fail('あるはずのmockInfoが見つからない')
-        self.client.get("/infos/" + str(info.pk) + "/del/")
+        response = self.client.get("/infos/" + str(info.pk) + "/del/")
+        self.assertRedirects(response, reverse('info_list') , status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
         try:
             info = Info.objects.get(title='タイトル')
         except:
             return None
         self.fail('ないはずのmockInfoが見つかった')
 
-class AddInfoAttachmentTest(TestCase):
+class AddInfoInfoFileTest(TestCase):
     def setUp(self) -> None:
         login(self)
         addMockInfo(self)
@@ -111,8 +112,8 @@ class AddInfoAttachmentTest(TestCase):
         except:
             self.fail('あるはずのmockInfoが見つからない')
         if not os.path.isfile("abc.jpg"):
-            self.fail('mockInfoAttachmentsファイル(abc.jpg)が見つからない')
-        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+            self.fail('mockInfoInfoFilesファイル(abc.jpg)が見つからない')
+        self.info_attach = InfoFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
 
     def tearDown(self) -> None:
         os.remove('abc.jpg')
@@ -127,7 +128,7 @@ class AddInfoAttachmentTest(TestCase):
 
     def test_create_info_attachment(self):
         self.assertTrue(os.path.isfile(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
-        self.info_attach.attachment = File(open('abc.png','rb'))
+        self.info_attach.file = File(open('abc.png','rb'))
         self.info_attach.save()
         self.assertFalse(os.path.isfile(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         os.remove(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.png")
