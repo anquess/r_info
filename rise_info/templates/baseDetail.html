@@ -19,6 +19,9 @@
             {{ info.content | linebreaksbr }}
         {% endif %}
     </div></div>
+    {% for file in files %}
+    <a href="/media/{{ file.attachment }}">{{ file.attachment.name }}</a>
+    {% endfor %}
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>
         <div class="col-3">作成者:{{ info.created_by }}</div>
@@ -29,6 +32,6 @@
 </div>
 {% endblock %}
 {% block add_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script src="/static/highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
