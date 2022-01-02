@@ -65,13 +65,15 @@ class BaseAttachment(models.Model):
     objects = BaseManager()
     upload_path = ''
     info = models.ForeignKey(CommonInfo , on_delete=models.CASCADE)
-    file = models.FileField(verbose_name='ファイル名', upload_to=file_upload_path)
+    file = models.FileField(verbose_name='ファイル', upload_to=file_upload_path)
+    filename = models.CharField(verbose_name='ファイル名', default="", null=True, blank=True, max_length=64)
     class Meta:
         abstract= True
 
     def save(self, *args, **kwargs):
         if self.id is None:
             upload_file = self.file
+            self.filename = str(self.file)
             self.file = None
             super().save(*args, **kwargs)
             self.file = upload_file
@@ -79,9 +81,11 @@ class BaseAttachment(models.Model):
                 kwargs.pop("force_insert")
         self.file_delete()
         super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         self.file_delete()
         super().delete(*args, **kwargs)
+
     def file_delete(self) -> None:
         if os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
             shutil.rmtree(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
