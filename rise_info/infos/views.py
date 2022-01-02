@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 
-from infos.models import Info
-from infos.forms import InfoForm
+from infos.models import Info, InfoAttachmentFile
+from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 
 @login_required
@@ -12,25 +12,6 @@ def info_list(request):
     context = {'infos':infos}
     context = addTmcAuth(context, request.user)
     return render(request, "infos/list.html", context)    
-
-@login_required
-def info_new(request):
-    if isInTmcGroup(request.user):
-        if request.method == 'POST':
-            form = InfoForm(request.POST)
-            if form.is_valid():
-                info = form.save(commit=False)
-                info.created_by = request.user
-                info.save()
-                return redirect('info_list')
-            else:
-                raise Http404(form.errors)
-        else:
-            form = InfoForm()
-            context = addTmcAuth({'form': form}, request.user)
-        return render(request, "infos/new.html", context)
-    else:
-        raise Http404("この権限では登録は許可されていません。")
 
 @login_required
 def info_edit(request, info_id):
@@ -55,9 +36,11 @@ def info_edit(request, info_id):
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
+    files = InfoAttachmentFile.objects.filter(info=info)
     if info:
         context ={
             'info': info,
+            'files': files,
         }
         context = addTmcAuth(context, request.user)
         return render(request, 'infos/detail.html', context)
@@ -74,5 +57,25 @@ def info_del(request, info_id):
             return redirect('info_list')
         else:
             raise Http404('該当Infoは既に削除されてありません。')
+    else:
+        raise Http404("この権限では編集は許可されていません。")
+
+@login_required
+def info_new(request):
+    if isInTmcGroup(request.user):
+        form = InfoForm(request.POST or None)
+        context = addTmcAuth({'form': form}, request.user)
+        if request.method == "POST" and form.is_valid():
+            info = form.save(commit=False)
+            formset = FileFormSet(request.POST, request.FILES, instance=info)
+            if formset.is_valid():
+                info.save()
+                formset.save()
+                return redirect('info_list')
+            else:
+                context['formset'] = formset
+        else:
+            context['formset'] = FileFormSet()
+        return render(request, "infos/new.html", context)
     else:
         raise Http404("この権限では編集は許可されていません。")

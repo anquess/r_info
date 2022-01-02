@@ -11,7 +11,12 @@ from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
     testCase.client.force_login(testCase.user)
-    data = {'title': 'タイトル', 'sammary': '概要'}
+    data = {
+        'title': 'タイトル',
+        'sammary': '概要',
+        'infoattachmentfile_set-TOTAL_FORMS': 1,
+        'infoattachmentfile_set-INITIAL_FORMS': 0,
+        }
     testCase.response = testCase.client.post("/infos/new/", data)
     
 class InfoListTest(TestCase):
@@ -107,19 +112,20 @@ class AddInfoAttachmentTest(TestCase):
             self.fail('あるはずのmockInfoが見つからない')
         if not os.path.isfile("abc.jpg"):
             self.fail('mockInfoAttachmentsファイル(abc.jpg)が見つからない')
+        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
+
     def tearDown(self) -> None:
         os.remove('abc.jpg')
         os.remove('abc.png')
         return super().tearDown()
     def test_delete_info_attachment(self):
-        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
         info_pk = self.info.pk
         attach_pk = self.info_attach.pk
         self.info_attach.delete()
         self.info_attach.save()
         self.assertFalse(os.path.isfile(f"uploads/info/{str(info_pk)}/{str(attach_pk)}/abc.jpg"))
+
     def test_create_info_attachment(self):
-        self.info_attach = InfoAttachmentFile.objects.create(info=self.info, attachment=File(open('abc.jpg','rb')))
         self.assertTrue(os.path.isfile(f"uploads/info/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         self.info_attach.attachment = File(open('abc.png','rb'))
         self.info_attach.save()

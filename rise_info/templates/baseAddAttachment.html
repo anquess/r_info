@@ -1,0 +1,9 @@
+<h2>添付ファイル</h2>
+{{ formset.management_form }}
+<div id="file-area">
+{% for file_form in formset %}
+    {{ file_form.as_p }}
+    <hr>
+{% endfor %}
+</div>
+<button id="add" type="button" class="btn btn-primary">ファイルの追加</button></br>
