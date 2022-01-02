@@ -1,8 +1,5 @@
 from django.db import models
 
-import os
-import shutil
-
 from rise_info.baseModels import CommonInfo, Attachment, file_upload_path
 
 class Info(CommonInfo):
