@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import FailuerReport
+from .models import FailuerReport, AttachmentFile
 
 class FailuerReportForm(forms.ModelForm):
     class Meta:
@@ -15,3 +15,6 @@ class FailuerReportForm(forms.ModelForm):
             'is_flight_impact',
             'flight_impact',
              )
+FileFormSet = forms.inlineformset_factory(
+    FailuerReport, AttachmentFile, fields='__all__', extra=1,
+)

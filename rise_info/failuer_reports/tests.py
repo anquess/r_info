@@ -10,7 +10,12 @@ import shutil
 import os
 
 def addMockFailuereReports(testCase) -> None:
-    data = {'title': 'タイトル', 'sammary': '概要'}
+    data = {
+        'title': 'タイトル',
+        'sammary': '概要',
+        'attachmentfile_set-TOTAL_FORMS': 1,
+        'attachmentfile_set-INITIAL_FORMS': 0,
+        }
     testCase.response = testCase.client.post("/failuer_reports/new/", data)
 
 def detail_and_edit_common_setUp(testCase, isEdit:bool):
