@@ -5,6 +5,8 @@
     <div class="row pb-2">
     <div class="col-5">
         <input class="form-control" type="file" name="attachmentfile_set-{{ forloop.counter0 }}-file" id="id_attachmentfile_set-{{ forloop.counter0 }}-file" >
+        {{ file_form.info }}
+        {{ file_form.id }}
     </div>
     <div class="col-5">
         <a href="/media/{{ file_form.file.value }}">{{ file_form.filename.value }}</a>
