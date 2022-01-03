@@ -6,7 +6,7 @@ import os
 import shutil
 
 from infos.views import info_edit
-from infos.models import Info, InfoFile
+from infos.models import Info, AttachmentFile
 from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
@@ -14,8 +14,8 @@ def addMockInfo(testCase) -> None:
     data = {
         'title': 'タイトル',
         'sammary': '概要',
-        'infofile_set-TOTAL_FORMS': 1,
-        'infofile_set-INITIAL_FORMS': 0,
+        'attachmentfile_set-TOTAL_FORMS': 1,
+        'attachmentfile_set-INITIAL_FORMS': 0,
         }
     testCase.response = testCase.client.post("/infos/new/", data)
     
@@ -101,7 +101,7 @@ class InfoDelTest(TestCase):
             return None
         self.fail('ないはずのmockInfoが見つかった')
 
-class AddInfoInfoFileTest(TestCase):
+class AddInfoAttachmentFileTest(TestCase):
     def setUp(self) -> None:
         login(self)
         addMockInfo(self)
@@ -112,8 +112,8 @@ class AddInfoInfoFileTest(TestCase):
         except:
             self.fail('あるはずのmockInfoが見つからない')
         if not os.path.isfile("abc.jpg"):
-            self.fail('mockInfoInfoFilesファイル(abc.jpg)が見つからない')
-        self.info_attach = InfoFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
+            self.fail('mockInfoAttachmentFilesファイル(abc.jpg)が見つからない')
+        self.info_attach = AttachmentFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
 
     def tearDown(self) -> None:
         os.remove('abc.jpg')

@@ -4,14 +4,14 @@
 {% for file_form in formset %}
     <div class="row pb-2">
     <div class="col-5">
-        <input class="form-control" type="file" name="{{ model_name }}_set-{{ forloop.counter0 }}-file" id="id_{{ model_name }}_set-{{ forloop.counter0 }}-file" files="{{ file_form.file.value }}">
+        <input class="form-control" type="file" name="attachmentfile_set-{{ forloop.counter0 }}-file" id="id_attachmentfile_set-{{ forloop.counter0 }}-file" >
     </div>
     <div class="col-5">
         <a href="/media/{{ file_form.file.value }}">{{ file_form.filename.value }}</a>
     </div>
     <div class="col-2">
-        <input class="form-check-input" type="checkbox" name="{{ model_name }}_set-{{ forloop.counter0 }}-DELETE" id="id_{{ model_name }}_set-{{ forloop.counter0 }}-DELETE">
-        <label class="form-check-label" for="id_{{ model_name }}_set-{{ forloop.counter0 }}-DELETE">削除</label>
+        <input class="form-check-input" type="checkbox" name="attachmentfile_set-{{ forloop.counter0 }}-DELETE" id="id_attachmentfile_set-{{ forloop.counter0 }}-DELETE">
+        <label class="form-check-label" for="id_attachmentfile_set-{{ forloop.counter0 }}-DELETE">削除</label>
     </div>
     </div>
 {% endfor %}

@@ -11,8 +11,8 @@ class Info(CommonInfo):
     class Meta:
         db_table = 'infos'
 
-class InfoFile(BaseAttachment):
+class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(Info , on_delete=models.CASCADE)
     upload_path = 'info'
     class Meta:
-        db_table = 'info_attachments'
+        db_table = 'info_attachment'

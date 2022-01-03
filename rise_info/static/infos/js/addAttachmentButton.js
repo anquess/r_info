@@ -1,6 +1,5 @@
-<script>
 $(function(){
-    var totalManageElement = $('input#id_{{ model_name }}_set-TOTAL_FORMS');
+    var totalManageElement = $('input#id_attachmentfile_set-TOTAL_FORMS');
     var currentFileCount = parseInt(totalManageElement.val());
     $('button#add').on('click', function(){
         var rowElement = $('<div>', {
@@ -18,18 +17,18 @@ $(function(){
         var fileElement = $('<input>', {
             class: 'form-control',
             type: 'file',
-            name: '{{ model_name }}_set-' + currentFileCount + '-file',
-            id: 'id_{{ model_name }}_set-' + currentFileCount + '-file',
+            name: 'attachmentfile_set-' + currentFileCount + '-file',
+            id: 'id_attachmentfile_set-' + currentFileCount + '-file',
         });
         var delElement = $('<input>', {
             class: 'form-check-input',
             type: 'checkbox',
-            name: '{{ model_name }}_set-' + currentFileCount + '-DELETE',
-            id: 'id_{{ model_name }}_set-' + currentFileCount + '-DELETE',
+            name: 'attachmentfile_set-' + currentFileCount + '-DELETE',
+            id: 'id_attachmentfile_set-' + currentFileCount + '-DELETE',
         });
         var delLabelElement = $('<label>', {
             class: 'form-check-label',
-            for: 'id_{{ model_name }}_set-' + currentFileCount + '-DELETE',
+            for: 'id_attachmentfile_set-' + currentFileCount + '-DELETE',
         });
         delLabelElement.text("削除")
         col5_1Element.append(fileElement);
@@ -42,4 +41,3 @@ $(function(){
         totalManageElement.attr('value', currentFileCount);
     });
 });
-</script>

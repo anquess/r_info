@@ -15,8 +15,8 @@ class FailuerReport(CommonInfo):
     class Meta:
         db_table = 'failuer_reports'
 
-class FailRepoFile(BaseAttachment):
+class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(FailuerReport , on_delete=models.CASCADE)
     upload_path = 'fail_rep'
     class Meta:
-        db_table = 'fail_report_attachments'
+        db_table = 'failuer_report_attachments'

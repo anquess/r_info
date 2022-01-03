@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from django.core.files.base import File
 
-from .models import FailuerReport, FailRepoFile
+from .models import FailuerReport, AttachmentFile
 from .views import failuer_report_edit
 from accounts.tests import loginTestAccount
 
@@ -96,7 +96,7 @@ class InfoDelTest(TestCase):
             return None
         self.fail('ないはずのmockInfoが見つかった')
 
-class AddReportFailRepoFileTest(TestCase):
+class AddReportAttachmentFileTest(TestCase):
     def setUp(self) -> None:
         loginTestAccount(self)
         addMockFailuereReports(self)
@@ -107,8 +107,8 @@ class AddReportFailRepoFileTest(TestCase):
         except:
             self.fail('あるはずのmockReportsが見つからない')
         if not os.path.isfile("abc.jpg"):
-            self.fail('mockReportFailRepoFilesファイル(abc.jpg)が見つからない')
-        self.info_attach = FailRepoFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
+            self.fail('mockReportAttachmentFilesファイル(abc.jpg)が見つからない')
+        self.info_attach = AttachmentFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
     def tearDown(self) -> None:
         os.remove('abc.jpg')
         os.remove('abc.png')
