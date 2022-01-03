@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-from infos.models import Info, InfoFile
+from infos.models import Info, AttachmentFile
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 
@@ -16,7 +17,7 @@ def info_list(request):
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
-    files = InfoFile.objects.filter(info=info)
+    files = AttachmentFile.objects.filter(info=info)
     if info:
         context ={
             'info': info,
@@ -25,7 +26,8 @@ def info_detail(request, info_id):
         context = addTmcAuth(context, request.user)
         return render(request, 'infos/detail.html', context)
     else:
-        raise Http404('該当Infoはありません。')
+        messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+        return redirect('info_list')
 
 @login_required
 def info_del(request, info_id):
@@ -34,11 +36,14 @@ def info_del(request, info_id):
         if info:
             title = info.title
             info.delete()
+            messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
             return redirect('info_list')
         else:
-            raise Http404('該当Infoは既に削除されてありません。')
+            messages.add_message(request, messages.WARNING, '該当Infoは既に削除されてありません。')
+            return redirect('info_list')
     else:
-        raise Http404("この権限では編集は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('info_list')
 
 @login_required
 def info_edit(request, info_id):
@@ -49,13 +54,11 @@ def info_edit(request, info_id):
             formset = FileFormSet(request.POST or None, files=request.FILES or None, instance=info)
             if (request.method == "POST" and form.is_valid()) :
                     if (request.FILES or None) is not None:
-                        if not formset.is_valid():
-                            return Http404(request.FILES)
-                        form.save()
-                        formset.save()
-                        return redirect('info_list')
-                        
-
+                        if formset.is_valid():
+                            form.save()
+                            formset.save()
+                            messages.add_message(request, messages.INFO, '更新されました。')
+                            return redirect('info_list')
             context = addTmcAuth({
                 'form': form,
                 'formset': formset,
@@ -63,7 +66,8 @@ def info_edit(request, info_id):
                  request.user)
             return render(request, 'infos/edit.html', context)
     else:
-        raise Http404("この権限では編集は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('info_list')
     
 
 @login_required
@@ -77,12 +81,13 @@ def info_new(request):
             if formset.is_valid():
                 info.save()
                 formset.save()
+                messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('info_list')
             else:
                 context['formset'] = formset
         else:
             context['formset'] = FileFormSet()
-            context['model_name'] = 'infofile'
         return render(request, "infos/new.html", context)
     else:
-        raise Http404("この権限では編集は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('info_list')

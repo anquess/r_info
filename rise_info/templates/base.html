@@ -48,13 +48,17 @@
 </nav></div>
 <main>
     <div class="container-fluid">
-        {% if msg %}
-            <div class="card"><div class="card-body">
-                <h5 class="card-title">メッセージ</h5>
-                <p class="card-text">{{ msg }}</p>
-            </div></div>
-            
-        {% endif %}
+        {% for message in messages %}
+        <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% for message in form.errors %}
+        <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+        </div>
+        {% endfor %}
+
         {% block main %}{% endblock %}
     </div>
 </main>

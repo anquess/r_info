@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+from django.contrib import messages
+
 import os
 from pathlib import Path
 
@@ -147,6 +149,15 @@ APPEND_SLASH = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+# MESSAGE TAG 実践Django Pythonによる本格Webアプリケーション開発9.2 p257
+MESSAGE_TAGS ={
+    messages.INFO: 'alert alert-info',
+    messages.SUCCESS: 'alert alert-success',
+    messages.WARNING: 'alert alert-warning',
+    messages.ERROR: 'alert alert-danger',
+}
+
 
 STATIC_URL = '/static/'
 
