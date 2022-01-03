@@ -19,6 +19,7 @@
     <table class="table">
         <thead>
         <tr>
+            <th>情報種別</th>
             <th>タイトル</th>
             <th>概要</th>
             <th>投稿日</th>
@@ -28,6 +29,7 @@
         <tbody>
         {% for info in infos %}
         <tr>
+            <th>{{ info.get_info_type_display }}</th>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary | linebreaksbr}}</th>
             <th>{{ info.created_at }}</th>

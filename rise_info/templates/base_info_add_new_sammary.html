@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-3">
+    <label for="id_info_type" class="form-label">情報種別</label>
+    <select class="form-select" aria-label="情報種別" name="info_type" id="id_info_type">
+        {% for value, displayable in form.fields.info_type.choices %}
+            <option value="{{ value }}">{{ displayable }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="col-9">
+        <label for="id_managerID" class="form-label">管理番号</label>
+        <input type="text" class="form-control" name="managerID" value="TMC-解析-" maxlength="32" required="" id="id_managerID">
+    </div>
+</div>
+{% include "baseAddAttachment.html" %}
+<label for="id_sammary" class="form-label">概要</label>
+<textarea name="sammary" class="form-control" cols="40" rows="3" maxlength="512" id="id_sammary">{{ form.sammary.value }}</textarea>

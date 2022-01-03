@@ -2,7 +2,16 @@ from django.db import models
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path
 
+class InfoTypeChoices(models.TextChoices):
+    TECHINICAL = 'technical', '信頼性技術情報'
+    FAILURE_CASE = 'failure_case', '障害事例情報'
+    SAFETY = 'safety', '安全情報'
+    EVENT = 'event', 'イベント情報'
+
+
 class Info(CommonInfo):
+    info_type = models.CharField(verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices, default=InfoTypeChoices.TECHINICAL, null=False, blank=False)
+    managerID = models.CharField(verbose_name='管理番号', default="TMC-解析-", null=False, blank=False, max_length=32)
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
 
     def save(self, *args, **kwargs):

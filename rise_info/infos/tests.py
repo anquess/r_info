@@ -6,13 +6,15 @@ import os
 import shutil
 
 from infos.views import info_edit
-from infos.models import Info, AttachmentFile
+from infos.models import Info, AttachmentFile, InfoTypeChoices
 from accounts.tests import login
 
 def addMockInfo(testCase) -> None:
     testCase.client.force_login(testCase.user)
     data = {
         'title': 'タイトル',
+        'info_type': InfoTypeChoices.TECHINICAL,
+        'managerID' : 'test-00',
         'sammary': '概要',
         'attachmentfile_set-TOTAL_FORMS': 1,
         'attachmentfile_set-INITIAL_FORMS': 0,
