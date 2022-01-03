@@ -41,3 +41,25 @@ $(function(){
         totalManageElement.attr('value', currentFileCount);
     });
 });
+
+function setUpElement(id){
+	var elment = document.getElementById(id);
+	elment.disabled = false;
+	elment.hidden = false;
+	return elment;
+}
+function tearDownElement(elment){
+	elment.disabled = true;
+	elment.hidden = true;
+}
+function copy(id) {
+	var copyText = setUpElement(id);
+	copyText.select();
+	document.execCommand("copy");
+	tearDownElement(copyText);
+}
+function change(id) {
+	var buttton = setUpElement(id);
+	buttton.disabled = true;
+	buttton.hidden = true;
+}
