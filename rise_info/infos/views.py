@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
 from django.shortcuts import render, redirect
 
 from infos.models import Info, AttachmentFile
@@ -54,11 +53,18 @@ def info_edit(request, info_id):
             formset = FileFormSet(request.POST or None, files=request.FILES or None, instance=info)
             if (request.method == "POST" and form.is_valid()) :
                     if (request.FILES or None) is not None:
-                        if formset.is_valid():
-                            form.save()
-                            formset.save()
-                            messages.add_message(request, messages.INFO, '更新されました。')
-                            return redirect('info_list')
+                        if not formset.is_valid():
+                            context=addTmcAuth({
+                                'form': form,
+                                'formset': formset,
+                            },request.user)
+                            for ele in formset:
+                                messages.add_message(request, messages.WARNING, str(ele))
+                            return render(request, 'infos/edit.html', context)
+                    form.save()
+                    formset.save()
+                    messages.add_message(request, messages.INFO, '更新されました。')
+                    return redirect('info_list')
             context = addTmcAuth({
                 'form': form,
                 'formset': formset,
