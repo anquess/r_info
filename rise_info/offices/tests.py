@@ -25,7 +25,7 @@ class OfficeListTest(TestCase):
 
     def test_office_list_return_200_and_expected_title(self) -> None:
         response = self.client.get("/offices/")
-        self.assertContains(response,"ファイルをアップロード" , status_code=200)    
+        self.assertContains(response,"官署・アカウント一括更新" , status_code=200)    
 
     def test_info_list_uses_expected_template(self):
         response = self.client.get("/offices/")
