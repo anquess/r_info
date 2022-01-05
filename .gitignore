@@ -10,6 +10,7 @@ db.sqlite3
 uploads
 rise_info/static/admin
 rise_info/static/bootstrap5
+rise_info/static/bootstrap-datepicker
 rise_info/static/bootstrap-maxlength
 rise_info/static/highlight
 rise_info/static/jquery

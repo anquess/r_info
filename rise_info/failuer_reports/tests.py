@@ -15,6 +15,8 @@ def addMockFailuereReports(testCase) -> None:
         'sammary': '概要',
         'attachmentfile_set-TOTAL_FORMS': 1,
         'attachmentfile_set-INITIAL_FORMS': 0,
+        'circumstances_set-TOTAL_FORMS': 1,
+        'circumstances_set-INITIAL_FORMS': 0,
         }
     testCase.response = testCase.client.post("/failuer_reports/new/", data)
 

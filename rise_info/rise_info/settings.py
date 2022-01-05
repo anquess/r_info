@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'pygments_renderer',
     'django_extensions',
+    'bootstrap_datepicker_plus',
 
     # APPS
     'accounts.apps.AccountsConfig',
