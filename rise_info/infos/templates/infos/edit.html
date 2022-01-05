@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block sammary %}
+{% include "baseAddAttachment.html" %}
 {% include "base_info_add_new_sammary.html" %}
 {% endblock %}
 {% block btn %}
@@ -13,4 +14,8 @@
 
 {% block add_js %}
 <script src="/static/infos/js/addAttachmentButton.js"></script>
+<script>
+$(document).ready(setMaxlength('#id_managerID'));
+$(document).ready(setMaxlength('#id_sammary'));
+</script>
 {% endblock %}
