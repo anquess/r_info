@@ -1,33 +1,28 @@
 from django import forms
+from django.forms import widgets
 
-from infos.models import Info, AttachmentFile, InfoTypeChoices
+from infos.models import Info, AttachmentFile
+from rise_info.baseForms import MetaCommonInfo
 
-#class InfoForm(forms.Form):
-#    title = forms.CharField(label='タイトル', required=True, max_length=128)
-#    info_type = forms.fields.ChoiceField(
-#        label='情報種別',
-#        choices=InfoTypeChoices,
-#    )
-#    managerID = forms.CharField(label='管理番号', initial='TMC-解析-', required=True, max_length=16)
-#    sammary = forms.CharField(widget=forms.Textarea(attrs={'cols': '80', 'rows': '10'}), label='概要', max_length=512)
-#    is_rich_text = forms.BooleanField(help_text='MD形式ならTrue', initial=False)
-#    content = forms.CharField(widget=forms.Textarea(attrs={'cols': '80', 'rows': '10'}),label='詳細')
-#    def save(self):
-#        data = self.cleaned_data
-#        info = Info(
-#            title=data['title'],
-#            info_type=data['info_type'],
-#            managerID=data['managerID'],
-#            sammary=data['sammary'],
-#            is_rich_text=data['is_rich_text'],
-#            content=data['content'],
-#        )
-#        info.save()
 class InfoForm(forms.ModelForm):
-    class Meta:
+    class Meta(MetaCommonInfo):
         model = Info
-        fields = ('title','info_type', 'managerID', 'sammary', 'is_rich_text', 'content')
-
+        fields = MetaCommonInfo.fields + ('info_type', 'managerID', 'sammary', 'is_rich_text')
+        widgets = {**MetaCommonInfo.widgets, **{
+            'info_type': forms.widgets.Select(attrs={
+                "class": "form-select",
+            }),
+            'managerID': forms.TextInput(attrs={
+                "class": "form-control",
+            }),
+            'sammary': forms.Textarea(attrs={
+                "class": "form-control",
+                "rows":"3",
+            }),
+            'is_rich_text': forms.CheckboxInput(attrs={
+                'onclick': 'simplemde = makeSimplemde(this.checked)',
+            }),
+        }}
 FileFormSet = forms.inlineformset_factory(
     Info, AttachmentFile, fields='__all__', extra=1,
 )

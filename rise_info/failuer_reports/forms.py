@@ -1,15 +1,13 @@
 from django import forms
 
 from .models import FailuerReport, AttachmentFile
+from rise_info.baseForms import MetaCommonInfo
 
 class FailuerReportForm(forms.ModelForm):
-    class Meta:
+    class Meta(MetaCommonInfo):
         model = FailuerReport
-        fields = (
-            'title',
+        fields = MetaCommonInfo.fields + (
             'sammary',
-            'is_rich_text',
-            'content', 
             'is_operatinal_impact',
             'operatinal_impact',
             'is_flight_impact',
