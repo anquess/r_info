@@ -11,6 +11,7 @@ class InfoTypeChoices(models.TextChoices):
 
 class Info(CommonInfo):
     info_type = models.CharField(verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices, default=InfoTypeChoices.TECHINICAL, null=False, blank=False)
+    is_rich_text = models.BooleanField(verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
     managerID = models.CharField(verbose_name='管理番号', default="TMC-解析-", null=False, blank=False, max_length=32)
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
 
