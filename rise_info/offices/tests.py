@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from datetime import datetime as dt
 import pytz
+import shutil
+import os
 
 from accounts.tests import login
 from .models import Office, offices_csv_import
@@ -45,6 +47,14 @@ class OfficeDelTest(TestCase):
 
 @tag('slowTest')
 class OfficeCsvImportTest(TestCase):
+    def setUp(self) -> None:
+        shutil.copy2('uploads/documents/Offices.csv', 'uploads/documents/Offices_test.csv')
+        shutil.copy2('test_data/Offices.csv','uploads/documents/Offices.csv')
+
+    def tearDown(self) -> None:
+        shutil.copy2('uploads/documents/Offices_test.csv','uploads/documents/Offices.csv')
+        os.remove('uploads/documents/Offices_test.csv')
+
     def test_csv_import_test(self):
         self.assertEqual(getLastUpdateAt('office'), mock_update_at)
         self.assertEqual(Office.objects.all().count(), 0)
