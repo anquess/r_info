@@ -9,12 +9,6 @@ import os
 import shutil
 import markdown
 
-def csvFormatCheck(csvRow, checkLists) -> bool:
-    for check in checkLists:
-        if not check in csvRow:
-            raise Http404('CSVデータに項目%sがありません' % check)
-    return True
-
 def getSysupdtime(row) -> dt:
     if row['DATASHUSEI_DATE']:
         sysupdtime = dt.strptime(row['DATASHUSEI_DATE'], '%Y/%m/%d %H:%M:%S')

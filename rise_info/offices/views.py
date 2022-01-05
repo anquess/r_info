@@ -7,6 +7,7 @@ import sys
 from .forms import UploadFileForm
 from .models import Office, offices_csv_import
 from accounts.views import isInTmcGroup, addTmcAuth
+from histories.models import getLastUpdateAt
 
 @login_required
 def office_del(request, office_id):
@@ -38,7 +39,8 @@ def file_upload(request):
         else:
             offices = Office.objects.all()
             form = UploadFileForm()
-        context = addTmcAuth({'form': form, 'offices': offices }, request.user)
+            last_update_at = getLastUpdateAt('office')
+        context = addTmcAuth({'form': form, 'offices': offices, 'last_update_at': last_update_at, }, request.user)
         return render(request, 'offices/upload.html', context)
     else:
         raise Http404("この権限では許可されていません。")

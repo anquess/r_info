@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.db.models import Max
 
-from rise_info.baseModels import BaseManager, csvFormatCheck, getSysupdtime
+from rise_info.baseModels import BaseManager, getSysupdtime
 from histories.models import getLastUpdateAt, setLastUpdateAt
 from accounts.models import createUser
 
@@ -18,22 +18,10 @@ def isImportRow(row) -> bool:
             and getSysupdtime(row) > getLastUpdateAt('office') \
         )
 
-def formatCheck(offices) -> bool:
-    return csvFormatCheck(
-        offices, (
-            'KANSHO_CD',
-            'KANSHO_NM',
-            'KANSHO_SNM',
-            'DATASHUSEI_DATE',
-            'SYSUPDTIME',
-            )
-        )
-
 def offices_csv_import():
     with open('uploads/documents/Offices.csv', 'rt', encoding='cp932') as f:
         reader = csv.DictReader(f)
         offices = [ row for row in reader ]
-    if formatCheck(offices[0]):
         for row in offices:
             sysupdtime = getSysupdtime(row)
             if isImportRow(row):
