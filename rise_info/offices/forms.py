@@ -1,4 +1,5 @@
 from django import forms
+from django.http import Http404
 
 import csv
 
@@ -30,6 +31,10 @@ class UploadFileForm(forms.Form):
     def clean_file(self):
         file = self.cleaned_data['file']
         with open('uploads/documents/Offices.csv', 'rt', encoding='cp932') as f:
-            reader = csv.DictReader(f)
-            formatCheck(reader[0])
+            reader = csv.reader(f)
+            header = reader.__next__()
+            try:
+                formatCheck(header)
+            except Exception as e:
+                raise Http404(e, str(header))
         return file
