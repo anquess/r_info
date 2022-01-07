@@ -6,6 +6,22 @@
         {{ info.sammary | linebreaksbr }}
     </div></div>
     <div class="card"><div class="card-body">
+        <h5 class="card-title">経緯</h5>
+        {%for event in events%}
+            <div class="row">
+                <div class="col-2">
+                    {%if event.date%}{{event.date}}{%endif%}
+                </div>
+                <div class="col-1">
+                    {%if event.time%}{{event.time}}{%endif%}
+                </div>
+                <div class="col-9">
+                    {{event.event|linebreaksbr}}
+                </div>
+            </div>
+        {%endfor%}
+    </div></div>
+    <div class="card"><div class="card-body">
         <h5 class="card-title">運用への影響</h5>
         <p class="card-text">{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}</p>
         <p class="card-text">{{ info.operatinal_impact }}</p>

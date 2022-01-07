@@ -1,6 +1,6 @@
 from django.db import models
 
-from rise_info.baseModels import BaseManager, CommonInfo, BaseAttachment, file_upload_path
+from rise_info.baseModels import CommonInfo, BaseAttachment
 
 class FailuerReport(CommonInfo):
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
@@ -22,8 +22,9 @@ class AttachmentFile(BaseAttachment):
         db_table = 'failuer_report_attachments'
 
 class Circumstances(models.Model):
-    object = BaseManager()
     info = models.ForeignKey(FailuerReport , on_delete=models.CASCADE)
     date = models.DateField(verbose_name='日付', null=True, blank=True)
     time = models.TimeField(verbose_name='時間', null=True, blank=True)
     event = models.TextField(verbose_name='事案', max_length=256)
+    class Meta:
+        db_table = 'circumstance'

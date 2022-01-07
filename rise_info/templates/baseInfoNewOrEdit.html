@@ -26,8 +26,15 @@
 {% block add_js %}
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-<script src="/static/infos/js/addMaxLength.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script>
+function setMaxlength (id){
+    $(id).maxlength({
+        alwaysShow: true,
+        warningClass: "label label-success",
+        limitReachedClass: "label label-danger"
+    });
+}
     $(document).ready(setMaxlength('#id_title'));
     $(document).ready(setMaxlength('#id_content'));
 </script>

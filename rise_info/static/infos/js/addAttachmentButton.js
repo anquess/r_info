@@ -8,9 +8,6 @@ $(function(){
         var col5_1Element =$('<div>', {
             class: 'col-5',
         }); 
-        var col5_2Element =$('<div>', {
-            class: 'col-5',
-        }); 
         var col2Element =$('<div>', {
             class: 'col-2',
         });
@@ -41,6 +38,71 @@ $(function(){
         totalManageElement.attr('value', currentFileCount);
     });
 });
+
+$(function(){
+    var totalManageElement = $('input#id_circumstances_set-TOTAL_FORMS');
+    var currentEventCount = parseInt(totalManageElement.val());
+    $('button#add_event').on('click', function(){
+        var currentEventDate = $('input#id_circumstances_set-' + (currentEventCount -1) + '-date').val();
+        var currentEventTime = $('input#id_circumstances_set-' + (currentEventCount -1) + '-time').val();
+        var rowElement = $('<div>', {
+            class: 'row',
+        });
+        var col2_date_Element =$('<div>', {
+            class: 'col-2',
+        }); 
+        var col2_time_Element =$('<div>', {
+            class: 'col-2',
+        }); 
+        var col7_Element =$('<div>', {
+            class: 'col-7',
+        });
+        var col1_Element =$('<div>', {
+            class: 'col-1',
+        });
+        var dateElement = $('<input>', {
+            class: 'form-control',
+            type: 'text',
+            onclick: "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
+            id: 'id_circumstances_set-' + currentEventCount + '-date',
+            value: currentEventDate,
+        });
+        var timeElement = $('<input>', {
+            class: 'form-control',
+            type: 'text',
+            name: 'circumstances_set-' + currentEventCount + '-time',
+            id: 'id_circumstances_set-' + currentEventCount + '-time',
+            value: currentEventTime,
+        });
+        var eventElement = $('<textarea>', {
+            class: 'form-control',
+            type: 'text',
+            name: 'circumstances_set-' + currentEventCount + '-event',
+            id: 'id_circumstances_set-' + currentEventCount + '-event',
+            cols: '40',
+            rows: '2',
+        });
+        var delElement = $('<input>', {
+            class: 'form-check-input',
+            type: 'checkbox',
+            name: 'circumstances_set-' + currentEventCount + '-DELETE',
+            id: 'id_circumstances_set-' + currentEventCount + '-DELETE',
+        });
+        col2_date_Element.append(dateElement);
+        col2_time_Element.append(timeElement);
+        col7_Element.append(eventElement);
+        col1_Element.append(delElement);
+        rowElement.append(col2_date_Element);
+        rowElement.append(col2_time_Element);
+        rowElement.append(col7_Element);
+        rowElement.append(col1_Element);
+        $('div#event-area').append(rowElement);
+        currentEventCount += 1;
+        totalManageElement.attr('value', currentEventCount);
+        
+    });
+});
+
 
 function setUpElement(id){
 	var elment = document.getElementById(id);
