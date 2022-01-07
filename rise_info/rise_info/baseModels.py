@@ -72,9 +72,8 @@ class BaseAttachment(models.Model):
             self.file = upload_file
             if "force_insert" in kwargs:
                 kwargs.pop("force_insert")
-        else:
-            if not os.path.isfile(f'f"uploads/info/{str(self.id)}/{str(self.info)}/abc.jpg"'):
-                self.file_delete()
+        elif not os.path.isfile(f'uploads/{str(self.file)}'):
+            self.file_delete()
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
