@@ -38,6 +38,6 @@
     <th><a class="btn btn-primary" href="{% url 'failuer_report_list' %}">戻る</a></th>
     {% if user == info.created_by %}
         <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">編集</a></th>
-        <th><a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}">削除</a></th>
+        <th><a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
     {% endif %}
 {% endblock %}

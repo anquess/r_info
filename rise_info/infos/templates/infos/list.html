@@ -35,7 +35,7 @@
             <th>{{ info.created_at }}</th>
             {% if auth %}
                 <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a>
-                    <a class="btn btn-danger" href="{% url 'info_del' info.id %}">削除</a></th>
+                    <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
             {% endif %}
                 </tr>
         {% endfor %}
