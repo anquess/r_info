@@ -1,6 +1,7 @@
+from django.core.validators import RegexValidator
 from django.db import models
-from django.urls import reverse
 from django.db.models import Max
+from django.urls import reverse
 
 from rise_info.baseModels import BaseManager, getSysupdtime
 from histories.models import getLastUpdateAt, setLastUpdateAt
@@ -9,6 +10,8 @@ from accounts.models import createUser
 import csv
 import pytz
 import shutil
+
+bigAlphaNumeric = RegexValidator(r'^[0-9A-Z]*$', 'Only A-Z and 0-9 chatacters are allowed')
 
 def isImportRow(row) -> bool:
     return ( \
@@ -25,7 +28,7 @@ def offices_csv_import():
         for row in offices:
             sysupdtime = getSysupdtime(row)
             if isImportRow(row):
-                office = Office.objects.get_or_none(slug=row['KANSHO_CD'])
+                office = Office.objects.get_or_none(id=row['KANSHO_CD'])
                 if office:
                     if sysupdtime > office.update_at.replace(tzinfo=None):
                         office.name=row['KANSHO_NM']
@@ -34,7 +37,7 @@ def offices_csv_import():
                         office.save()
                 else:
                     office = Office.objects.create(
-                        slug=row['KANSHO_CD'],
+                        id=row['KANSHO_CD'],
                         name=row['KANSHO_NM'],
                         shortcut_name=row['KANSHO_SNM'],
                         update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
@@ -46,16 +49,16 @@ def offices_csv_import():
 
 class Office(models.Model):
     objects = BaseManager()
-    slug = models.SlugField(verbose_name='官署コード', unique=True,null=False, blank=False, max_length=4)
+    id = models.SlugField(verbose_name='官署コード', primary_key=True, editable=False, validators=[bigAlphaNumeric], max_length=4)
     name = models.CharField(verbose_name='官署名',null=False, blank=False, max_length=32)
     shortcut_name = models.CharField(verbose_name='官署略称',null=False, blank=False, max_length=8)
     update_at = models.DateTimeField(verbose_name='更新日時')
 
     def __str__(self):
-        return self.slug
+        return self.id
     
     def get_absolute_url(self):
-        return reverse('office_detail', kwargs={'slug': self.slug})
+        return reverse('office_detail', kwargs={'id': self.id})
     
     class Meta:
         db_table = 'offices'

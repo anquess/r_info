@@ -33,16 +33,16 @@ class OfficeListTest(TestCase):
 
 class OfficeDelTest(TestCase):
     def setUp(self) -> None:
-        Office.objects.create(slug='test', name='test000', shortcut_name='tes', update_at=mock_update_at)
+        Office.objects.create(id='TEST', name='test000', shortcut_name='tes', update_at=mock_update_at)
 
     def test_with_login_delete_office(self):
         login(self)
         try:
-            office = Office.objects.get(slug='test')
+            office = Office.objects.get(id='TEST')
         except:
             self.fail('あるはずのMockOfficeが取得できない')
-        self.client.get('/offices/' + str(office.pk) + '/del/')
-        office = Office.objects.get_or_none(slug='test')
+        self.client.get('/offices/' + str(office.id) + '/del/')
+        office = Office.objects.get_or_none(id='TEST')
         self.assertIsNone(office)
 
 @tag('slowTest')

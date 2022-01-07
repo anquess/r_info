@@ -28,11 +28,11 @@
       </tr>
       </thead>
       <tbody>
-      {% for office in offices|dictsort:"slug" %}
+      {% for office in offices|dictsort:"id" %}
         <tr>
-          <td>{{ office.slug }}</td>
+          <td>{{ office.id }}</td>
           <td>{{ office.name }}</td>
-          <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}">削除</a></th>
+          <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
         </tr>
       {% endfor %}
     </tbody>
