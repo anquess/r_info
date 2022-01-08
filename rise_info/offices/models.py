@@ -25,24 +25,40 @@ def offices_csv_import():
     with open('uploads/documents/Offices.csv', 'rt', encoding='cp932') as f:
         reader = csv.DictReader(f)
         offices = [ row for row in reader ]
+        office_create_object=[]
+        office_update_object=[]
+        user_object=[]
         for row in offices:
             sysupdtime = getSysupdtime(row)
             if isImportRow(row):
-                office = Office.objects.get_or_none(id=row['KANSHO_CD'])
-                if office:
+                if Office.objects.filter(id=row['KANSHO_CD']).exists():
+                    office = Office.objects.get(id=row['KANSHO_CD'])
                     if sysupdtime > office.update_at.replace(tzinfo=None):
                         office.name=row['KANSHO_NM']
                         office.shortcut_name=row['KANSHO_SNM']
                         office.update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
-                        office.save()
+                        office_update_object.append(office)
+                        user_object.append({
+                            'username':row['KANSHO_CD'],
+                            'first_name':row['KANSHO_NM'],
+                            'last_name':row['KANSHO_SNM'],
+                            })
                 else:
-                    office = Office.objects.create(
-                        id=row['KANSHO_CD'],
-                        name=row['KANSHO_NM'],
-                        shortcut_name=row['KANSHO_SNM'],
-                        update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
-                    )
-                    createUser(office)
+                    office_create_object.append(Office(
+                            id=row['KANSHO_CD'],
+                            name=row['KANSHO_NM'],
+                            shortcut_name=row['KANSHO_SNM'],
+                            update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+                    ))
+                    user_object.append({
+                            'username':row['KANSHO_CD'],
+                            'first_name':row['KANSHO_NM'],
+                            'last_name':row['KANSHO_SNM'],
+                            })
+
+        Office.objects.bulk_create(office_create_object)
+        Office.objects.bulk_update(office_update_object, fields=['name', 'shortcut_name', 'update_at',])
+        createUser(user_object)
         last_update_at = Office.objects.all().aggregate(Max('update_at'))['update_at__max']
         setLastUpdateAt('office', last_update_at.replace(tzinfo=pytz.timezone('Asia/Tokyo')))
         shutil.copy2('uploads/documents/Offices.csv','uploads/documents/Offices_tmp.csv')

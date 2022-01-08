@@ -1,11 +1,21 @@
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
-def createUser(office):
-    if User.objects.filter(username=office.id).count() == 0:
-        user = User.objects.create(
-            username=office.id,
-            first_name=office.name,
-            last_name=office.shortcut_name,
-        )
-        user.set_password(office.id)
-        user.save()
+def createUser(offices):
+    user_create_object=[]
+    user_update_object=[]
+    for office in offices:
+        if User.objects.filter(username=office['username']).exists():
+            user=User.objects.get(username=office['username'])
+            user.first_name=office.name
+            user.last_name=office.shortcut_name
+            user_update_object.append(user)
+        else:
+            user_create_object.append(User(
+                username=office['username'],
+                first_name=office['first_name'],
+                last_name=office['last_name'],
+                password=make_password(office['username'])
+            ))
+    User.objects.bulk_create(user_create_object)
+    User.objects.bulk_update(user_update_object,fields=['first_name','last_name'])
