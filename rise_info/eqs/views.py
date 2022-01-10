@@ -1,12 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
 from django.contrib import messages
+from rest_framework import serializers, status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 import sys
 
 from .forms import UploadFileForm
 from .models import Eqtype, eqtypes_csv_import
+from .serializer import EqtypeSerializer
 from accounts.views import isInTmcGroup, addTmcAuth
 from histories.models import getLastUpdateAt
 
@@ -24,6 +28,14 @@ def eqtype_del(request, slug):
 
     return redirect('eqtype')
 
+@api_view(['GET'])
+def get_eqtypes_json(request):
+    if request.method == 'GET':
+        eqtypes = Eqtype.objects.all()
+        serializers = EqtypeSerializer(eqtypes, many=True)
+        return Response(serializers.data)
+
+
 @login_required
 def file_upload(request):
     if isInTmcGroup(request.user):
@@ -35,9 +47,7 @@ def file_upload(request):
                 file_obj = request.FILES['file']
                 sys.stderr.write(file_obj.name + "\n")
                 messages.add_message(request, messages.INFO, '登録されました')
-                return HttpResponseRedirect('/eqs/eqtypes/')
-        else:
-            
+        else:            
             eqtypes = Eqtype.objects.all()
             form = UploadFileForm()
             last_update_at = getLastUpdateAt('eqtype')
@@ -45,9 +55,10 @@ def file_upload(request):
             context = addTmcAuth({'form': form, 'eqtypes': eqtypes, 'last_update_at': last_update_at, }, request.user)
             return render(request, 'eqs/eqtypes/upload.html', context)
         except Exception as e:
-            raise Http404(str(e))
+            messages.add_message(request, messages.ERROR, f'予期せぬエラーが発生しました。 エラーメッセージ:{str(e)}')
     else:
-        raise Http404("この権限では許可されていません。")
+        messages.add_message(request, messages.ERROR, 'この権限では許可されていません。')
+    return HttpResponseRedirect('/eqs/eqtypes/')
 
 def handle_uploaded_file(file_obj):
     sys.stderr.write("*** handle_uploaded_file *** aaa ***\n")
