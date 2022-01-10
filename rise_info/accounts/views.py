@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
-from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
@@ -29,12 +28,13 @@ def account_new(request):
                 form.save()
                 return redirect('account_list')
             else:
-                return HttpResponse("invalid request", status=400)
+                messages.add_message(request, messages.WARNING, "値がおかしいです")
         else:
             context = addTmcAuth({'form': UserAddForm()}, request.user)
             return render(request, "accounts/account_new.html", context)
     else:
-        raise Http404("この権限では登録は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
+    return redirect('account_list')
 
 class PasswordChange(PasswordChangeView):
     """パスワード変更ビュー"""
@@ -56,7 +56,8 @@ def account_list(request):
         context = addTmcAuth(context, request.user)
         return render(request, "accounts/account_list.html", context)
     else:
-        raise Http404("この権限では登録は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
+    return redirect('account_list')
 
 @login_required
 def account_delete(request, pk):
@@ -69,4 +70,5 @@ def account_delete(request, pk):
         
         return redirect('account_list')
     else:
-        raise Http404("この権限では登録は許可されていません。")
+        messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
+    return redirect('account_list')

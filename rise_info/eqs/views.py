@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
