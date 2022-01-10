@@ -9,13 +9,14 @@ def createUser(offices):
             user=User.objects.get(username=office['username'])
             user.first_name=office.name
             user.last_name=office.shortcut_name
-            user.is_active=True
+            user.is_active=office.unyo_sts
             user_update_object.append(user)
         else:
             user_create_object.append(User(
                 username=office['username'],
                 first_name=office['first_name'],
                 last_name=office['last_name'],
+                is_active=office['is_active'],
                 password=make_password(office['username'])
             ))
     User.objects.bulk_create(user_create_object)

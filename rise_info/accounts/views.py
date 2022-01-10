@@ -62,13 +62,11 @@ def account_list(request):
 def account_delete(request, pk):
     if isInTmcGroup(request.user):
         user = get_object_or_404(User, pk=pk)
-        if user.is_active:
-            user.is_active = False
-            messages.add_message(request, messages.INFO, f"{user}の権限は、無効になりました")
-        else:
-            user.is_active = True
-            messages.add_message(request, messages.INFO, f"{user}の権限は、有効になりました")
+        user.is_active = not user.is_active
         user.save()
+        is_active_str='有効' if user.is_active else '無効'
+        messages.add_message(request, messages.INFO, f"{user}の権限は、{is_active_str}になりました")
+        
         return redirect('account_list')
     else:
         raise Http404("この権限では登録は許可されていません。")

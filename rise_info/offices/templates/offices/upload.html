@@ -24,7 +24,7 @@
       <tr>
           <th>官署コード</th>
           <th>官署名</th>
-          <th>削除</th>
+          <th>有効・無効</th>
       </tr>
       </thead>
       <tbody>
@@ -32,8 +32,12 @@
         <tr>
           <td>{{ office.id }}</td>
           <td>{{ office.name }}</td>
-          <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
-        </tr>
+          {%if office.unyo_sts%}
+            <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>無効化</a></th>
+          {%else%}  
+            <th><a class="btn btn-primary" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>有効化</a></th>
+          {%endif%}
+          </tr>
       {% endfor %}
     </tbody>
    </table>

@@ -35,23 +35,27 @@ def offices_csv_import():
                     office = Office.objects.get(id=row['KANSHO_CD'])
                     if sysupdtime > office.update_at.replace(tzinfo=None):
                         office.name=row['KANSHO_NM']
+                        office.unyo_sts=(row['UNYOSTS_KBN']=='0')
                         office.shortcut_name=row['KANSHO_SNM']
                         office.update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
                         office_update_object.append(office)
                         user_object.append({
                             'username':row['KANSHO_CD'],
+                            'is_active':(row['UNYOSTS_KBN']=='0'),
                             'first_name':row['KANSHO_NM'],
                             'last_name':row['KANSHO_SNM'],
                             })
                 else:
                     office_create_object.append(Office(
                             id=row['KANSHO_CD'],
+                            unyo_sts=(row['UNYOSTS_KBN']=='0'),
                             name=row['KANSHO_NM'],
                             shortcut_name=row['KANSHO_SNM'],
                             update_at=sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
                     ))
                     user_object.append({
                             'username':row['KANSHO_CD'],
+                            'is_active':(row['UNYOSTS_KBN']=='0'),
                             'first_name':row['KANSHO_NM'],
                             'last_name':row['KANSHO_SNM'],
                             })
@@ -66,6 +70,7 @@ def offices_csv_import():
 class Office(models.Model):
     objects = BaseManager()
     id = models.SlugField(verbose_name='官署コード', primary_key=True, editable=False, validators=[bigAlphaNumeric], max_length=4)
+    unyo_sts = models.BooleanField(verbose_name='運用状態', default=True)
     name = models.CharField(verbose_name='官署名',null=False, blank=False, max_length=32)
     shortcut_name = models.CharField(verbose_name='官署略称',null=False, blank=False, max_length=8)
     update_at = models.DateTimeField(verbose_name='更新日時')

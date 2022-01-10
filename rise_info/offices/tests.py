@@ -43,7 +43,7 @@ class OfficeDelTest(TestCase):
             self.fail('あるはずのMockOfficeが取得できない')
         self.client.get('/offices/' + str(office.id) + '/del/')
         office = Office.objects.get_or_none(id='TEST')
-        self.assertIsNone(office)
+        self.assertFalse(office.unyo_sts)
 
 @tag('slowTest')
 class OfficeCsvImportTest(TestCase):

@@ -9,6 +9,7 @@ def formatCheck(offices):
     csvFormatCheck(
         offices, (
             'KANSHO_CD',
+            'UNYOSTS_KBN',
             'KANSHO_NM',
             'KANSHO_SNM',
             'DATASHUSEI_DATE',
