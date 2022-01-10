@@ -13,7 +13,7 @@
             <th>ユーザ名</th>
             <th>登録日時</th>
             <th>ログイン日時</th>
-            <th>削除</th>
+            <th>有効</th>
         </tr>
         </thead>
         <tbody>
@@ -21,8 +21,12 @@
         <tr>
             <th>{{ user.username }}</th>
             <th>{{ user.date_joined }}</th>            
-            <th>{{ user.last_login }}</th>            
-            <th><a class="btn btn-danger" href="{% url 'account_delete' user.pk %}">削除</a></th>
+            <th>{{ user.last_login }}</th>
+            {%if user.is_active%}
+                <th><a class="btn btn-danger" href="{% url 'account_delete' user.pk %}">無効</a></th>
+            {%else%}
+                <th><a class="btn btn-primary" href="{% url 'account_delete' user.pk %}">有効</a></th>
+            {%endif%}
         </tr>
         {% endfor %}
         </tbody>

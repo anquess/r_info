@@ -13,6 +13,7 @@ urlpatterns = [
     path("failuer_reports/", include("failuer_reports.urls")),
     path('infos/', include('infos.urls')),
     path('offices/', include('offices.urls')),
+    path('eqs/', include('eqs.urls')),
     url(r'mdeditor/', include('mdeditor.urls')), # mdeditor
 ]
 

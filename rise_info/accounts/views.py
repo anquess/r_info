@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
@@ -61,7 +62,13 @@ def account_list(request):
 def account_delete(request, pk):
     if isInTmcGroup(request.user):
         user = get_object_or_404(User, pk=pk)
-        user.delete()
+        if user.is_active:
+            user.is_active = False
+            messages.add_message(request, messages.INFO, f"{user}の権限は、無効になりました")
+        else:
+            user.is_active = True
+            messages.add_message(request, messages.INFO, f"{user}の権限は、有効になりました")
+        user.save()
         return redirect('account_list')
     else:
         raise Http404("この権限では登録は許可されていません。")

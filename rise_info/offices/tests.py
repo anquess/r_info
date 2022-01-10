@@ -27,7 +27,7 @@ class OfficeListTest(TestCase):
         response = self.client.get("/offices/")
         self.assertContains(response,"官署・アカウント一括更新" , status_code=200)    
 
-    def test_info_list_uses_expected_template(self):
+    def test_office_list_uses_expected_template(self):
         response = self.client.get("/offices/")
         self.assertTemplateUsed(response, "offices/upload.html")
 

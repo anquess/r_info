@@ -12,8 +12,10 @@ import markdown
 def getSysupdtime(row) -> dt:
     if row['DATASHUSEI_DATE']:
         sysupdtime = dt.strptime(row['DATASHUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
-    else:
+    elif row['SYSUPDTIME']:
         sysupdtime = dt.strptime(row['SYSUPDTIME'], '%Y/%m/%d %H:%M:%S')
+    elif row['DATASAKUSEI_DATE']:
+        sysupdtime = dt.strptime(row['DATASAKUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
     return sysupdtime
 
 class BaseManager(models.Manager):

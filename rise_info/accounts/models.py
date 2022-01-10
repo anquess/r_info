@@ -9,6 +9,7 @@ def createUser(offices):
             user=User.objects.get(username=office['username'])
             user.first_name=office.name
             user.last_name=office.shortcut_name
+            user.is_active=True
             user_update_object.append(user)
         else:
             user_create_object.append(User(
