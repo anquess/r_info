@@ -59,7 +59,16 @@
             {{ message }}
         </div>
         {% endfor %}
-
+        {%if formset.erros%}
+            {%for error in formset.errors%}
+                {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
+            {%endfor%}
+        {%endif%}
+        {%if formset2%}
+            {%for error in formset2.errors%}
+                {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
+            {%endfor%}
+        {%endif%}
         {% block main %}{% endblock %}
     </div>
 </main>

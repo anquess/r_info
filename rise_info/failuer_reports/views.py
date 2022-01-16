@@ -84,7 +84,7 @@ def failuer_report_edit(request, info_id):
 def failuer_report_detail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     files = AttachmentFile.objects.filter(info=info)
-    events = Circumstances.objects.filter(info=info)
+    events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     if info:
         context ={
             'info': info,

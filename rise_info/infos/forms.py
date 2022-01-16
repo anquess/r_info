@@ -8,6 +8,15 @@ class InfoForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = Info
         fields = MetaCommonInfo.fields + ('info_type', 'managerID', 'sammary', 'is_rich_text')
+        error_messages = {
+            'managerID': {
+                'required': '管理番号は必須です',
+                'max_length': '管理番号は32文字以内です。'
+            },
+            'sammary': {
+                'max_length': '概要への影響は512文字以内です',
+            },
+        }
         widgets = {**MetaCommonInfo.widgets, **{
             'info_type': forms.widgets.Select(attrs={
                 "class": "form-select",
