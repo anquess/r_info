@@ -1,6 +1,6 @@
-from django.http import response
 from django.test import TestCase
 from django.contrib.auth.models import Group, User
+from django.contrib.messages import get_messages
 from django.shortcuts import get_object_or_404
 
 # Create your tests here.
@@ -56,7 +56,9 @@ class WithoutRootLoginAccountNewPageTest(TestCase):
         testAcountCreate(self)
         login(self)
         response = self.client.get("/accounts/new/")
-        self.assertContains(response,"許可されていません" , status_code=404)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'この権限では登録は許可されていません。')
     
 class WithRootLoginAccountNewPageTest(TestCase):
     def setUp(self) -> None:
@@ -83,7 +85,9 @@ class WithRootLoginAccountNewPageTest(TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         response = self.client.get("/accounts/new/")
-        self.assertContains(response,"許可されていません" , status_code=404)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'この権限では登録は許可されていません。')
 
 class AccountListTest(TestCase):
     def setUp(self) -> None:
