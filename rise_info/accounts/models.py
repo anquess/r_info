@@ -7,9 +7,9 @@ def createUser(offices):
     for office in offices:
         if User.objects.filter(username=office['username']).exists():
             user=User.objects.get(username=office['username'])
-            user.first_name=office.name
-            user.last_name=office.shortcut_name
-            user.is_active=office.unyo_sts
+            user.first_name=office['first_name']
+            user.last_name=office['last_name']
+            user.is_active=office['is_active']
             user_update_object.append(user)
         else:
             user_create_object.append(User(
