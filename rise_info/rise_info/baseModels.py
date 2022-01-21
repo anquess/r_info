@@ -1,21 +1,25 @@
 from django.db import models
-from django.http import Http404
-from django.utils.safestring import mark_safe
 from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
-from datetime import datetime as dt
+from datetime import datetime as dt, tzinfo
 import os
 import shutil
 import markdown
+import pytz
 
 def getSysupdtime(row) -> dt:
     if row['DATASHUSEI_DATE']:
-        sysupdtime = dt.strptime(row['DATASHUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
+        str_sysupdtime = row['DATASHUSEI_DATE']
     elif row['SYSUPDTIME']:
-        sysupdtime = dt.strptime(row['SYSUPDTIME'], '%Y/%m/%d %H:%M:%S')
-    elif row['DATASAKUSEI_DATE']:
-        sysupdtime = dt.strptime(row['DATASAKUSEI_DATE'], '%Y/%m/%d %H:%M:%S')
+        str_sysupdtime = row['SYSUPDTIME']
+    else:
+        str_sysupdtime = row['DATASAKUSEI_DATE']
+    if str_sysupdtime.count(':')==1:
+        sysupdtime = dt.strptime(str_sysupdtime, '%Y/%m/%d %H:%M')
+    else:
+        sysupdtime = dt.strptime(str_sysupdtime, '%Y/%m/%d %H:%M:%S')
+    sysupdtime = sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
     return sysupdtime
 
 class BaseManager(models.Manager):

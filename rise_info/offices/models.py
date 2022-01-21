@@ -7,6 +7,7 @@ from rise_info.baseModels import BaseManager, getSysupdtime
 from histories.models import getLastUpdateAt, setLastUpdateAt
 from accounts.models import createUser
 
+from datetime import datetime as dt
 import csv
 import pytz
 import shutil
@@ -14,11 +15,13 @@ import shutil
 bigAlphaNumeric = RegexValidator(r'^[0-9A-Z]*$', 'Only A-Z and 0-9 chatacters are allowed')
 
 def isImportRow(row) -> bool:
+    sysupdtime=getSysupdtime(row)
+    lastupdtime=getLastUpdateAt('office')
     return ( \
             row['UNYOSTS_KBN'] == '0' \
             and row['HOSHUINUMU_FLG'] == '1' \
             and row['KANSHO_CD'] == row['JOCHUKANSHO_CD']  \
-            and getSysupdtime(row) > getLastUpdateAt('office') \
+            and sysupdtime > lastupdtime \
         )
 
 def offices_csv_import():
@@ -33,7 +36,7 @@ def offices_csv_import():
             if isImportRow(row):
                 if Office.objects.filter(id=row['KANSHO_CD']).exists():
                     office = Office.objects.get(id=row['KANSHO_CD'])
-                    if sysupdtime > office.update_at.replace(tzinfo=None):
+                    if sysupdtime > office.update_at.replace(tzinfo=pytz.timezone('Asia/Tokyo')):
                         office.name=row['KANSHO_NM']
                         office.unyo_sts=(row['UNYOSTS_KBN']=='0')
                         office.shortcut_name=row['KANSHO_SNM']
