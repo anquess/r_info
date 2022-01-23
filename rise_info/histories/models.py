@@ -20,8 +20,9 @@ def getLastUpdateAt(slug) -> dt:
     history = HistoryDB.objects.get_or_none(slug=slug)
     if history:
         last_update_at = history.update_at
+        last_update_at = last_update_at.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
     else:
-        last_update_at = dt(2001,1,1,0,0,0,0)
+        last_update_at = dt(2001,1,1,0,0,0,0,tzinfo=pytz.timezone('Asia/Tokyo'))
     return last_update_at
 
 def setLastUpdateAt(slug, last_update_at):

@@ -17,6 +17,13 @@ bigAlphaNumeric = RegexValidator(r'^[0-9A-Z]*$', 'Only A-Z and 0-9 chatacters ar
 def isImportRow(row) -> bool:
     sysupdtime=getSysupdtime(row)
     lastupdtime=getLastUpdateAt('office')
+    try:
+        if str(sysupdtime.tzinfo)=='UTC':
+                raise ValueError('sysupdtime is ' + str(sysupdtime.tzinfo))
+        if str(lastupdtime.tzinfo)=='UTC':
+                raise ValueError('lastupdtime is ' + str(lastupdtime.tzinfo))
+    except ValueError as e:
+        print(e)
     return ( \
             row['UNYOSTS_KBN'] == '0' \
             and row['HOSHUINUMU_FLG'] == '1' \

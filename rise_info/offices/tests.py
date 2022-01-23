@@ -10,9 +10,10 @@ import os
 from accounts.tests import login
 from .models import Office, offices_csv_import
 from histories.models import getLastUpdateAt
+from histories.models import getLastUpdateAt
 
-mock_update_at = dt(2001,1,1,0,0,0,0)
-mock_update_at2 = dt(2001,1,1,0,0,0,0,pytz.timezone('Asia/Tokyo'))
+mock_update_at = dt(2019,7,15,15,22,48,0, pytz.timezone('Asia/Tokyo'))
+mock_update_at2 = dt(2001,1,1,0,0,0,0, pytz.timezone('Asia/Tokyo'))
 
 class NoLoginOfficeListTest(TestCase):
     def test_no_login_office_list_return_402_and_expected_title(self) -> None:
@@ -56,10 +57,12 @@ class OfficeCsvImportTest(TestCase):
         os.remove('uploads/documents/Offices_test.csv')
 
     def test_csv_import_test(self):
-        self.assertEqual(getLastUpdateAt('office'), mock_update_at)
+        self.assertEqual(getLastUpdateAt('office'), mock_update_at2)
         self.assertEqual(Office.objects.all().count(), 0)
         self.assertEqual(User.objects.all().count(), 0)
+        self.assertEqual(str(getLastUpdateAt('office').tzinfo),'Asia/Tokyo') 
+
         offices_csv_import()
         self.assertLess(0, Office.objects.all().count())
         self.assertLess(0, User.objects.all().count())
-        self.assertLess(mock_update_at2, getLastUpdateAt('office'))        
+        self.assertEqual(mock_update_at, getLastUpdateAt('office'))  

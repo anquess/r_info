@@ -13,7 +13,10 @@ from histories.models import getLastUpdateAt, setLastUpdateAt
 from rise_info.baseModels import BaseManager
 
 def isImportRow(row) -> bool:
-    return dt.strptime(row['DATASAKUSEI_DATE'], '%Y/%m/%d %H:%M') > getLastUpdateAt('eqtype')
+    sysupdtime = dt.strptime(row['DATASAKUSEI_DATE'], '%Y/%m/%d %H:%M')
+    sysupdtime = sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+    lastUpdateAt = getLastUpdateAt('eqtype').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+    return sysupdtime > lastUpdateAt
 
 def eqtypes_csv_import():
     with open('uploads/documents/EQTypes.csv', 'rt', encoding = "utf-8-sig") as f:

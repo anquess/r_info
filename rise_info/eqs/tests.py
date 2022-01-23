@@ -57,8 +57,9 @@ class EqtypeCsvImportTest(TestCase):
         os.remove('uploads/documents/EQTypes_test.csv')
 
     def test_csv_import_test(self):
-        self.assertEqual(getLastUpdateAt('eqtype'), mock_update_at)
+        self.assertEqual(getLastUpdateAt('eqtype'), mock_update_at2)
         self.assertEqual(Eqtype.objects.all().count(), 0)
+        self.assertEqual(str(getLastUpdateAt('eqtype').tzinfo),'Asia/Tokyo') 
         eqtypes_csv_import()
         self.assertLess(0, Eqtype.objects.all().count())
         self.assertLess(mock_update_at2, getLastUpdateAt('eqtype'))        
