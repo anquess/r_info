@@ -14,6 +14,7 @@ rise_info/static/bootstrap-datepicker
 rise_info/static/bootstrap-maxlength
 rise_info/static/highlight
 rise_info/static/jquery
+rise_info/static/gyoumushien
 rise_info/static/popper
 rise_info/static/simplemde
 rise_info/static/django_extensions
