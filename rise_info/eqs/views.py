@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 import sys
 
@@ -27,13 +28,14 @@ def eqtype_del(request, slug):
 
     return redirect('eqtype')
 
-@api_view(['GET'])
-def get_eqtypes_json(request):
-    if request.method == 'GET':
-        eqtypes = Eqtype.objects.all()
-        serializers = EqtypeSerializer(eqtypes, many=True)
-        return Response(serializers.data)
-
+def api_posts_get(request):
+    """サジェスト候補の記事をJSONで返す。"""
+    keyword = request.GET.get('keyword')
+    if keyword:
+        eqType_list = [{'pk': eqType.pk, 'name': str(eqType)} for eqType in Eqtype.objects.filter(id__icontains=keyword)]
+    else:
+        eqType_list = []
+    return JsonResponse({'object_list': eqType_list})
 
 @login_required
 def file_upload(request):

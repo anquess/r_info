@@ -1,0 +1,18 @@
+<div class="row mb-2 ms-1">
+    <input type="text" id="{{ widget.name }}-input" data-target="{{ widget.name }}" placeholder="装置型式を入力し選択したら追加されます"
+        autocomplete="off" {% include "django/forms/widgets/attrs.html" %}>
+</div>  
+<ul id="{{ widget.name }}-list" class="dropdown"></ul>
+
+<div id="{{ widget.name }}-display">
+    {% for group, options, index in widget.optgroups %}{% for option in options %}{% if option.selected %}
+        <button type="button" class="suggest-item btn btn-outline-secondary" data-target="{{ widget.name }}" data-pk="{{ option.value }}">{{ option.label }} ×</button>
+    {% endif %}{% endfor %}{% endfor %}
+</div>
+
+
+<div id="{{ widget.name }}-values">
+    {% for value in widget.value %}
+        <input type="hidden" name="{{ widget.name }}" value="{{ value }}">
+    {% endfor %}
+</div>
