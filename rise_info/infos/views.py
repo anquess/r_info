@@ -1,18 +1,30 @@
-from re import template
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.utils.decorators import method_decorator
 
 from infos.models import Info, AttachmentFile
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 
-@login_required
-def info_list(request):
-    infos = Info.objects.all()
-    context = {'infos':infos}
-    context = addTmcAuth(context, request.user)
-    return render(request, "infos/list.html", context)
+class InfoList(ListView):
+    model = Info
+    template_name = 'infos/info_list.html'
+    context_object_name = 'infos'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(InfoList, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = addTmcAuth(context, self.request.user)
+        return context
 
 @login_required
 def info_detail(request, info_id):
