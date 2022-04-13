@@ -1,3 +1,4 @@
+from re import template
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -11,7 +12,7 @@ def info_list(request):
     infos = Info.objects.all()
     context = {'infos':infos}
     context = addTmcAuth(context, request.user)
-    return render(request, "infos/list.html", context)    
+    return render(request, "infos/list.html", context)
 
 @login_required
 def info_detail(request, info_id):

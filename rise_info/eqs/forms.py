@@ -1,13 +1,25 @@
 from django import forms
 from django.http import Http404
+from django.urls import reverse_lazy
 
 import csv
 
+from .widgets import SuggestWidget
+from .models import Eqtype
 from rise_info.baseForms import csvFormatCheck
+
 
 def formatCheck(eqtypes):
     csvFormatCheck(
         eqtypes, ('SOCHIKATA', 'DATASAKUSEI_DATE', ))
+
+class EqTypeCreateForm(forms.ModelForm):
+    class Meta:
+        model = Eqtype
+        fields = '__all__'
+        widgets = {
+            'relation_posts': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
+        }
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(

@@ -1,6 +1,12 @@
 {% extends "baseDetail.html" %}
-
 {% block sammary %}
+<div class="card"><div class="card-body">
+    <h5 class="card-title">装置型式</h5>
+    {% for eqtype in info.eqtypes.all %}
+    <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
+    {% endfor %}
+</div></div>
+
 <div class="card"><div class="card-body">
     <h5 class="card-title">概要</h5>
     {{ info.sammary | linebreaksbr }}
