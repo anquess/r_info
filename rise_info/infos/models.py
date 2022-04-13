@@ -1,6 +1,7 @@
 from django.db import models
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path
+from eqs.models import Eqtype
 
 class InfoTypeChoices(models.TextChoices):
     TECHINICAL = 'technical', '信頼性技術情報'
@@ -14,6 +15,7 @@ class Info(CommonInfo):
     is_rich_text = models.BooleanField(verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
     managerID = models.CharField(verbose_name='管理番号', default="TMC-解析-", null=False, blank=False, max_length=32)
     sammary = models.TextField(verbose_name='概要', default="", null=False, blank=True, max_length=512)
+    eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
 
     def save(self, *args, **kwargs):
         super(Info, self).save(self, *args, **kwargs)
