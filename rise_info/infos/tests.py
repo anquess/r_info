@@ -31,7 +31,7 @@ class InfoListTest(TestCase):
         
     def test_info_list_uses_expected_template(self) ->None:
         response = self.client.get("/infos/")
-        self.assertTemplateUsed(response, "infos/list.html")
+        self.assertTemplateUsed(response, "infos/info_list.html")
 
 class CreateInfoTest(TestCase):
     def setUp(self) -> None:
