@@ -26,7 +26,7 @@ def eqtype_del(request, slug):
     except Exception as e:
         messages.add_message(request, messages.ERROR, str(e))    
 
-    return redirect('eqtype')
+    return redirect('eqs:eqtype')
 
 def api_posts_get(request):
     """サジェスト候補の記事をJSONで返す。"""

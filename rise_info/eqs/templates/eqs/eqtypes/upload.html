@@ -30,7 +30,7 @@
       {% for eqtype in eqtypes|dictsort:"id" %}
         <tr>
           <td>{{ eqtype.id }}</td>
-          <th><a class="btn btn-danger" href="{% url 'eqtype_del' eqtype.slug %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
+          <th><a class="btn btn-danger" href="{% url 'eqs:eqtype_del' eqtype.slug %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
         </tr>
       {% endfor %}
     </tbody>
