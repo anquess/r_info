@@ -1,8 +1,10 @@
+from ast import keyword
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 from infos.models import Info, AttachmentFile
 from infos.forms import InfoForm, FileFormSet
@@ -19,6 +21,13 @@ class InfoList(ListView):
 
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
+        q_keyword = self.request.GET.get('keyword')
+        if q_keyword is not None:
+            queryset = queryset.filter(
+                Q(title__contains=q_keyword)|
+                Q(sammary__contains=q_keyword)|
+                Q(content__contains=q_keyword)
+            ).distinct()
         return queryset
 
     def get_context_data(self, **kwargs):
