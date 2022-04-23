@@ -1,8 +1,8 @@
 from django import forms
-from django.core.exceptions import ValidationError
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from rise_info.baseForms import MetaCommonInfo
+
 
 class FailuerReportForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
@@ -13,7 +13,7 @@ class FailuerReportForm(forms.ModelForm):
             'operatinal_impact',
             'is_flight_impact',
             'flight_impact',
-             )
+        )
         error_messages = {
             'sammary': {
                 'max_length': '概要は512文字以内です。'
@@ -28,15 +28,16 @@ class FailuerReportForm(forms.ModelForm):
         widgets = {**MetaCommonInfo.widgets, **{
             'sammary': forms.Textarea(attrs={
                 "class": "form-control",
-                "rows":"3",
+                "rows": "3",
             }),
-            'is_operatinal_impact':forms.CheckboxInput(attrs={
+            'is_operatinal_impact': forms.CheckboxInput(attrs={
                 'onclick': 'clickCheck(this.id, "id_operatinal_impact")',
             }),
             'is_flight_impact': forms.CheckboxInput(attrs={
                 'onclick': 'clickCheck(this.id, "id_flight_impact")',
             }),
         }}
+
 
 class CircumstancesForm(forms.ModelForm):
     class Meta:
@@ -57,10 +58,11 @@ class CircumstancesForm(forms.ModelForm):
             },
         }
 
+
 FileFormSet = forms.inlineformset_factory(
     FailuerReport, AttachmentFile, fields='__all__', extra=1,
 )
-CircumstancesFormSet= forms.inlineformset_factory(
+CircumstancesFormSet = forms.inlineformset_factory(
     FailuerReport, Circumstances, fields='__all__', extra=1, form=CircumstancesForm,
     widgets={
         'date': forms.DateInput(attrs={
@@ -72,7 +74,7 @@ CircumstancesFormSet= forms.inlineformset_factory(
         }),
         'event': forms.Textarea(attrs={
             'class': 'form-control',
-            'rows':'2',
+            'rows': '2',
         }),
     }
 )
