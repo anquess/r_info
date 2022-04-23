@@ -1,4 +1,3 @@
-from ast import keyword
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -9,6 +8,7 @@ from django.db.models import Q
 from infos.models import Info, AttachmentFile
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
+
 
 class InfoList(ListView):
     model = Info
@@ -24,8 +24,8 @@ class InfoList(ListView):
         q_keyword = self.request.GET.get('keyword')
         if q_keyword is not None:
             queryset = queryset.filter(
-                Q(title__contains=q_keyword)|
-                Q(sammary__contains=q_keyword)|
+                Q(title__contains=q_keyword) |
+                Q(sammary__contains=q_keyword) |
                 Q(content__contains=q_keyword)
             ).distinct()
         return queryset
@@ -35,12 +35,13 @@ class InfoList(ListView):
         context = addTmcAuth(context, self.request.user)
         return context
 
+
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
     files = AttachmentFile.objects.filter(info=info)
     if info:
-        context ={
+        context = {
             'info': info,
             'files': files,
         }
@@ -49,6 +50,7 @@ def info_detail(request, info_id):
     else:
         messages.add_message(request, messages.WARNING, "該当Infoはありません。")
         return redirect('info_list')
+
 
 @login_required
 def info_del(request, info_id):
@@ -60,11 +62,13 @@ def info_del(request, info_id):
             messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
             return redirect('info_list')
         else:
-            messages.add_message(request, messages.WARNING, '該当Infoは既に削除されてありません。')
+            messages.add_message(request, messages.WARNING,
+                                 '該当Infoは既に削除されてありません。')
             return redirect('info_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('info_list')
+
 
 @login_required
 def info_edit(request, info_id):
@@ -72,31 +76,33 @@ def info_edit(request, info_id):
         info = Info.objects.get_or_none(pk=info_id)
         if info:
             form = InfoForm(request.POST or None, instance=info)
-            formset = FileFormSet(request.POST or None, files=request.FILES or None, instance=info)
-            if (request.method == "POST" and form.is_valid()) :
-                    if (request.FILES or None) is not None:
-                        if not formset.is_valid():
-                            context=addTmcAuth({
-                                'form': form,
-                                'formset': formset,
-                            },request.user)
-                            for ele in formset:
-                                messages.add_message(request, messages.WARNING, str(ele))
-                            return render(request, 'infos/edit.html', context)
-                    form.save()
-                    formset.save()
-                    messages.add_message(request, messages.INFO, '更新されました。')
-                    return redirect('info_list')
+            formset = FileFormSet(request.POST or None,
+                                  files=request.FILES or None, instance=info)
+            if (request.method == "POST" and form.is_valid()):
+                if (request.FILES or None) is not None:
+                    if not formset.is_valid():
+                        context = addTmcAuth({
+                            'form': form,
+                            'formset': formset,
+                        }, request.user)
+                        for ele in formset:
+                            messages.add_message(
+                                request, messages.WARNING, str(ele))
+                        return render(request, 'infos/edit.html', context)
+                form.save()
+                formset.save()
+                messages.add_message(request, messages.INFO, '更新されました。')
+                return redirect('info_list')
             context = addTmcAuth({
                 'form': form,
                 'formset': formset,
-                },
-                 request.user)
+            },
+                request.user)
             return render(request, 'infos/edit.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('info_list')
-    
+
 
 @login_required
 def info_new(request):
