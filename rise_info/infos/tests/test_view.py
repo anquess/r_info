@@ -7,7 +7,7 @@ import shutil
 
 from infos.views import info_edit
 from infos.models import Info, AttachmentFile, InfoTypeChoices
-from accounts.tests import login
+from accounts.tests.com_setup import login
 
 def addMockInfo(testCase) -> None:
     testCase.client.force_login(testCase.user)
@@ -65,6 +65,7 @@ class InfoDetailTest(TestCase):
 
     def test_should_use_expected_template(self):
         self.assertTemplateUsed(self.response, "infos/detail.html")
+
     def test_detail_page_returns_200_and_expected_heading(self):
         self.assertContains(self.response, "タイトル", status_code=200)
 
@@ -79,11 +80,6 @@ class DetailInfoTest(TestCase):
     def test_should_resolve_info_edit(self):
         found = resolve("/infos/1/edit/")
         self.assertEqual(info_edit, found.func)
-
-class InfoModelTest(TestCase):
-    def test_is_empty(self) -> None:
-        infos = Info.objects.all()
-        self.assertEqual(infos.count(), 0)
 
 class InfoDelTest(TestCase):
     def setUp(self) -> None:

@@ -2,9 +2,9 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from django.core.files.base import File
 
-from .models import FailuerReport, AttachmentFile
-from .views import failuer_report_edit
-from accounts.tests import loginTestAccount
+from ..models import FailuerReport, AttachmentFile
+from ..views import failuer_report_edit
+from accounts.tests.com_setup import loginTestAccount
 
 import shutil
 import os
@@ -64,6 +64,7 @@ class FailuerReportsDetailTest(TestCase):
 
     def test_should_use_expected_template(self):
         self.assertTemplateUsed(self.response, "failuer_reports/detail.html")
+        
     def test_detail_page_returns_200_and_expected_heading(self):
         self.assertContains(self.response, "タイトル", status_code=200)
 
@@ -78,11 +79,6 @@ class DetailFailuerReportsTest(TestCase):
     def test_should_resolve_info_edit(self):
         found = resolve("/failuer_reports/1/edit/")
         self.assertEqual(failuer_report_edit, found.func)
-
-class InfoModelTest(TestCase):
-    def test_is_empty(self) -> None:
-        infos = FailuerReport.objects.all()
-        self.assertEqual(infos.count(), 0)
 
 class InfoDelTest(TestCase):
     def setUp(self) -> None:
@@ -116,10 +112,12 @@ class AddReportAttachmentFileTest(TestCase):
         if not os.path.isfile("abc.jpg"):
             self.fail('mockReportAttachmentFilesファイル(abc.jpg)が見つからない')
         self.info_attach = AttachmentFile.objects.create(info=self.info, file=File(open('abc.jpg','rb')))
+
     def tearDown(self) -> None:
         os.remove('abc.jpg')
         os.remove('abc.png')
         return super().tearDown()
+
     def test_create_report_attachment(self):
         self.assertTrue(os.path.isfile(f"uploads/fail_rep/{str(self.info.pk)}/{str(self.info_attach.pk)}/abc.jpg"))
         self.info_attach.file = File(open('abc.png','rb'))

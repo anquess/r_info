@@ -1,14 +1,12 @@
-from django import shortcuts
 from django.test import TestCase, tag
-from django.contrib.auth.models import User
 
 from datetime import datetime as dt
 import pytz
 import shutil
 import os
 
-from accounts.tests import login
-from .models import Eqtype, eqtypes_csv_import
+from accounts.tests.com_setup import login
+from ..models import Eqtype, eqtypes_csv_import
 from histories.models import getLastUpdateAt
 
 mock_update_at = dt(2001,1,1,0,0,0,0)
