@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
 from django.contrib.auth.models import User
 
+
 class MyPasswordChangeForm(PasswordChangeForm):
     """パスワード変更フォーム"""
 
@@ -9,7 +10,9 @@ class MyPasswordChangeForm(PasswordChangeForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
+
 class UserAddForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'first_name','last_name' , 'password1', 'password2', 'groups')
+        fields = ('username', 'first_name', 'last_name',
+                  'password1', 'password2', 'groups')

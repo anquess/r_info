@@ -1,13 +1,16 @@
 from django.contrib.auth.models import Group, User
 
 # Create your tests here.
+
+
 def testTMCAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="test_user",
         password="top_secret_pass0001",
     )
-    group=Group.objects.create(name="TMC")
+    group = Group.objects.create(name="TMC")
     group.user_set.add(testCase.user)
+
 
 def testAcountCreate(testCase):
     testCase.user = User.objects.create(
@@ -15,12 +18,13 @@ def testAcountCreate(testCase):
         password="top_secret_pass0002",
     )
 
+
 def rootAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="root",
         password="root_secret_pass0001",
     )
-    group=Group.objects.create(name="TMC")
+    group = Group.objects.create(name="TMC")
     group.user_set.add(testCase.user)
 
 
@@ -28,6 +32,7 @@ def login(testCase) -> None:
     if not hasattr(testCase, 'user'):
         testTMCAcountCreate(testCase)
     testCase.client.force_login(testCase.user)
+
 
 def loginTestAccount(testCase) -> None:
     if not hasattr(testCase, 'user'):
@@ -38,8 +43,8 @@ def loginTestAccount(testCase) -> None:
 def addMockUser(testCase) -> None:
     testCase.client.force_login(testCase.user)
     data = {
-        'username': testCase.username, 
-        'password1': testCase.password, 
+        'username': testCase.username,
+        'password1': testCase.password,
         'password2': testCase.password,
     }
     testCase.response = testCase.client.post("/accounts/new/", data)

@@ -8,9 +8,10 @@ from django.urls import reverse_lazy
 from .forms import MyPasswordChangeForm, UserAddForm
 
 
-def addTmcAuth(context: dict, user) ->dict:
+def addTmcAuth(context: dict, user) -> dict:
     context['auth'] = isInTmcGroup(user)
     return context
+
 
 def isInTmcGroup(user) -> bool:
     try:
@@ -18,6 +19,7 @@ def isInTmcGroup(user) -> bool:
     except:
         tmcGroup = None
     return tmcGroup in user.groups.all()
+
 
 @login_required
 def account_new(request):
@@ -36,6 +38,7 @@ def account_new(request):
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
     return redirect('account_list')
 
+
 class PasswordChange(PasswordChangeView):
     """パスワード変更ビュー"""
     form_class = MyPasswordChangeForm
@@ -52,12 +55,13 @@ class PasswordChangeDone(PasswordChangeDoneView):
 def account_list(request):
     if isInTmcGroup(request.user):
         users = User.objects.all()
-        context = { "users": users, }
+        context = {"users": users, }
         context = addTmcAuth(context, request.user)
         return render(request, "accounts/account_list.html", context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
     return redirect('account_list')
+
 
 @login_required
 def account_delete(request, pk):
@@ -65,9 +69,10 @@ def account_delete(request, pk):
         user = get_object_or_404(User, pk=pk)
         user.is_active = not user.is_active
         user.save()
-        is_active_str='有効' if user.is_active else '無効'
-        messages.add_message(request, messages.INFO, f"{user}の権限は、{is_active_str}になりました")
-        
+        is_active_str = '有効' if user.is_active else '無効'
+        messages.add_message(request, messages.INFO,
+                             f"{user}の権限は、{is_active_str}になりました")
+
         return redirect('account_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
