@@ -1,4 +1,3 @@
-import abc
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -7,10 +6,11 @@ from rise_info.baseModels import CommonInfo
 
 def csvFormatCheck(csvRow, checkLists):
     for check in checkLists:
-        if not check in csvRow:
+        if check not in csvRow:
             raise ValidationError(
                 'CSVデータに項目がありません : %s' % check,
                 code='invalid')
+
 
 class MetaCommonInfo:
     model = CommonInfo
@@ -19,7 +19,7 @@ class MetaCommonInfo:
         "title": forms.TextInput(attrs={
             "class": "form-control",
         }),
-        "content" : forms.Textarea(attrs={
+        "content": forms.Textarea(attrs={
             "class": "form-control",
         })
     }

@@ -2,11 +2,12 @@ from django.db import models
 from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
-from datetime import datetime as dt, tzinfo
+from datetime import datetime as dt
 import os
 import shutil
 import markdown
 import pytz
+
 
 def getSysupdtime(row) -> dt:
     if row['DATASHUSEI_DATE']:
@@ -15,12 +16,13 @@ def getSysupdtime(row) -> dt:
         str_sysupdtime = row['SYSUPDTIME']
     else:
         str_sysupdtime = row['DATASAKUSEI_DATE']
-    if str_sysupdtime.count(':')==1:
+    if str_sysupdtime.count(':') == 1:
         sysupdtime = dt.strptime(str_sysupdtime, '%Y/%m/%d %H:%M')
     else:
         sysupdtime = dt.strptime(str_sysupdtime, '%Y/%m/%d %H:%M:%S')
     sysupdtime = sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
     return sysupdtime
+
 
 class BaseManager(models.Manager):
     def get_or_none(self, **kwargs):
@@ -32,20 +34,28 @@ class BaseManager(models.Manager):
         except self.model.DoesNotExist:
             return None
 
+
 class CommonInfo(models.Model):
     objects = BaseManager()
-    title = models.CharField(verbose_name='タイトル', default="", null=False, blank=False, max_length=128)
-    content = models.TextField(verbose_name='内容', default="", null=False, blank=True)
-    created_by = CurrentUserField(verbose_name='登録者',on_update=True, related_name='%(app_label)s_%(class)s_create', null=False, blank=False, max_length=4096)
-    created_at = models.DateTimeField(verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
-    updated_at = models.DateTimeField(verbose_name='更新日', auto_now=True, null=False, blank=False)
-    updated_by = CurrentUserField(verbose_name='更新者', on_update=True, related_name='%(app_label)s_%(class)s_update', null=False, blank=False)
+    title = models.CharField(
+        verbose_name='タイトル', default="", null=False, blank=False, max_length=128)
+    content = models.TextField(
+        verbose_name='内容', default="", null=False, blank=True)
+    created_by = CurrentUserField(verbose_name='登録者', on_update=True,
+                                  related_name='%(app_label)s_%(class)s_create', null=False, blank=False, max_length=4096)
+    created_at = models.DateTimeField(
+        verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
+    updated_at = models.DateTimeField(
+        verbose_name='更新日', auto_now=True, null=False, blank=False)
+    updated_by = CurrentUserField(verbose_name='更新者', on_update=True,
+                                  related_name='%(app_label)s_%(class)s_update', null=False, blank=False)
+
     class Meta:
-        abstract= True
+        abstract = True
 
     def __str__(self):
         return self.title
-    
+
     def save(self, obj, *args, **kwargs):
         if not self.pk:
             self.created_by = get_current_authenticated_user()
@@ -57,17 +67,21 @@ class CommonInfo(models.Model):
             extensions=['extra', 'admonition', 'sane_lists', 'toc'])
         return md.convert(self.content)
 
+
 def file_upload_path(instance, filename):
     return f"{instance.upload_path}/{str(instance.info.pk)}/{str(instance.pk)}/{filename}"
+
 
 class BaseAttachment(models.Model):
     objects = BaseManager()
     upload_path = ''
-    info = models.ForeignKey(CommonInfo , on_delete=models.CASCADE)
+    info = models.ForeignKey(CommonInfo, on_delete=models.CASCADE)
     file = models.FileField(verbose_name='ファイル', upload_to=file_upload_path)
-    filename = models.CharField(verbose_name='ファイル名', default="", null=True, blank=True, max_length=64)
+    filename = models.CharField(
+        verbose_name='ファイル名', default="", null=True, blank=True, max_length=64)
+
     class Meta:
-        abstract= True
+        abstract = True
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -88,4 +102,5 @@ class BaseAttachment(models.Model):
 
     def file_delete(self) -> None:
         if os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
-            shutil.rmtree(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
+            shutil.rmtree(
+                f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')

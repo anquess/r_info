@@ -105,12 +105,12 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                },
+        },
     }
-    #'default': {
+    # 'default': {
     #    'ENGINE': 'django.db.backends.sqlite3',
     #    'NAME': BASE_DIR / 'db.sqlite3',
-    #}
+    # }
 }
 
 
@@ -152,7 +152,7 @@ APPEND_SLASH = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # MESSAGE TAG 実践Django Pythonによる本格Webアプリケーション開発9.2 p257
-MESSAGE_TAGS ={
+MESSAGE_TAGS = {
     messages.INFO: 'alert alert-info',
     messages.SUCCESS: 'alert alert-success',
     messages.WARNING: 'alert alert-warning',
