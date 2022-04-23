@@ -1,5 +1,5 @@
-from tempfile import tempdir
 from django import forms
+
 
 class SuggestWidget(forms.SelectMultiple):
     template_name = 'eqs/widgets/suggest.html'
@@ -7,9 +7,9 @@ class SuggestWidget(forms.SelectMultiple):
     class Media:
         js = ['eqs/js/suggest.js']
         css = {
-            'all' : ['eqs/css/suggest.css']
+            'all': ['eqs/css/suggest.css']
         }
-    
+
     def __init__(self, attrs=None):
         super().__init__(attrs)
         if 'class' in self.attrs:

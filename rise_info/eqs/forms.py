@@ -13,6 +13,7 @@ def formatCheck(eqtypes):
     csvFormatCheck(
         eqtypes, ('SOCHIKATA', 'DATASAKUSEI_DATE', ))
 
+
 class EqTypeCreateForm(forms.ModelForm):
     class Meta:
         model = Eqtype
@@ -20,6 +21,7 @@ class EqTypeCreateForm(forms.ModelForm):
         widgets = {
             'relation_posts': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
         }
+
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(
@@ -29,12 +31,13 @@ class UploadFileForm(forms.Form):
         widget=forms.widgets.FileInput(
             attrs={
                 'class': 'form-control',
-            },       
+            },
         )
     )
+
     def clean_file(self):
         file = self.cleaned_data['file']
-        with open('uploads/documents/EQTypes.csv', 'rt', encoding = "utf-8-sig") as f:
+        with open('uploads/documents/EQTypes.csv', 'rt', encoding="utf-8-sig") as f:
             reader = csv.reader(f)
             header = reader.__next__()
             try:

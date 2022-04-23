@@ -2,17 +2,15 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from django.http import JsonResponse
 
 import sys
 
 from .forms import UploadFileForm
 from .models import Eqtype, eqtypes_csv_import
-from .serializer import EqtypeSerializer
 from accounts.views import isInTmcGroup, addTmcAuth
 from histories.models import getLastUpdateAt
+
 
 @login_required
 def eqtype_del(request, slug):
@@ -20,22 +18,26 @@ def eqtype_del(request, slug):
         if isInTmcGroup(request.user):
             for eqtype in Eqtype.objects.filter(slug=slug):
                 eqtype.delete()
-                messages.add_message(request, messages.INFO, f"{eqtype.id}は削除されました")    
+                messages.add_message(request, messages.INFO,
+                                     f"{eqtype.id}は削除されました")
         else:
             messages.add_message(request, messages.ERROR, "この権限では許可されていません。")
     except Exception as e:
-        messages.add_message(request, messages.ERROR, str(e))    
+        messages.add_message(request, messages.ERROR, str(e))
 
     return redirect('eqs:eqtype')
+
 
 def api_posts_get(request):
     """サジェスト候補の記事をJSONで返す。"""
     keyword = request.GET.get('keyword')
     if keyword:
-        eqType_list = [{'pk': eqType.pk, 'name': str(eqType)} for eqType in Eqtype.objects.filter(id__icontains=keyword)]
+        eqType_list = [{'pk': eqType.pk, 'name': str(
+            eqType)} for eqType in Eqtype.objects.filter(id__icontains=keyword)]
     else:
         eqType_list = []
     return JsonResponse({'object_list': eqType_list})
+
 
 @login_required
 def file_upload(request):
@@ -48,18 +50,21 @@ def file_upload(request):
                 file_obj = request.FILES['file']
                 sys.stderr.write(file_obj.name + "\n")
                 messages.add_message(request, messages.INFO, '登録されました')
-        else:            
+        else:
             eqtypes = Eqtype.objects.all()
             form = UploadFileForm()
             last_update_at = getLastUpdateAt('eqtype')
         try:
-            context = addTmcAuth({'form': form, 'eqtypes': eqtypes, 'last_update_at': last_update_at, }, request.user)
+            context = addTmcAuth(
+                {'form': form, 'eqtypes': eqtypes, 'last_update_at': last_update_at, }, request.user)
             return render(request, 'eqs/eqtypes/upload.html', context)
         except Exception as e:
-            messages.add_message(request, messages.ERROR, f'予期せぬエラーが発生しました。 エラーメッセージ:{str(e)}')
+            messages.add_message(request, messages.ERROR,
+                                 f'予期せぬエラーが発生しました。 エラーメッセージ:{str(e)}')
     else:
         messages.add_message(request, messages.ERROR, 'この権限では許可されていません。')
     return HttpResponseRedirect('/eqs/eqtypes/')
+
 
 def handle_uploaded_file(file_obj):
     sys.stderr.write("*** handle_uploaded_file *** aaa ***\n")
