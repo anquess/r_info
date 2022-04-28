@@ -25,8 +25,8 @@
         <label for="info_type" class="form-label">情報種別:</label>
     </div>
     <div class="col-auto">
-        <select class="form-select" type="info_type" id="info_type" name="info_type">
-            <option value=""></option>
+        <select class="form-select" type="search" id="info_type" name="info_type">
+            <option value="">指定なし</option>
             {% for info_type in info_types %}
             {% if selelcted_info_type == info_type.0 %}
             <option value="{{ info_type.0 }}" selected>

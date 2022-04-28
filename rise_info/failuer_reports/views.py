@@ -1,10 +1,48 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.generic import ListView
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+from django.db.models import Q
+from django.contrib.auth.models import User
+
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.views import addTmcAuth
+
+
+class FailuerReportList(ListView):
+    model = FailuerReport
+    template_name = 'failuer_reports/list.html'
+    context_object_name = 'infos'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FailuerReportList, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        q_created_by = self.request.GET.get('created_by')
+        q_keyword = self.request.GET.get('keyword')
+        if q_created_by is not None:
+            queryset = queryset.filter(
+                Q(created_by__username__contains=q_created_by)
+            ).distinct()
+        if q_keyword is not None:
+            queryset = queryset.filter(
+                Q(title__contains=q_keyword) |
+                Q(sammary__contains=q_keyword) |
+                Q(content__contains=q_keyword)
+            ).distinct()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = addTmcAuth(context, self.request.user)
+        context['users'] = User.objects.all()
+        context['selelcted_user'] = self.request.GET.get('created_by')
+        return context
 
 
 @login_required
