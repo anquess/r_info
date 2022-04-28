@@ -1,26 +1,36 @@
 {% extends "base.html" %}
-{% load static %} 
+{% load static %}
 {% block extraheader %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/a11y-dark.min.css">
+<link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
 <link rel="stylesheet" href="{% static 'infos/css/table-style.css' %}">
 {% endblock %}
 {% block main %}
 
 <div class="container">
-    <div class="card"><div class="card-body">
-    <h2>{{ info.title }}</h2>
-    </div></div>
+    <div class="card">
+        <div class="card-body">
+            <h2>{{ info.title }}</h2>
+        </div>
+    </div>
     {% block sammary %}{% endblock %}
-    <div class="card"><div class="card-body">
+    {% if info.is_rich_text %}
+    <div>
         <h5 class="card-title">詳細</h5>
-        {% if info.is_rich_text %}
-            {{ info.get_content_as_markdown | safe }}
-        {% else %}
+        <textarea id="editor" name="name">{{ info.content }}</textarea>
+        <script src="/static/simplemde/simplemde.min.js"></script>
+        <script src="/static/infos/js/addSimpleMDE_preview.js"></script>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">詳細</h5>
             {{ info.content | linebreaksbr }}
-        {% endif %}
-    </div></div>
+        </div>
+    </div>
+
+    {% endif %}
     {% for file in files %}
-        <p><a href="/media/{{ file.file }}">/media/{{ file.file.name }}</a></p>
+    <p><a href="/media/{{ file.file }}">/media/{{ file.file.name }}</a></p>
     {% endfor %}
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>
@@ -32,6 +42,5 @@
 </div>
 {% endblock %}
 {% block add_js %}
-<script src="/static/highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
