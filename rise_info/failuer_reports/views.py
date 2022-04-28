@@ -16,6 +16,7 @@ class FailuerReportList(ListView):
     model = FailuerReport
     template_name = 'failuer_reports/list.html'
     context_object_name = 'infos'
+    ordering = '-updated_at'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

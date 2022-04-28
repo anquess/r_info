@@ -14,6 +14,7 @@ class InfoList(ListView):
     model = Info
     template_name = 'infos/info_list.html'
     context_object_name = 'infos'
+    ordering = '-updated_at'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

@@ -59,6 +59,7 @@
             <th>タイトル</th>
             <th>概要</th>
             <th>投稿日</th>
+            <th>更新日</th>
             <th>編集</th>
         </tr>
     </thead>
@@ -68,7 +69,8 @@
             <th>{{ info.get_info_type_display }}</th>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary | linebreaksbr}}</th>
-            <th>{{ info.created_at }}</th>
+            <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
             {% if auth %}
             <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a>
                 <a class="btn btn-danger" href="{% url 'info_del' info.id %}"

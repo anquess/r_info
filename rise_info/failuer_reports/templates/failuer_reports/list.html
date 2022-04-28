@@ -54,6 +54,7 @@
             <th>タイトル</th>
             <th>概要</th>
             <th>投稿日</th>
+            <th>更新日</th>
             <th>官署</th>
             <th>編集</th>
         </tr>
@@ -64,6 +65,7 @@
             <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary | linebreaksbr }}</th>
             <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
             <th>{{ info.created_by.last_name }}</th>
             {% if user == info.created_by %}
             <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">編集</a>
