@@ -10,13 +10,15 @@ urlpatterns = [
     path("", views.top, name="top"),
     path('admin/', admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("contents/", include("contents.urls")),
     path("failuer_reports/", include("failuer_reports.urls")),
     path('infos/', include('infos.urls')),
     path('offices/', include('offices.urls')),
     path('eqs/', include('eqs.urls')),
-    url(r'mdeditor/', include('mdeditor.urls')), # mdeditor
+    url(r'mdeditor/', include('mdeditor.urls')),  # mdeditor
 ]
 
-handler404= 'rise_info.views.handler404'
+handler404 = 'rise_info.views.handler404'
 if settings.DEBUG:  # mdeditor
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    # mdeditor
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)    # mdeditor

@@ -1,0 +1,6 @@
+{% extends "baseDetail.html" %}
+{% block btn %}
+<th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
+{% if auth %}
+{% endif %}
+{% endblock %}
