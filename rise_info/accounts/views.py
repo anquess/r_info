@@ -6,10 +6,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
 from .forms import MyPasswordChangeForm, UserAddForm
+from contents.views import addMenus
 
 
 def addTmcAuth(context: dict, user) -> dict:
     context['auth'] = isInTmcGroup(user)
+    context = addMenus(context)
     return context
 
 

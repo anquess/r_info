@@ -1,80 +1,98 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>信頼性ＨＰ</title>    
+    <title>信頼性ＨＰ</title>
     <link href="/static/bootstrap5/css/bootstrap.min.css" rel="stylesheet">
     <script src="/static/bootstrap5/js/bootstrap.bundle.min.js"></script>
     {% block extraheader %}{% endblock %}
 </head>
+
 <body>
-<div class="container-fluid">
-<nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
-    <div class="d-flex container-fluid justify-content-between">
-        <a href="/" class="navbar-brand">信頼性ＨＰ</a>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">信頼性情報</a> </li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'failuer_report_list' %}">障害通報</a> </li>
-            {% if auth %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'office' %}">官署</a> </li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'eqs:eqtype' %}">装置型式</a> </li>
-            {% endif %}
-            <li class="nav-item"><a class="nav-link" href="/static/gyoumushien/" target="new">業務支援</a> </li>
-        </ul>
-        <ul class="navbar-nav mr-md-2">
-            <li class="nav-item dropdown">
-                {% if user %}
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="/media/user.png" class="avatar" width="30px" height="30px" />{{ user }}
-                    </a>
-                {% else %}
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        ユーザ管理
-                    </a>
-                {% endif %}
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% if user.is_authenticated %}
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
-                    <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
-                        {% if user.username == 'root' %}
-                            <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
-                        {% endif %}
-                    {% else %}
-                    <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-        </ul>
-    </div>
-</nav></div>
-<main>
     <div class="container-fluid">
-        {% for message in messages %}
-        <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
-            {{ message }}
-        </div>
-        {% endfor %}
-        {% for message in form.errors %}
-        <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
-            {{ message }}
-        </div>
-        {% endfor %}
-        {%if formset.erros%}
-            {%for error in formset.errors%}
-                {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
-            {%endfor%}
-        {%endif%}
-        {%if formset2%}
-            {%for error in formset2.errors%}
-                {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
-            {%endfor%}
-        {%endif%}
-        {% block main %}{% endblock %}
+        <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
+            <div class="d-flex container-fluid justify-content-between">
+                <a href="/" class="navbar-brand">信頼性ＨＰ</a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">信頼性情報</a> </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'failuer_report_list' %}">障害通報</a> </li>
+                    {% if auth %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'office' %}">官署</a> </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'eqs:eqtype' %}">装置型式</a> </li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="/static/gyoumushien/" target="new">業務支援</a> </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            信頼性HP
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for menu in menus %}
+                            <li><a class="dropdown-item" href="">{{menu.menu_title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="navbar-nav mr-md-2">
+                    <li class="nav-item dropdown">
+                        {% if user %}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="/media/user.png" class="avatar" width="30px" height="30px" />{{ user }}
+                        </a>
+                        {% else %}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            ユーザ管理
+                        </a>
+                        {% endif %}
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
+                            <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
+                            {% if user.username == 'root' %}
+                            <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
+                            {% endif %}
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </div>
-</main>
-</div>
+    <main>
+        <div class="container-fluid">
+            {% for message in messages %}
+            <div {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% for message in form.errors %}
+            <div {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {%if formset.erros%}
+            {%for error in formset.errors%}
+            {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
+            {%endfor%}
+            {%endif%}
+            {%if formset2%}
+            {%for error in formset2.errors%}
+            {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
+            {%endfor%}
+            {%endif%}
+            {% block main %}{% endblock %}
+        </div>
+    </main>
+    </div>
 </body>
-    <script src="/static/jquery/jquery-3.6.0.min.js"></script>
-    {% block add_js %}{% endblock %}
+<script src="/static/jquery/jquery-3.6.0.min.js"></script>
+{% block add_js %}{% endblock %}
+
 </html>

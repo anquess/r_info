@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     # APPS
     'accounts.apps.AccountsConfig',
+    'contents.apps.ContentsConfig',
     'eqs.apps.EqsConfig',
     'failuer_reports.apps.FailuerReportsConfig',
     'histories.apps.HistoriesConfig',
