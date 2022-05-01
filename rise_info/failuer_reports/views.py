@@ -47,17 +47,6 @@ class FailuerReportList(ListView):
 
 
 @login_required
-def failuer_report_list(request):
-    infos = FailuerReport.objects.all()
-    context = {
-        'infos': infos,
-        'user': request.user
-    }
-    context = addTmcAuth(context, request.user)
-    return render(request, "failuer_reports/list.html", context)
-
-
-@login_required
 def failuer_report_new(request):
     form = FailuerReportForm(request.POST or None)
     context = addTmcAuth({'form': form}, request.user)
