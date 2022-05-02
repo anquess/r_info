@@ -2,48 +2,59 @@
 
 {% block main %}
 {% load markdown_extras %}
-  <div class="row">
-    <div class="col-5">
-      <h1>官署・アカウント一括更新</h1>
+<div class="row">
+  <div class="col-5">
+    <h1>官署・アカウント一括更新</h1>
+  </div>
+  <div class="col-5">
+    <h3>最新更新日:{{last_update_at}}</h3>
+  </div>
+  <div class="col-2">
+    <sub>最終更新日はRISEの更新日時</sub>
+  </div>
+</div>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row align-items-center">
+    <div class="col-10">
+      {{ form.as_p }}
     </div>
-    <div class="col-5">
-      <h3>最新更新日:{{last_update_at}}</h3>
+    <div class="col-1">
+      <button class="btn btn-primary" type="submit">アップロード</button>
     </div>
-    <div class="col-2">
-      <sub>最終更新日はRISEの更新日時</sub>
+    <div class="col-1">
+      <a class="btn btn-success" href="{% url 'office_download' %}">ダウンロード</a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">アップロード</button>
-  </form>
-  {% if offices %}
-    <table class="table">
-      <thead>
-      <tr>
-          <th>官署コード</th>
-          <th>官署名</th>
-          <th>有効・無効</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for office in offices|dictsort:"id" %}
-        <tr>
-          <td>{{ office.id }}</td>
-          <td>{{ office.name }}</td>
-          {%if office.unyo_sts%}
-            <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>無効化</a></th>
-          {%else%}  
-            <th><a class="btn btn-primary" href="{% url 'office_del' office.id %}" onclick='return confirm("よろしいですか？");'>有効化</a></th>
-          {%endif%}
-          </tr>
-      {% endfor %}
-    </tbody>
-   </table>
+</form>
+{% if offices %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>官署コード</th>
+      <th>官署名</th>
+      <th>有効・無効</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for office in offices|dictsort:"id" %}
+    <tr>
+      <td>{{ office.id }}</td>
+      <td>{{ office.name }}</td>
+      {%if office.unyo_sts%}
+      <th><a class="btn btn-danger" href="{% url 'office_del' office.id %}"
+          onclick='return confirm("よろしいですか？");'>無効化</a></th>
+      {%else%}
+      <th><a class="btn btn-primary" href="{% url 'office_del' office.id %}"
+          onclick='return confirm("よろしいですか？");'>有効化</a></th>
+      {%endif%}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-  {% else %}
-    <p>官署はまだ登録されていません。</p>
-  {% endif %}
+{% else %}
+<p>官署はまだ登録されていません。</p>
+{% endif %}
 
 {% endblock %}

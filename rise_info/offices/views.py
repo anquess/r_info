@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import FileResponse
 from django.shortcuts import redirect, render
 
 import sys
@@ -62,3 +63,8 @@ def handle_uploaded_file(file_obj):
             destination.write(chunk)
             sys.stderr.write("*** handle_uploaded_file *** eee ***\n")
     offices_csv_import()
+
+
+@login_required
+def file_downnload(request):
+    return FileResponse(open('uploads/documents/Offices.csv', 'rb'), filename='office.csv', as_attachment=True)

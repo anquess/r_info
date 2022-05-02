@@ -2,42 +2,52 @@
 
 {% block main %}
 {% load markdown_extras %}
-  <div class="row">
-    <div class="col-5">
-      <h1>装置型式一括更新</h1>
+<div class="row">
+  <div class="col-5">
+    <h1>装置型式一括更新</h1>
+  </div>
+  <div class="col-5">
+    <h3>最新更新日:{{last_update_at}}</h3>
+  </div>
+  <div class="col-2">
+    <sub>最終更新日はRISEの更新日時</sub>
+  </div>
+</div>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row align-items-center">
+    <div class="col-10">
+      {{ form.as_p }}
     </div>
-    <div class="col-5">
-      <h3>最新更新日:{{last_update_at}}</h3>
+    <div class="col-1">
+      <button class="btn btn-primary" type="submit">アップロード</button>
     </div>
-    <div class="col-2">
-      <sub>最終更新日はRISEの更新日時</sub>
+    <div class="col-1">
+      <a class="btn btn-success" href="{% url 'eqs:eqtype_download' %}">ダウンロード</a>
     </div>
   </div>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">アップロード</button>
-  </form>
-  {% if eqtypes %}
-    <table class="table">
-      <thead>
-      <tr>
-          <th>装置型式</th>
-          <th>削除</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for eqtype in eqtypes|dictsort:"id" %}
-        <tr>
-          <td>{{ eqtype.id }}</td>
-          <th><a class="btn btn-danger" href="{% url 'eqs:eqtype_del' eqtype.slug %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
-        </tr>
-      {% endfor %}
-    </tbody>
-   </table>
+</form>
+{% if eqtypes %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>装置型式</th>
+      <th>削除</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for eqtype in eqtypes|dictsort:"id" %}
+    <tr>
+      <td>{{ eqtype.id }}</td>
+      <th><a class="btn btn-danger" href="{% url 'eqs:eqtype_del' eqtype.slug %}"
+          onclick='return confirm("よろしいですか？");'>削除</a></th>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-  {% else %}
-    <p>装置型式はまだ登録されていません。</p>
-  {% endif %}
+{% else %}
+<p>装置型式はまだ登録されていません。</p>
+{% endif %}
 
 {% endblock %}
