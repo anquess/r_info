@@ -1,14 +1,14 @@
-$(function(){
+$(function () {
     var totalManageElement = $('input#id_attachmentfile_set-TOTAL_FORMS');
     var currentFileCount = parseInt(totalManageElement.val());
-    $('button#add').on('click', function(){
+    $('button#add').on('click', function () {
         var rowElement = $('<div>', {
             class: 'row pb-2',
         });
-        var col5_1Element =$('<div>', {
+        var col5_1Element = $('<div>', {
             class: 'col-5',
-        }); 
-        var col2Element =$('<div>', {
+        });
+        var col2Element = $('<div>', {
             class: 'col-2',
         });
         var fileElement = $('<input>', {
@@ -39,30 +39,31 @@ $(function(){
     });
 });
 
-$(function(){
+$(function () {
     var totalManageElement = $('input#id_circumstances_set-TOTAL_FORMS');
     var currentEventCount = parseInt(totalManageElement.val());
-    $('button#add_event').on('click', function(){
-        var currentEventDate = $('input#id_circumstances_set-' + (currentEventCount -1) + '-date').val();
-        var currentEventTime = $('input#id_circumstances_set-' + (currentEventCount -1) + '-time').val();
+    $('button#add_event').on('click', function () {
+        var currentEventDate = $('input#id_circumstances_set-' + (currentEventCount - 1) + '-date').val();
+        var currentEventTime = $('input#id_circumstances_set-' + (currentEventCount - 1) + '-time').val();
         var rowElement = $('<div>', {
             class: 'row',
         });
-        var col2_date_Element =$('<div>', {
+        var col2_date_Element = $('<div>', {
             class: 'col-2',
-        }); 
-        var col2_time_Element =$('<div>', {
+        });
+        var col2_time_Element = $('<div>', {
             class: 'col-2',
-        }); 
-        var col7_Element =$('<div>', {
+        });
+        var col7_Element = $('<div>', {
             class: 'col-7',
         });
-        var col1_Element =$('<div>', {
+        var col1_Element = $('<div>', {
             class: 'col-1',
         });
         var dateElement = $('<input>', {
             class: 'form-control',
             type: 'text',
+            name: 'circumstances_set-' + currentEventCount + '-date',
             onclick: "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
             id: 'id_circumstances_set-' + currentEventCount + '-date',
             value: currentEventDate,
@@ -99,29 +100,29 @@ $(function(){
         $('div#event-area').append(rowElement);
         currentEventCount += 1;
         totalManageElement.attr('value', currentEventCount);
-        
+
     });
 });
 
 
-function setUpElement(id){
-	var elment = document.getElementById(id);
-	elment.disabled = false;
-	elment.hidden = false;
-	return elment;
+function setUpElement(id) {
+    var elment = document.getElementById(id);
+    elment.disabled = false;
+    elment.hidden = false;
+    return elment;
 }
-function tearDownElement(elment){
-	elment.disabled = true;
-	elment.hidden = true;
+function tearDownElement(elment) {
+    elment.disabled = true;
+    elment.hidden = true;
 }
 function copy(id) {
-	var copyText = setUpElement(id);
-	copyText.select();
-	document.execCommand("copy");
-	tearDownElement(copyText);
+    var copyText = setUpElement(id);
+    copyText.select();
+    document.execCommand("copy");
+    tearDownElement(copyText);
 }
 function change(id) {
-	var buttton = setUpElement(id);
-	buttton.disabled = true;
-	buttton.hidden = true;
+    var buttton = setUpElement(id);
+    buttton.disabled = true;
+    buttton.hidden = true;
 }
