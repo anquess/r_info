@@ -1,18 +1,19 @@
 {% extends "baseInfoNewOrEdit.html" %}
 
 {% block title %}
-<h1>信頼性HPの更新</h1>
+<h1>信頼性HPの登録</h1>
 {% endblock %}
 
 {% block sammary %}
 {% include "baseAddAttachment.html" %}
 {% include "base_info_add_new_sammary.html" %}
 {% endblock %}
+
 {% block btn %}
-<button class="btn btn-primary" type="submit" value="post">変更</button>
+<button class="btn btn-primary" type="submit" value="post">登録</button>
 {% endblock %}
 
-{% block add_js %}
+{% block add_js2 %}
 <script src="/static/infos/js/addAttachmentButton.js"></script>
 <script>
     $(document).ready(setMaxlength('#id_managerID'));

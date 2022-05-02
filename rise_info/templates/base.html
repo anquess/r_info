@@ -32,8 +32,10 @@
                             {% for menu in menus %}
                             <li><a class="dropdown-item"
                                     href="{% url 'content_detail' menu.content.id %}">{{menu.menu_title}}</a></li>
-
                             {% endfor %}
+                            {% if auth %}
+                            <li><a class="dropdown-item" href="{% url 'content_new' %}">追加</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 

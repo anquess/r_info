@@ -61,3 +61,27 @@ def content_edit(request, content_id):
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('info_list')
+
+
+@login_required
+def content_new(request):
+    from accounts.views import addTmcAuth, isInTmcGroup
+    if isInTmcGroup(request.user):
+        form = ContentsForm(request.POST or None)
+        context = addTmcAuth({'form': form}, request.user)
+        if request.method == "POST" and form.is_valid():
+            info = form.save(commit=False)
+            formset = FileFormSet(request.POST, request.FILES, instance=info)
+            if formset.is_valid():
+                info.save()
+                formset.save()
+                messages.add_message(request, messages.INFO, '更新されました。')
+                return redirect('top')
+            else:
+                context['formset'] = formset
+        else:
+            context['formset'] = FileFormSet()
+        return render(request, "contents/new.html", context)
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
