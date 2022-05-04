@@ -7,6 +7,9 @@
 __pycache__/
 local_settings.py
 rise_info/*/migrations/*
+rise_info/node_modules/*
+rise_info/package-lock.json
+rise_info/package.json
 */migrations/*
 db.sqlite3
 uploads
