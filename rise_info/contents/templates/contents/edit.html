@@ -5,11 +5,19 @@
 {% endblock %}
 
 {% block sammary %}
+<div class="row mt-2">
+    <div class="col-1">
+        <label for="id_menu" class="form-label">{{form.menu.label}}</label>
+    </div>
+    <div class="col-4">
+        {{form.menu}}
+    </div>
+</div>
 {% include "baseAddAttachment.html" %}
 {% include "base_info_add_new_sammary.html" %}
 {% endblock %}
 {% block btn %}
-<button class="btn btn-primary" type="submit" value="post">変更</button>
+<button class="btn btn-primary mt-2" type="submit" value="post">変更</button>
 {% endblock %}
 
 {% block add_js %}

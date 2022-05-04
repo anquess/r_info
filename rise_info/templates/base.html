@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>信頼性ＨＰ</title>
     <link href="/static/bootstrap5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/menu/css/dropdown-submenu.css" rel="stylesheet">
     <script src="/static/bootstrap5/js/bootstrap.bundle.min.js"></script>
     {% block extraheader %}{% endblock %}
 </head>
@@ -30,11 +31,22 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for menu in menus %}
-                            <li><a class="dropdown-item"
-                                    href="{% url 'content_detail' menu.content.id %}">{{menu.menu_title}}</a></li>
+                            <li><a class="dropdown-item" href="#">
+                                    {{ menu.menu_title }} &raquo;
+                                </a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    {% for content in menu.related_content.all %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'content_detail' content.id %}">
+                                            {{ content }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
                             {% endfor %}
                             {% if auth %}
                             <li><a class="dropdown-item" href="{% url 'content_new' %}">追加</a></li>
+                            <li><a class="dropdown-item" href="{% url 'menu_list' %}">メニュー管理</a></li>
                             {% endif %}
                         </ul>
                     </li>

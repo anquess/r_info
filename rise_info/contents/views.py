@@ -1,6 +1,9 @@
+from re import template
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView
 
 from contents.models import Menu, Contents, AttachmentFile
 from contents.forms import ContentsForm, FileFormSet
@@ -57,7 +60,7 @@ def content_edit(request, content_id):
                 'formset': formset,
             },
                 request.user)
-            return render(request, 'infos/edit.html', context)
+            return render(request, 'contents/edit.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('info_list')
@@ -85,3 +88,20 @@ def content_new(request):
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')
+
+
+class MenuList(ListView):
+    model = Menu
+    template_name = 'contents/menu_list.html'
+    context_object_name = 'menus'
+    ordering = 'sort_num'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MenuList, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        from accounts.views import addTmcAuth
+        context = super().get_context_data(**kwargs)
+        context = addTmcAuth(context, self.request.user)
+        return context
