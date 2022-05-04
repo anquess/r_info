@@ -1,4 +1,3 @@
-from re import template
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -10,7 +9,7 @@ from contents.forms import ContentsForm, FileFormSet
 
 
 def addMenus(context: dict) -> dict:
-    context['menus'] = Menu.objects.order_by('sort_num').all()
+    context['menus'] = Menu.objects.prefetch_related('related_content')
     return context
 
 
@@ -25,7 +24,7 @@ def content_detail(request, content_id):
             'files': files,
         }
         context = addTmcAuth(context, request.user)
-        return render(request, 'contents/detail.html', context)
+        return render(request, 'contents/content_detail.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Contentsはありません。")
         return redirect('top')
@@ -50,20 +49,20 @@ def content_edit(request, content_id):
                         for ele in formset:
                             messages.add_message(
                                 request, messages.WARNING, str(ele))
-                        return render(request, 'contents/edit.html', context)
+                        return render(request, 'contents/content_edit.html', context)
                 form.save()
                 formset.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('top')
+                return redirect('menu_list')
             context = addTmcAuth({
                 'form': form,
                 'formset': formset,
             },
                 request.user)
-            return render(request, 'contents/edit.html', context)
+            return render(request, 'contents/content_edit.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('menu_list')
+        return redirect('top')
 
 
 @login_required
@@ -79,15 +78,47 @@ def content_new(request):
                 info.save()
                 formset.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('top')
+                return redirect('menu_list')
             else:
                 context['formset'] = formset
         else:
             context['formset'] = FileFormSet()
-        return render(request, "contents/new.html", context)
+        return render(request, "contents/content_new.html", context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')
+
+
+@login_required
+def content_up(request, content_id):
+    return content_updown(request, content_id, 'sort_num')
+
+
+@login_required
+def content_down(request, content_id):
+    return content_updown(request, content_id, '-sort_num')
+
+
+def content_updown(request, content_id, order):
+    from accounts.views import isInTmcGroup
+    if isInTmcGroup(request.user):
+        menu = Contents.objects.get_or_none(pk=content_id).menu
+        subject = None
+        for content in Contents.objects.filter(menu=menu).order_by(order).all():
+            if content.id == content_id:
+                try:
+                    content.replace_sort_num(subject)
+                    messages.add_message(
+                        request, messages.INFO, content.title + "メニューを動かしました")
+                except ValueError:
+                    messages.add_message(
+                        request, messages.ERROR, "これより上はありません")
+                return redirect('menu_list')
+            else:
+                subject = content
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('menu_list')
 
 
 class MenuList(ListView):
@@ -95,6 +126,7 @@ class MenuList(ListView):
     template_name = 'contents/menu_list.html'
     context_object_name = 'menus'
     ordering = 'sort_num'
+    queryset = Menu.objects.prefetch_related('related_content')
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):

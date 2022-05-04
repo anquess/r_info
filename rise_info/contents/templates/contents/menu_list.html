@@ -12,9 +12,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>メニュータイトル</th>
+            <th>タイトル</th>
             <th>順番</th>
             <th>操作</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +23,7 @@
         <tr>
             <th>{{ menu.menu_title }} </th>
             <th id='menu-{{forloop.counter}}' value='{{forloop.counter}}'>{{ menu.sort_num }}</th>
+            <th></th>
             <th>
                 <div class="row">
                     <div class="col-1">
@@ -41,6 +43,11 @@
                 </div>
             </th>
         </tr>
+        {% for content in menu.related_content.all|dictsort:"sort_num" %}
+        <tr bgcolor="lightgrey">
+            {% include "contents/contents_list.html" %}
+        </tr>
+        {% endfor %}
         {% endfor %}
     </tbody>
 </table>
