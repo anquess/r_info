@@ -36,7 +36,7 @@
                                     {{ menu.menu_title }} &raquo;
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    {% for content in menu.related_content.all %}
+                                    {% for content in menu.related_content.all|dictsort:"sort_num" %}
                                     <li>
                                         <a class="dropdown-item" href="{% url 'content_detail' content.id %}">
                                             {{ content }}</a>

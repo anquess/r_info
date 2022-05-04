@@ -8,7 +8,7 @@ urlpatterns = [
     path("content/up/<int:content_id>/", views.content_up, name="content_up"),
     path("content/down/<int:content_id>/",
          views.content_down, name="content_down"),
-    path("menu/list/", views.MenuList.as_view(), name="menu_list"),
+    path("menu/list/", views.menu_list, name="menu_list"),
     path("menu/up/<int:menu_id>/", views.menu_up, name="menu_up"),
     path("menu/down/<int:menu_id>/", views.menu_down, name="menu_down"),
 ]

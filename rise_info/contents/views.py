@@ -9,7 +9,8 @@ from contents.forms import ContentsForm, FileFormSet
 
 
 def addMenus(context: dict) -> dict:
-    context['menus'] = Menu.objects.prefetch_related('related_content')
+    context['menus'] = Menu.objects.order_by('sort_num').prefetch_related(
+        'related_content')
     return context
 
 
@@ -118,25 +119,19 @@ def content_updown(request, content_id, order):
                 subject = content
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('menu_list')
+        return redirect('top')
 
 
-class MenuList(ListView):
-    model = Menu
-    template_name = 'contents/menu_list.html'
-    context_object_name = 'menus'
-    ordering = 'sort_num'
-    queryset = Menu.objects.prefetch_related('related_content')
-
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(MenuList, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        from accounts.views import addTmcAuth
-        context = super().get_context_data(**kwargs)
-        context = addTmcAuth(context, self.request.user)
-        return context
+@login_required
+def menu_list(request):
+    from accounts.views import addTmcAuth, isInTmcGroup
+    if isInTmcGroup(request.user):
+        context = {}
+        context = addTmcAuth(context, request.user)
+        return render(request, 'contents/menu_list.html', context)
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
 
 
 @login_required
