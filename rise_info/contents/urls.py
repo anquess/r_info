@@ -6,4 +6,6 @@ urlpatterns = [
     path("<int:content_id>/", views.content_detail, name="content_detail"),
     path("<int:content_id>/edit/", views.content_edit, name="content_edit"),
     path("menu/list/", views.MenuList.as_view(), name="menu_list"),
+    path("menu/up/<int:menu_id>/", views.menu_up, name="menu_up"),
+    path("menu/down/<int:menu_id>/", views.menu_down, name="menu_down"),
 ]

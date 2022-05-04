@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block main %}
+{% load bootstrap_icons %}
 
 <div class="welcome">
     <h1>メニュー一覧</h1>
@@ -12,16 +13,33 @@
     <thead>
         <tr>
             <th>メニュータイトル</th>
-            <th>コンテンツ詳細</th>
             <th>順番</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
         {% for menu in menus %}
         <tr>
             <th>{{ menu.menu_title }} </th>
-            <th><a href="{% url 'content_detail' menu.content.id %}">{{ menu.content.title }}</a></th>
             <th id='menu-{{forloop.counter}}' value='{{forloop.counter}}'>{{ menu.sort_num }}</th>
+            <th>
+                <div class="row">
+                    <div class="col-1">
+                        {% if not forloop.first %}
+                        <a class="btn btn-primary" href="{% url 'menu_up' menu.id%}">
+                            {% bs_icon 'chevron-compact-up' %}
+                        </a>
+                        {%endif%}
+                    </div>
+                    <div class="col-1">
+                        {% if not forloop.last %}
+                        <a class="btn btn-primary" href="{% url 'menu_down' menu.id%}">
+                            {% bs_icon 'chevron-compact-down' %}
+                        </a>
+                        {%endif%}
+                    </div>
+                </div>
+            </th>
         </tr>
         {% endfor %}
     </tbody>
