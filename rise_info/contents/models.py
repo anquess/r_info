@@ -50,6 +50,8 @@ class Contents(CommonInfo):
 
     def assign_sort_num(self) -> int:
         content_querySet = Contents.objects.filter(menu=self.menu).all()
+        if content_querySet.count() == 0:
+            return self.sort_num
         if content_querySet.aggregate(Max('sort_num'))['sort_num__max'] + 1 < self.sort_num:
             return content_querySet.aggregate(Max('sort_num'))['sort_num__max'] + 1
         if content_querySet.filter(sort_num=self.sort_num).count() > 1:
