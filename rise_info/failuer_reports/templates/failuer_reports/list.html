@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load custom_filters %}
 {% load pygmentize %}
-
+{% load bootstrap_icons %}
 {% block header %}
 <style>
     {
@@ -41,7 +41,7 @@
         </select>
     </div>
     <div class="col-auto">
-        <button id="filter" type="submit" class="btn btn-secondary">検索</button>
+        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
 </form>
 
@@ -68,9 +68,13 @@
             <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
             <th>{{ info.created_by.last_name }}</th>
             {% if user == info.created_by %}
-            <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">編集</a>
+            <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">
+                    {% bs_icon 'pencil-square' %}
+                </a>
                 <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}"
-                    onclick='return confirm("よろしいですか？");'>削除</a>
+                    onclick='return confirm("よろしいですか？");'>
+                    {% bs_icon 'trash' %}
+                </a>
             </th>
             {% endif %}
         </tr>

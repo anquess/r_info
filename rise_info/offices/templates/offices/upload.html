@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load bootstrap_icons %}
 {% block main %}
 {% load markdown_extras %}
 <div class="row">
@@ -20,10 +20,12 @@
       {{ form.as_p }}
     </div>
     <div class="col-1">
-      <button class="btn btn-primary" type="submit">アップロード</button>
+      <button class="btn btn-primary" type="submit">{% bs_icon 'upload' %}</button>
     </div>
     <div class="col-1">
-      <a class="btn btn-success" href="{% url 'office_download' %}">ダウンロード</a>
+      <a class="btn btn-success" href="{% url 'office_download' %}">
+        {% bs_icon 'file-earmark-arrow-down' %}
+      </a>
     </div>
   </div>
 </form>

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load pygmentize %}
 {% load custom_filters %}
+{% load bootstrap_icons %}
 {% block header %}
 <style>
     {
@@ -45,7 +46,7 @@
         <input class="form-control" type="search" id="eqtype" name="eqtype" value={{ request.GET|eqtype }}>
     </div>
     <div class="col-auto">
-        <button id="filter" type="submit" class="btn btn-secondary">検索</button>
+        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
 </form>
 {% if auth %}
@@ -72,9 +73,12 @@
             <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
             <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
             {% if auth %}
-            <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a>
-                <a class="btn btn-danger" href="{% url 'info_del' info.id %}"
-                    onclick='return confirm("よろしいですか？");'>削除</a>
+            <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+                    {% bs_icon 'pencil-square' %}
+                </a>
+                <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+                    {% bs_icon 'trash' %}
+                </a>
             </th>
             {% endif %}
         </tr>

@@ -1,22 +1,31 @@
 {% extends "baseDetail.html" %}
+{% load bootstrap_icons %}
 {% block sammary %}
-<div class="card"><div class="card-body">
-    <h5 class="card-title">装置型式</h5>
-    {% for eqtype in info.eqtypes.all %}
-    <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
-    {% endfor %}
-</div></div>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">装置型式</h5>
+        {% for eqtype in info.eqtypes.all %}
+        <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
+        {% endfor %}
+    </div>
+</div>
 
-<div class="card"><div class="card-body">
-    <h5 class="card-title">概要</h5>
-    {{ info.sammary | linebreaksbr }}
-</div></div>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">概要</h5>
+        {{ info.sammary | linebreaksbr }}
+    </div>
+</div>
 {% endblock %}
 
 {% block btn %}
-    <th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
-    {% if auth %}
-        <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">編集</a></th>
-        <th><a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>削除</a></th>
-    {% endif %}
+<th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
+{% if auth %}
+<th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+        {% bs_icon 'pencil-square' %}
+    </a></th>
+<th><a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+        {% bs_icon 'trash' %}
+    </a></th>
+{% endif %}
 {% endblock %}
