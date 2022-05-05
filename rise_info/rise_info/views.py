@@ -1,13 +1,16 @@
-from shutil import copy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from accounts.views import addTmcAuth
 
+
 @login_required
 def top(request):
-    context = addTmcAuth({},request.user)
+    context = addTmcAuth({}, request.user)
+#    ip = request.META.get('REMOTE_ADDR') # django toolbar
+#    context["IP"] = ip # django toolbar
     return render(request, "top.html", context)
+
 
 def handler404(request, exception):
     context = {"errmsg": exception}

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'pygments_renderer',
     'django_extensions',
     'rest_framework',
+    #   'debug_toolbar', # Django tool_bar
 
     # APPS
     'accounts.apps.AccountsConfig',
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django_currentuser.middleware.ThreadLocalUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #    'debug_toolbar.middleware.DebugToolbarMiddleware', #Django_toolbar
 ]
 
 ROOT_URLCONF = 'rise_info.urls'
@@ -86,7 +88,7 @@ TEMPLATES = [
             ],
             'libraries': {
                 'markdown_extras': 'rise_info.templatetags.markdown_extras',
-            }
+            },
         },
     },
 ]
@@ -185,3 +187,9 @@ MDEDITOR_CONFIGS = {
         'language': 'en',
     }
 }
+
+# Django_toolbar
+#INTERNAL_IPS = ['192.168.1.18']
+# DEBUG_TOOLBAR_CONFIG = {
+#    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+# }
