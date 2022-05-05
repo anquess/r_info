@@ -22,8 +22,7 @@ class Menu(models.Model):
     def replace_sort_num(self, subject: 'Menu', *args, **kwargs):
         if subject:
             self.sort_num, subject.sort_num = subject.sort_num, self.sort_num
-            super(Menu, self).save(**kwargs)
-            super(Menu, subject).save(**kwargs)
+            Menu.objects.bulk_update([self, subject], fields=['sort_num'])
         else:
             raise ValueError('対象が空です')
 
@@ -45,8 +44,7 @@ class Contents(CommonInfo):
 
     def replace_sort_num(self, subject: 'Contents', *args, **kwargs):
         self.sort_num, subject.sort_num = subject.sort_num, self.sort_num
-        super(Contents, subject).save(subject, *args, **kwargs)
-        super(Contents, self).save(self, *args, **kwargs)
+        Contents.objects.bulk_update([self, subject], fields=['sort_num'])
 
     def assign_sort_num(self) -> int:
         content_querySet = Contents.objects.filter(menu=self.menu).all()
