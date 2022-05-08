@@ -13,6 +13,7 @@ rise_info/package.json
 */migrations/*
 db.sqlite3
 uploads
+rise_info/rise_info/settings.json
 rise_info/static/admin
 rise_info/static/bootstrap5
 rise_info/static/bootstrap-datepicker

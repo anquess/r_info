@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from django.contrib import messages
 
 import os
+import json
 from pathlib import Path
 
+json_file = open('settings.json','r')
+json_data = json.load(json_file)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
