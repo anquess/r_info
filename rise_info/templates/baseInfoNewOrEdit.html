@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block extraheader %}
 <link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
+<link rel="stylesheet" href="/static/fontawesome/css/fontawesome.min.css">
 {% endblock %}
 {% block main %}
 {% block title %}{% endblock %}
@@ -28,13 +29,13 @@
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
 <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script>
-function setMaxlength (id){
-    $(id).maxlength({
-        alwaysShow: true,
-        warningClass: "label label-success",
-        limitReachedClass: "label label-danger"
-    });
-}
+    function setMaxlength(id) {
+        $(id).maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
     $(document).ready(setMaxlength('#id_title'));
     $(document).ready(setMaxlength('#id_content'));
 </script>

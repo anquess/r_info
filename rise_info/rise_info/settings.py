@@ -102,12 +102,15 @@ WSGI_APPLICATION = 'rise_info.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = json_data["DATABASES"]
-# 'default': {
-#    'ENGINE': 'django.db.backends.sqlite3',
-#    'NAME': BASE_DIR / 'db.sqlite3',
-#   }
-# }
+if json_data["DATABASES"]:
+    DATABASES = json_data["DATABASES"]
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
