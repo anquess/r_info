@@ -15,10 +15,10 @@ import os
 import json
 from pathlib import Path
 
-json_file = open('settings.json','r')
-json_data = json.load(json_file)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+with (BASE_DIR / 'rise_info/settings.json').open() as json_file:
+    json_data = json.load(json_file)
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,23 +102,12 @@ WSGI_APPLICATION = 'rise_info.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rise_info',
-        'USER': 'root',
-        'PASSWORD': 'mjk2r7h4u5',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
-    # 'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-}
+DATABASES = json_data["DATABASES"]
+# 'default': {
+#    'ENGINE': 'django.db.backends.sqlite3',
+#    'NAME': BASE_DIR / 'db.sqlite3',
+#   }
+# }
 
 
 # Password validation
