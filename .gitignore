@@ -22,6 +22,7 @@ rise_info/static/bootstrap-datepicker
 rise_info/static/bootstrap-maxlength
 rise_info/static/debug_toolbar
 rise_info/static/highlight
+rise_info/static/icon_cache
 rise_info/static/jquery
 rise_info/static/gyoumushien
 rise_info/static/popper
@@ -29,6 +30,9 @@ rise_info/static/simplemde
 rise_info/static/django_extensions
 rise_info/static/rest_framework
 test_data/
+node_modules
+package-lock.json
+package.json
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/

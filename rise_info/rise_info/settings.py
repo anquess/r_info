@@ -188,3 +188,7 @@ MDEDITOR_CONFIGS = {
 # DEBUG_TOOLBAR_CONFIG = {
 #    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 # }
+
+# bootstrap icons
+BS_ICONS_BASE_URL = 'http://prototype-rpi.local/static/bootstrap_icons/'
+BS_ICONS_CACHE = os.path.join(STATIC_ROOT, 'icon_cache')
