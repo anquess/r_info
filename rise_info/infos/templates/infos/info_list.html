@@ -3,11 +3,6 @@
 {% load custom_filters %}
 {% load bootstrap_icons %}
 {% block header %}
-<style>
-    {
-        % pygments_css %
-    }
-</style>
 {% endblock %}
 
 {% block main %}
@@ -45,6 +40,14 @@
     <div class="col-auto">
         <input class="form-control" type="search" id="eqtype" name="eqtype" value={{ request.GET|eqtype }}>
     </div>
+    {% if auth %}
+    <div class="col-auto">
+        <label for="is_all" class="form-label">非公開情報含む:</label>
+    </div>
+    <div class="col-auto">
+        <input type="checkbox" id="is_all" name="is_all" {{ request.GET|is_all }}>
+    </div>
+    {%endif%}
     <div class="col-auto">
         <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
@@ -59,7 +62,7 @@
             <th>情報種別</th>
             <th>タイトル</th>
             <th>概要</th>
-            <th>投稿日</th>
+            <th>公開日</th>
             <th>更新日</th>
             <th>編集</th>
         </tr>
@@ -70,8 +73,8 @@
             <th>{{ info.get_info_type_display }}</th>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary | linebreaksbr}}</th>
-            <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
-            <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.disclosure_date | date:"y/n/j" }}</th>
+            <th>{{ info.updated_at | date:"y/n/j" }}</th>
             {% if auth %}
             <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
                     {% bs_icon 'pencil-square' %}

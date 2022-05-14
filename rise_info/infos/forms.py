@@ -10,7 +10,8 @@ class InfoForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = Info
         fields = MetaCommonInfo.fields + \
-            ('info_type', 'managerID', 'sammary', 'is_rich_text', 'eqtypes')
+            ('info_type', 'managerID', 'sammary', 'is_rich_text',
+             'eqtypes', 'is_disclosed', 'disclosure_date')
         error_messages = {
             'managerID': {
                 'required': '管理番号は必須です',
@@ -33,6 +34,13 @@ class InfoForm(forms.ModelForm):
             }),
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
+            }),
+            'is_disclosed': forms.CheckboxInput(attrs={
+                'onclick': 'clickCheck2(this.id, "id_disclosure_date")',
+            }),
+            'disclosure_date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'onclick': "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
             }),
             'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
         }}

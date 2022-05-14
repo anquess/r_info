@@ -2,6 +2,8 @@
 {% block extraheader %}
 <link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
 <link rel="stylesheet" href="/static/fontawesome/css/fontawesome.min.css">
+<script src="/static/infos/js/clickCheck2.js"></script>
+
 {% endblock %}
 {% block main %}
 {% block title %}{% endblock %}
@@ -16,10 +18,22 @@
             <label for="id_is_rich_text" class="form-label">{{form.is_rich_text.label}}</label>
             {{form.is_rich_text}}
         </div>
+        {{form.content.label}}{{form.content}}
+        <script src="/static/simplemde/simplemde.min.js"></script>
+        <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
-    {{form.content.label}}{{form.content}}
-    <script src="/static/simplemde/simplemde.min.js"></script>
-    <script src="/static/infos/js/addSimpleMDE.js"></script>
+    <div class="row mt-2">
+        <div class="col-2">
+            <label for="id_is_disclosed" class="form-label">{{form.is_disclosed.label}}</label>
+            {{form.is_disclosed}}
+        </div>
+        <div class="col-10">
+            <link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
+            <script src="/static/jquery/jquery-3.6.0.min.js"></script>
+            <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+            {{form.disclosure_date}}
+        </div>
+    </div>
     {% block btn %}{% endblock %}
 </form>
 {% endblock %}

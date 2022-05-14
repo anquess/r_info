@@ -3,6 +3,8 @@ from django.db import models
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path
 from eqs.models import Eqtype
 
+from datetime import date
+
 
 class InfoTypeChoices(models.TextChoices):
     TECHINICAL = 'technical', '信頼性技術情報'
@@ -21,6 +23,9 @@ class Info(CommonInfo):
     sammary = models.TextField(
         verbose_name='概要', default="", null=False, blank=True, max_length=512)
     eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
+    is_disclosed = models.BooleanField(verbose_name='公開可否', default=True)
+    disclosure_date = models.DateField(
+        verbose_name='公開日', default=date.today())
 
     def save(self, *args, **kwargs):
         super(Info, self).save(self, *args, **kwargs)

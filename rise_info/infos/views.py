@@ -9,6 +9,8 @@ from infos.models import Info, AttachmentFile, InfoTypeChoices
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 
+from datetime import datetime
+
 
 class InfoList(ListView):
     model = Info
@@ -21,16 +23,23 @@ class InfoList(ListView):
         return super(InfoList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
-        queryset = super().get_queryset(**kwargs)
+        is_all = self.request.GET.get('is_all')
+        if is_all:
+            queryset = super().get_queryset(**kwargs)
+        else:
+            queryset = super().get_queryset(
+                **kwargs).filter(is_disclosed=True).filter(disclosure_date__lte=datetime.today())
+
         q_info_type = self.request.GET.get('info_type')
         q_keyword = self.request.GET.get('keyword')
         q_eqtype = self.request.GET.get('eqtype')
         if q_info_type is not None and q_info_type != "":
             queryset = queryset.filter(Q(info_type__iexact=q_info_type))
         if q_eqtype is not None:
-            queryset = queryset.filter(
-                Q(eqtypes__id__icontains=q_eqtype)
-            ).distinct()
+            if len(q_eqtype) > 0:
+                queryset = queryset.filter(
+                    Q(eqtypes__id__icontains=q_eqtype)
+                ).distinct()
         if q_keyword is not None:
             queryset = queryset.filter(
                 Q(title__contains=q_keyword) |
