@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import widgets
 from django.urls import reverse_lazy
 
 from infos.models import Info, AttachmentFile

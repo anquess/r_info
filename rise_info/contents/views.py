@@ -1,17 +1,31 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView
 
 from contents.models import Menu, Contents, AttachmentFile
 from contents.forms import ContentsForm, FileFormSet
 
 
-def addMenus(context: dict) -> dict:
-    context['menus'] = Menu.objects.order_by('sort_num').prefetch_related(
-        'related_content')
-    return context
+def content_updown(request, content_id, order):
+    from accounts.views import isInTmcGroup
+    if isInTmcGroup(request.user):
+        menu = Contents.objects.get_or_none(pk=content_id).menu
+        subject = None
+        for content in Contents.objects.filter(menu=menu).order_by(order).all():
+            if content.id == content_id:
+                try:
+                    content.replace_sort_num(subject)
+                    messages.add_message(
+                        request, messages.INFO, content.title + "メニューを動かしました")
+                except ValueError:
+                    messages.add_message(
+                        request, messages.ERROR, "これより上はありません")
+                return redirect('menu_list')
+            else:
+                subject = content
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
 
 
 @login_required
@@ -100,26 +114,31 @@ def content_down(request, content_id):
     return content_updown(request, content_id, '-sort_num')
 
 
-def content_updown(request, content_id, order):
+def addMenus(context: dict) -> dict:
+    context['menus'] = Menu.objects.order_by('sort_num').prefetch_related(
+        'related_content')
+    return context
+
+
+def menu_updown(request, menu_id, order):
     from accounts.views import isInTmcGroup
     if isInTmcGroup(request.user):
-        menu = Contents.objects.get_or_none(pk=content_id).menu
         subject = None
-        for content in Contents.objects.filter(menu=menu).order_by(order).all():
-            if content.id == content_id:
+        for menu in Menu.objects.order_by(order).all():
+            if menu.id == menu_id:
                 try:
-                    content.replace_sort_num(subject)
+                    menu.replace_sort_num(subject)
                     messages.add_message(
-                        request, messages.INFO, content.title + "メニューを動かしました")
+                        request, messages.INFO, menu.menu_title + "メニューを動かしました")
                 except ValueError:
                     messages.add_message(
                         request, messages.ERROR, "これより上はありません")
                 return redirect('menu_list')
             else:
-                subject = content
+                subject = menu
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('top')
+        return redirect('menu_list')
 
 
 @login_required
@@ -142,24 +161,3 @@ def menu_up(request, menu_id):
 @login_required
 def menu_down(request, menu_id):
     return menu_updown(request, menu_id, '-sort_num')
-
-
-def menu_updown(request, menu_id, order):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
-        subject = None
-        for menu in Menu.objects.order_by(order).all():
-            if menu.id == menu_id:
-                try:
-                    menu.replace_sort_num(subject)
-                    messages.add_message(
-                        request, messages.INFO, menu.menu_title + "メニューを動かしました")
-                except ValueError:
-                    messages.add_message(
-                        request, messages.ERROR, "これより上はありません")
-                return redirect('menu_list')
-            else:
-                subject = menu
-    else:
-        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('menu_list')

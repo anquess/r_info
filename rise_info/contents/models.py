@@ -43,8 +43,11 @@ class Contents(CommonInfo):
         super(Contents, self).save(self, *args, **kwargs)
 
     def replace_sort_num(self, subject: 'Contents', *args, **kwargs):
-        self.sort_num, subject.sort_num = subject.sort_num, self.sort_num
-        Contents.objects.bulk_update([self, subject], fields=['sort_num'])
+        if subject:
+            self.sort_num, subject.sort_num = subject.sort_num, self.sort_num
+            Contents.objects.bulk_update([self, subject], fields=['sort_num'])
+        else:
+            raise ValueError('対象が空です')
 
     def assign_sort_num(self) -> int:
         content_querySet = Contents.objects.filter(menu=self.menu).all()
