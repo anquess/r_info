@@ -17,6 +17,7 @@ class InfoList(ListView):
     template_name = 'infos/info_list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -46,7 +47,7 @@ class InfoList(ListView):
                 Q(sammary__contains=q_keyword) |
                 Q(content__contains=q_keyword)
             ).distinct()
-        return queryset
+        return queryset.order_by('-disclosure_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

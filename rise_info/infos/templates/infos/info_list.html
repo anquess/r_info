@@ -55,7 +55,11 @@
 {% if auth %}
 <a class="btn btn-primary float-end" href="{% url 'info_new' %}">＋</a>
 {% endif %}
+<div class="row mt-2">
+    {% include "pagination.html" %}
+</div>
 {% if infos %}
+
 <table class="table">
     <thead>
         <tr>
@@ -72,7 +76,7 @@
         <tr>
             <th>{{ info.get_info_type_display }}</th>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.sammary | linebreaksbr}}</th>
+            <th>{{ info.sammary }}</th>
             <th>{{ info.disclosure_date | date:"y/n/j" }}</th>
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
             {% if auth %}

@@ -21,3 +21,8 @@ def markdown_to_html(value):
         extensions=['extra', 'admonition', 'sane_lists', 'toc'])
     html = m.convert(value)
     return html
+
+
+@register.filter()
+def is_visible_page(num, value):
+    return value in range(num - 20, num + 20)
