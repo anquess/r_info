@@ -31,10 +31,10 @@ class FailuerReportForm(forms.ModelForm):
                 "rows": "3",
             }),
             'is_operatinal_impact': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_operatinal_impact")',
+                'onclick': 'clickCheck(this.id, "id_operatinal_impact", true)',
             }),
             'is_flight_impact': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_flight_impact")',
+                'onclick': 'clickCheck(this.id, "id_flight_impact", true)',
             }),
         }}
 

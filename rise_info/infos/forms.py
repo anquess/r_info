@@ -36,7 +36,7 @@ class InfoForm(forms.ModelForm):
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
             'is_disclosed': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck2(this.id, "id_disclosure_date")',
+                'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
             }),
             'disclosure_date': forms.DateInput(attrs={
                 'class': 'form-control',
