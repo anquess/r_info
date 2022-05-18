@@ -13,6 +13,7 @@ rise_info/package.json
 */migrations/*
 db.sqlite3
 uploads
+gyoumushien
 rise_info/rise_info/settings.json
 rise_info/static/admin
 rise_info/static/fontawesome
@@ -25,6 +26,7 @@ rise_info/static/highlight
 rise_info/static/icon_cache
 rise_info/static/jquery
 rise_info/static/gyoumushien
+rise_info/static/GyoumuShien*
 rise_info/static/popper
 rise_info/static/simplemde
 rise_info/static/django_extensions
