@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 from django.contrib.auth.models import User
+from requests import request
 
 
 from .models import FailuerReport, AttachmentFile, Circumstances
@@ -17,13 +18,19 @@ class FailuerReportList(ListView):
     template_name = 'failuer_reports/list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
+    paginate_by = 2
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(FailuerReportList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
-        queryset = super().get_queryset(**kwargs)
+        is_all = self.request.GET.get('is_all')
+        if is_all:
+            queryset = super().get_queryset(**kwargs).filter(
+                Q(created_by__username__contains=self.request.user))
+        else:
+            queryset = super().get_queryset(**kwargs)
         q_created_by = self.request.GET.get('created_by')
         q_keyword = self.request.GET.get('keyword')
         if q_created_by is not None:
@@ -46,7 +53,7 @@ class FailuerReportList(ListView):
         return context
 
 
-@login_required
+@ login_required
 def failuer_report_new(request):
     form = FailuerReportForm(request.POST or None)
     context = addTmcAuth({'form': form}, request.user)
@@ -70,7 +77,7 @@ def failuer_report_new(request):
     return render(request, "failuer_reports/new.html", context)
 
 
-@login_required
+@ login_required
 def failuer_report_edit(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     if info:
@@ -116,7 +123,7 @@ def failuer_report_edit(request, info_id):
     return redirect('failuer_report_list')
 
 
-@login_required
+@ login_required
 def failuer_report_detail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     files = AttachmentFile.objects.filter(info=info)
@@ -134,7 +141,7 @@ def failuer_report_detail(request, info_id):
         return redirect('info_list')
 
 
-@login_required
+@ login_required
 def failuer_report_del(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     if info:

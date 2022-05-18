@@ -3,11 +3,6 @@
 {% load pygmentize %}
 {% load bootstrap_icons %}
 {% block header %}
-<style>
-    {
-        % pygments_css %
-    }
-</style>
 {% endblock %}
 
 {% block main %}
@@ -41,12 +36,22 @@
         </select>
     </div>
     <div class="col-auto">
+        <label for="is_all" class="form-label">自官署のみ:</label>
+    </div>
+    <div class="col-auto">
+        <input type="checkbox" id="is_all" name="is_all" {{ request.GET|is_all }}>
+    </div>
+
+    <div class="col-auto">
         <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
 </form>
 
 
 <a class="btn btn-primary float-end" href="{% url 'failuer_report_new' %}">＋</a>
+<div class="row mt-2">
+    {% include "pagination.html" %}
+</div>
 {% if infos %}
 <table class="table">
     <thead>
