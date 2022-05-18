@@ -23,6 +23,10 @@ handler404 = 'rise_info.views.handler404'
 if settings.DEBUG:  # mdeditor
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)    # mdeditor
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.GYOMUSHIEN_URL,
+                          document_root=settings.GYOMUSHIEN_ROOT)
 
 # django toolbar
 # if settings.DEBUG:

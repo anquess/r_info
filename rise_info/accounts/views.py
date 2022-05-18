@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
@@ -21,6 +22,11 @@ def isInTmcGroup(user) -> bool:
     except:
         tmcGroup = None
     return tmcGroup in user.groups.all()
+
+
+@login_required
+def is_login(request):
+    return HttpResponse(status=200)
 
 
 @login_required
