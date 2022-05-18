@@ -14,6 +14,7 @@ rise_info/package.json
 db.sqlite3
 uploads
 gyoumushien
+*/icon_cache/*
 rise_info/rise_info/settings.json
 rise_info/static/admin
 rise_info/static/fontawesome

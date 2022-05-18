@@ -28,7 +28,7 @@ with (BASE_DIR / 'rise_info/settings.json').open() as json_file:
 SECRET_KEY = 'django-insecure-3z$+&u27r7y26vdat4e&9(1btta45=3y_^2%s=sh%c*uyw2))r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -159,14 +159,20 @@ MESSAGE_TAGS = {
 }
 
 
-STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
+if DEBUG:
+    STATIC_ROOT = ''
+    BS_ICONS_BASE_URL = 'http://127.0.0.1:8000/static/bootstrap_icons/'
+else:
+    BS_ICONS_BASE_URL = 'http://prototype-rpi.local/static/bootstrap_icons/'
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [ BASE_DIR / 'static']
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -193,5 +199,4 @@ MDEDITOR_CONFIGS = {
 # }
 
 # bootstrap icons
-BS_ICONS_BASE_URL = 'http://prototype-rpi.local/static/bootstrap_icons/'
 BS_ICONS_CACHE = os.path.join(STATIC_ROOT, 'icon_cache')
