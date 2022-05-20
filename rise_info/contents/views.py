@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from contents.models import Menu, Contents, AttachmentFile
-from contents.forms import ContentsForm, FileFormSet
+from contents.forms import ContentsForm, FileFormSet, MenuForm
 
 
 def content_updown(request, content_id, order):
@@ -84,9 +84,10 @@ def content_edit(request, content_id):
 def content_new(request):
     from accounts.views import addTmcAuth, isInTmcGroup
     if isInTmcGroup(request.user):
-        form = ContentsForm(request.POST or None)
-        context = addTmcAuth({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():
+            form = ContentsForm(request.POST or None)
+            context = addTmcAuth({'form': form}, request.user)
+
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)
             if formset.is_valid():
@@ -97,6 +98,14 @@ def content_new(request):
             else:
                 context['formset'] = formset
         else:
+            menu_id = request.GET.get('menu')
+            if Menu.objects.filter(id=menu_id).exists:
+                menu = Menu.objects.get(id=menu_id)
+                form = ContentsForm(request.POST or None,
+                                    initial={'menu': menu, })
+                context = addTmcAuth({'form': form}, request.user)
+
+            context['menu_id'] = menu
             context['formset'] = FileFormSet()
         return render(request, "contents/content_new.html", context)
     else:
@@ -148,6 +157,46 @@ def menu_list(request):
         context = {}
         context = addTmcAuth(context, request.user)
         return render(request, 'contents/menu_list.html', context)
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
+
+
+@login_required
+def menu_new(request):
+    from accounts.views import addTmcAuth, isInTmcGroup
+    if isInTmcGroup(request.user):
+        form = MenuForm(request.POST or None)
+        context = addTmcAuth({'form': form}, request.user)
+        context['is_new'] = True
+        if request.method == "POST" and form.is_valid():
+            menu = form.save(commit=False)
+            menu.save()
+            messages.add_message(request, messages.INFO,
+                                 str(menu) + 'が登録されました。')
+            return redirect('menu_list')
+        return render(request, "contents/menu_new_or_edit.html", context)
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
+
+
+@login_required
+def menu_edit(request, menu_id):
+    from accounts.views import addTmcAuth, isInTmcGroup
+    if isInTmcGroup(request.user):
+        menu = Menu.objects.get_or_none(pk=menu_id)
+        if menu:
+            form = MenuForm(request.POST or None, instance=menu)
+            if (request.method == "POST" and form.is_valid()):
+                form.save()
+                messages.add_message(request, messages.INFO, '更新されました。')
+                return redirect('menu_list')
+            context = addTmcAuth({
+                'form': form,
+            },
+                request.user)
+            return render(request, 'contents/menu_new_or_edit.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')

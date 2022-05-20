@@ -5,28 +5,26 @@
     </div>
 </th>
 <th>
-    {{content.sort_num}}
-</th>
-<th>
     <div class="row">
-        <div class="col-1">
+        <div class="col-4">
             {% if not forloop.first %}
             <a class="btn btn-primary" href="{% url 'content_up' content.id%}">
                 {% bs_icon 'chevron-compact-up' %}
             </a>
             {%endif%}
         </div>
-        <div class="col-1">
+        <div class="col-4">
             {% if not forloop.last %}
             <a class="btn btn-primary" href="{% url 'content_down' content.id%}">
                 {% bs_icon 'chevron-compact-down' %}
             </a>
             {%endif%}
         </div>
-        <div class="col-1">
+        <div class="col-4">
             <a class="btn btn-primary" href="{% url 'content_edit' content.id%}">
                 {% bs_icon 'pencil-square' %}
             </a>
         </div>
     </div>
 </th>
+<th></th>

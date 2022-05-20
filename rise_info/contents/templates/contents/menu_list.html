@@ -5,40 +5,44 @@
 <div class="welcome">
     <h1>メニュー一覧</h1>
 </div>
-{% if auth %}
-<a class="btn btn-primary float-end" href="{% url 'content_new' %}">＋</a>
-{% endif %}
+<a class="btn btn-primary float-end" href="{% url 'menu_new' %}">＋</a>
 {% if menus %}
 <table class="table">
     <thead>
         <tr>
-            <th>タイトル</th>
-            <th>順番</th>
-            <th>操作</th>
-            <th></th>
+            <th scope="col-6">タイトル</th>
+            <th scope="col-3">操作</th>
+            <th scope="col-3"></th>
         </tr>
     </thead>
     <tbody>
         {% for menu in menus %}
         <tr>
             <th>{{ menu.menu_title }} </th>
-            <th id='menu-{{forloop.counter}}' value='{{forloop.counter}}'>{{ menu.sort_num }}</th>
             <th></th>
             <th>
                 <div class="row">
-                    <div class="col-1">
+                    <div class="col-3">
                         {% if not forloop.first %}
                         <a class="btn btn-primary" href="{% url 'menu_up' menu.id%}">
                             {% bs_icon 'chevron-compact-up' %}
                         </a>
                         {%endif%}
                     </div>
-                    <div class="col-1">
+                    <div class="col-3">
                         {% if not forloop.last %}
                         <a class="btn btn-primary" href="{% url 'menu_down' menu.id%}">
                             {% bs_icon 'chevron-compact-down' %}
                         </a>
                         {%endif%}
+                    </div>
+                    <div class="col-3">
+                        <a class="btn btn-primary" href="{% url 'menu_edit' menu.id%}">
+                            {% bs_icon 'pencil-square' %}
+                        </a>
+                    </div>
+                    <div class="col-3">
+                        <a class="btn btn-primary float-end" href="{% url 'content_new' %}?menu={{ menu.id }}">＋</a>
                     </div>
                 </div>
             </th>
@@ -51,6 +55,7 @@
         {% endfor %}
     </tbody>
 </table>
+
 {% else %}
 <p>メニューはまだ投稿されていません。</p>
 {% endif %}

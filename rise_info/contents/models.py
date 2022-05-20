@@ -1,10 +1,11 @@
 from django.db import models
 from django.db.models import Max
 
-from rise_info.baseModels import CommonInfo, BaseAttachment
+from rise_info.baseModels import CommonInfo, BaseAttachment, BaseManager
 
 
 class Menu(models.Model):
+    objects = BaseManager()
     menu_title = models.CharField('タイトル', max_length=24)
     sort_num = models.IntegerField(
         verbose_name='並び順', default=1, db_index=True)

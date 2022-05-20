@@ -1,7 +1,13 @@
 from django import forms
 
-from contents.models import Contents, AttachmentFile
+from contents.models import Contents, AttachmentFile, Menu
 from rise_info.baseForms import MetaCommonInfo
+
+
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ('menu_title', )
 
 
 class ContentsForm(forms.ModelForm):
