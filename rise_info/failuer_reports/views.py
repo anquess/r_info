@@ -18,7 +18,7 @@ class FailuerReportList(ListView):
     template_name = 'failuer_reports/list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
-    paginate_by = 2
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
