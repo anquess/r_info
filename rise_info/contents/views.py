@@ -163,18 +163,15 @@ def menu_list(request):
 
 @login_required
 def menu_new(request):
-    from accounts.views import addTmcAuth, isInTmcGroup
+    from accounts.views import isInTmcGroup
     if isInTmcGroup(request.user):
         form = MenuForm(request.POST or None)
-        context = addTmcAuth({'form': form}, request.user)
-        context['is_new'] = True
         if request.method == "POST" and form.is_valid():
             menu = form.save(commit=False)
             menu.create()
             messages.add_message(request, messages.INFO,
                                  str(menu) + 'が登録されました。')
-            return redirect('menu_list')
-        return render(request, "contents/menu_new_or_edit.html", context)
+        return redirect('menu_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')
@@ -182,7 +179,7 @@ def menu_new(request):
 
 @login_required
 def menu_edit(request, menu_id):
-    from accounts.views import addTmcAuth, isInTmcGroup
+    from accounts.views import isInTmcGroup
     if isInTmcGroup(request.user):
         menu = Menu.objects.get_or_none(pk=menu_id)
         if menu:
@@ -190,12 +187,7 @@ def menu_edit(request, menu_id):
             if (request.method == "POST" and form.is_valid()):
                 form.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('menu_list')
-            context = addTmcAuth({
-                'form': form,
-            },
-                request.user)
-            return render(request, 'contents/menu_new_or_edit.html', context)
+        return redirect('menu_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')
