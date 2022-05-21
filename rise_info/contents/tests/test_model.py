@@ -4,8 +4,10 @@ from contents.models import Contents, Menu
 
 
 def mock_menu(testCase: TestCase):
-    testCase.menu_1 = Menu.objects.create(menu_title='title1')
-    testCase.menu_2 = Menu.objects.create(menu_title='title2')
+    testCase.menu_1 = Menu(menu_title='title1')
+    testCase.menu_2 = Menu(menu_title='title2')
+    testCase.menu_1.create()
+    testCase.menu_2.create()
     return testCase
 
 

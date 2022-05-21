@@ -4,6 +4,7 @@ from django.core.files.base import File
 
 import os
 import shutil
+import datetime
 
 from infos.views import info_edit
 from infos.models import Info, AttachmentFile, InfoTypeChoices
@@ -19,6 +20,7 @@ def addMockInfo(testCase) -> None:
         'sammary': '概要',
         'attachmentfile_set-TOTAL_FORMS': 1,
         'attachmentfile_set-INITIAL_FORMS': 0,
+        'disclosure_date': datetime.date(2017, 11, 12)
     }
     testCase.response = testCase.client.post("/infos/new/", data)
 
