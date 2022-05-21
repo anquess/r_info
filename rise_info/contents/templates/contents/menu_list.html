@@ -2,10 +2,14 @@
 {% block main %}
 {% load bootstrap_icons %}
 
-<div class="welcome">
+<div>
     <h1>メニュー一覧</h1>
+    <div class="float-end">
+        <button type="button" class="btn btn-primary" onclick="showModal(false, null)">
+            ＋
+        </button>
+    </div>
 </div>
-<a class="btn btn-primary float-end" href="{% url 'menu_new' %}">＋</a>
 {% if menus %}
 <table class="table">
     <thead>
@@ -37,9 +41,10 @@
                         {%endif%}
                     </div>
                     <div class="col-3">
-                        <a class="btn btn-primary" href="{% url 'menu_edit' menu.id%}">
+                        <button type="button" class="btn btn-primary"
+                            onclick="showModal({{menu.id}}, '{{menu.menu_title}}')">
                             {% bs_icon 'pencil-square' %}
-                        </a>
+                        </button>
                     </div>
                     <div class="col-3">
                         <a class="btn btn-primary float-end" href="{% url 'content_new' %}?menu={{ menu.id }}">＋</a>
@@ -55,8 +60,10 @@
         {% endfor %}
     </tbody>
 </table>
-
 {% else %}
+
 <p>メニューはまだ投稿されていません。</p>
 {% endif %}
+{% include "contents/menu_edit_modal.html" %}
+
 {% endblock %}

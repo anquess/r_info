@@ -1,0 +1,42 @@
+<div class="modal fade" id="menuEditModal" tabindex="-1" aria-labelledby="menuEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="menuEditModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="modalForm" action="/contents/menu/new/">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="id_menu_title">タイトル</label>
+                        <input type="text" name="menu_title" maxlength="24" class="form-control" placeholder="タイトル"
+                            required="" id="id_menu_title">
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit" id="modalBTN">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function showModal(menu_id, menu_value) {
+        var modal = new bootstrap.Modal(document.getElementById('menuEditModal'),);
+        var modalTitle = document.getElementById('menuEditModalLabel');
+        var modalBTN = document.getElementById('modalBTN');
+        var modalForm = document.getElementById('modalForm');
+        var input = document.getElementById('id_menu_title');
+        input.value = menu_value
+        if (menu_id) {
+            modalForm.action = "/contents/menu/new/" + menu_id + "/";
+            modalTitle.textContent = "メニューの更新";
+            modalBTN.textContent = "更新";
+        } else {
+            modalForm.action = "/contents/menu/new/";
+            modalTitle.textContent = "メニューの追加";
+            modalBTN.textContent = "追加";
+        }
+        modal.show();
+    }
+</script>
