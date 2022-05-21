@@ -13,11 +13,14 @@ class Menu(models.Model):
     def __str__(self):
         return self.menu_title
 
-    def save(self, *args, **kwargs):
+    def create(self, *args, **kwargs):
         all_menu = Menu.objects.all()
         if all_menu.filter(sort_num=self.sort_num).count() > 0:
             max_val = all_menu.aggregate(Max('sort_num'))
             self.sort_num = max_val['sort_num__max'] + 1
+        super(Menu, self).save(**kwargs)
+
+    def save(self, *args, **kwargs):
         super(Menu, self).save(**kwargs)
 
     def replace_sort_num(self, subject: 'Menu', *args, **kwargs):

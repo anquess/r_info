@@ -84,10 +84,9 @@ def content_edit(request, content_id):
 def content_new(request):
     from accounts.views import addTmcAuth, isInTmcGroup
     if isInTmcGroup(request.user):
+        form = ContentsForm(request.POST or None)
+        context = addTmcAuth({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():
-            form = ContentsForm(request.POST or None)
-            context = addTmcAuth({'form': form}, request.user)
-
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)
             if formset.is_valid():
@@ -171,7 +170,7 @@ def menu_new(request):
         context['is_new'] = True
         if request.method == "POST" and form.is_valid():
             menu = form.save(commit=False)
-            menu.save()
+            menu.create()
             messages.add_message(request, messages.INFO,
                                  str(menu) + 'が登録されました。')
             return redirect('menu_list')
