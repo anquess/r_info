@@ -4,6 +4,27 @@
 
 <div class="welcome">
     <h1>ようこそ信頼性ホームページへ！</h1>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">新着　信頼性情報</div>
+            {% for info in infos %}
+            <p class="card-text">
+                {{info.disclosure_date|date:"Y年m月d日"}} <a href="{% url 'info_detail' info.id %}">{{ info.title }}</a>
+            </p>
+            {%endfor%}
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">新着　コンテンツ</div>
+            {% for content in contents %}
+            <p class="card-text">
+                {{content.updated_at|date:"Y年m月d日"}}
+                <a href="{% url 'content_detail' content.id %}">{{ content.title }}</a>
+            </p>
+            {%endfor%}
+        </div>
+    </div>
 </div>
 
 {% endblock %}
