@@ -1,19 +1,19 @@
-ul.dropdown {
+ul.suggest-dropdown {
     display: none;
     list-style-type: none;
     padding: 5px;
     position: absolute;
     z-index: 1;
-    background-color: #555;
+    background-color: lightgreen;
 }
 
-ul.dropdown li {
+ul.suggest-dropdown li {
     margin: 3px;
     cursor: pointer;
 }
 
-ul.dropdown li:hover {
-    opacity: 0.5;
+ul.suggest-dropdown li:hover {
+    opacity: 5;
 }
 
 .suggest-item {
