@@ -75,6 +75,7 @@ class InfoTypeChoices(models.TextChoices):
     FAILURE_CASE = 'failure_case', '障害事例情報'
     SAFETY = 'safety', '安全情報'
     EVENT = 'event', 'イベント情報'
+    MANUAL = 'manual', '完成図書差し替え'
 
 
 class Info(CommonInfo):
