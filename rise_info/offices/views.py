@@ -58,7 +58,7 @@ def api_posts_get(request):
     """サジェスト候補の記事をJSONで返す。"""
     keyword = request.GET.get('keyword').upper()
     if keyword:
-        office_list = [{'pk': office.pk, 'name': office.name} for office in Office.objects.filter(
+        office_list = [{'pk': office.pk, 'name': str(office)} for office in Office.objects.filter(
             Q(id__contains=keyword) | Q(name__contains=keyword))]
     else:
         office_list = []

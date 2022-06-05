@@ -98,7 +98,7 @@ class Office(models.Model):
     update_at = models.DateTimeField(verbose_name='更新日時')
 
     def __str__(self):
-        return self.id
+        return self.shortcut_name
 
     def get_absolute_url(self):
         return reverse('office_detail', kwargs={'id': self.id})
