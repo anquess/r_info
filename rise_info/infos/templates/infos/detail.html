@@ -9,7 +9,16 @@
         {% endfor %}
     </div>
 </div>
-
+{% if info.is_add_offices %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">官署</h5>
+        {% for office in info.offices.all %}
+        <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
+        {% endfor %}
+    </div>
+</div>
+{%endif%}
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">概要</h5>
