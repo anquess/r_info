@@ -1,6 +1,8 @@
+import imp
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import FileResponse
+from django.db.models import Q
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import redirect, render
 
 import sys
@@ -50,6 +52,17 @@ def file_upload(request):
     else:
         messages.add_message(request, messages.WARNING, 'この権限では許可されていません。')
     return redirect('office')
+
+
+def api_posts_get(request):
+    """サジェスト候補の記事をJSONで返す。"""
+    keyword = request.GET.get('keyword').upper()
+    if keyword:
+        office_list = [{'pk': office.pk, 'name': office.name} for office in Office.objects.filter(
+            Q(id__contains=keyword) | Q(name__contains=keyword))]
+    else:
+        office_list = []
+    return JsonResponse({'object_list': office_list})
 
 
 def handle_uploaded_file(file_obj):

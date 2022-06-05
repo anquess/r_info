@@ -4,14 +4,15 @@ from django.urls import reverse_lazy
 from infos.models import Info, AttachmentFile
 from rise_info.baseForms import MetaCommonInfo
 from eqs.widgets import SuggestWidget
+from offices.widgets import OfficeSuggestWidget
 
 
 class InfoForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = Info
         fields = MetaCommonInfo.fields + \
-            ('info_type', 'managerID', 'sammary', 'is_rich_text',
-             'eqtypes', 'is_disclosed', 'disclosure_date')
+            ('info_type', 'managerID', 'sammary', 'is_rich_text', 'is_add_offices',
+             'eqtypes', 'offices', 'is_disclosed', 'disclosure_date')
         error_messages = {
             'managerID': {
                 'required': '管理番号は必須です',
@@ -32,6 +33,9 @@ class InfoForm(forms.ModelForm):
                 "class": "form-control",
                 "rows": "3",
             }),
+            'is_add_offices': forms.CheckboxInput(attrs={
+                'onclick': 'clickCheck(this.id, "offices-input", true)',
+            }),
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
@@ -43,6 +47,7 @@ class InfoForm(forms.ModelForm):
                 'onclick': "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
             }),
             'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
+            'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
         }}
 
 
