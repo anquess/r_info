@@ -1,7 +1,8 @@
 {% extends "baseDetail.html" %}
+{% load bootstrap_icons %}
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
 {% if auth %}
-<th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}">編集</a></th>
+<th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}">{% bs_icon 'pencil-square' %}</a></th>
 {% endif %}
 {% endblock %}
