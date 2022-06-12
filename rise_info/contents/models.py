@@ -46,6 +46,11 @@ class Contents(CommonInfo):
         self.sort_num = self.assign_sort_num()
         super(Contents, self).save(self, *args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        for attachment in self.attachmentfile_set.all():
+            attachment.delete()
+        return super().delete(*args, **kwargs)
+
     def replace_sort_num(self, subject: 'Contents', *args, **kwargs):
         if subject:
             self.sort_num, subject.sort_num = subject.sort_num, self.sort_num

@@ -99,12 +99,18 @@ class Info(CommonInfo):
     def save(self, *args, **kwargs):
         super(Info, self).save(self, *args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        for attachment in self.attachmentfile_set.all():
+            attachment.delete()
+        return super().delete(*args, **kwargs)
+
     class Meta:
         db_table = 'infos'
 
 
 class AttachmentFile(BaseAttachment):
-    info = models.ForeignKey(Info, on_delete=models.CASCADE)
+    info = models.ForeignKey(
+        Info, on_delete=models.CASCADE)
     upload_path = 'info'
 
     class Meta:
