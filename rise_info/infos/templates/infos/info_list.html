@@ -40,6 +40,23 @@
     <div class="col-auto">
         <input class="form-control" type="search" id="eqtype" name="eqtype" value={{ request.GET|eqtype }}>
     </div>
+    <div class="col-auto">
+        <label for="office" class="form-label">官署</label>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" type="search" id="office" name="office">
+            <option value="">指定なし</option>
+            {% for office in offices %}
+            {% if selelcted_office == office.pk %}
+            <option value="{{ office.pk }}" selected>
+                {% else %}
+            <option value="{{ office.pk }}">
+                {% endif %}
+                {{ office.name }}
+            </option>
+            {%endfor%}
+        </select>
+    </div>
     {% if auth %}
     <div class="col-auto">
         <label for="is_all" class="form-label">非公開情報含む:</label>

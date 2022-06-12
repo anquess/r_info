@@ -8,6 +8,7 @@ from django.db.models import Q
 from infos.models import Info, AttachmentFile, InfoTypeChoices
 from infos.forms import InfoForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
+from offices.models import Office
 
 from datetime import datetime
 
@@ -34,13 +35,17 @@ class InfoList(ListView):
         q_info_type = self.request.GET.get('info_type')
         q_keyword = self.request.GET.get('keyword')
         q_eqtype = self.request.GET.get('eqtype')
+        q_office = self.request.GET.get('office')
+
         if q_info_type is not None and q_info_type != "":
             queryset = queryset.filter(Q(info_type__iexact=q_info_type))
         if q_eqtype is not None:
             if len(q_eqtype) > 0:
-                queryset = queryset.filter(
-                    Q(eqtypes__id__icontains=q_eqtype)
-                ).distinct()
+                queryset = queryset.filter(Q(eqtypes__id__icontains=q_eqtype) | Q(
+                    is_add_eqtypes__exact=False)).distinct()
+        if q_office is not None and q_office != "":
+            queryset = queryset.filter(Q(offices__id__icontains=q_office) | Q(
+                is_add_offices__exact=False)).distinct()
         if q_keyword is not None:
             queryset = queryset.filter(
                 Q(title__contains=q_keyword) |
@@ -52,8 +57,10 @@ class InfoList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context = addTmcAuth(context, self.request.user)
+        context['offices'] = Office.objects.all()
         context['info_types'] = InfoTypeChoices.choices
         context['selelcted_info_type'] = self.request.GET.get('info_type')
+        context['selelcted_office'] = self.request.GET.get('office')
         return context
 
 
