@@ -81,6 +81,23 @@ def content_edit(request, content_id):
 
 
 @login_required
+def content_del(request, content_id):
+    from accounts.views import isInTmcGroup
+    if isInTmcGroup(request.user):
+        info = Contents.objects.get_or_none(pk=content_id)
+        if info:
+            title = info.title
+            info.delete()
+            messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
+        else:
+            messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+        return redirect('menu_list')
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
+
+
+@login_required
 def content_new(request):
     from accounts.views import addTmcAuth, isInTmcGroup
     if isInTmcGroup(request.user):
@@ -187,6 +204,23 @@ def menu_edit(request, menu_id):
             if (request.method == "POST" and form.is_valid()):
                 form.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
+        return redirect('menu_list')
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('top')
+
+
+@login_required
+def menu_del(request, menu_id):
+    from accounts.views import isInTmcGroup
+    if isInTmcGroup(request.user):
+        menu = Menu.objects.get_or_none(pk=menu_id)
+        if menu:
+            title = menu.menu_title
+            menu.delete()
+            messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
+        else:
+            messages.add_message(request, messages.WARNING, "該当Menuはありません。")
         return redirect('menu_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")

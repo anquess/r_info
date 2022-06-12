@@ -24,6 +24,10 @@
             <a class="btn btn-primary" href="{% url 'content_edit' content.id %}">
                 {% bs_icon 'pencil-square' %}
             </a>
+            <a class="btn btn-danger" href="{% url 'content_del' content.id %}" onclick='return confirm("よろしいですか？");'>
+                {% bs_icon 'trash' %}
+            </a>
+
         </div>
     </div>
 </th>
