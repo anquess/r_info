@@ -88,8 +88,9 @@ class Info(CommonInfo):
         verbose_name='管理番号', default="TMC-解析-", null=False, blank=False, max_length=32)
     sammary = models.TextField(
         verbose_name='概要', default="", null=False, blank=True, max_length=512)
+    is_add_eqtypes = models.BooleanField(verbose_name='装置型式特定', default=True)
     eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
-    is_add_offices = models.BooleanField(verbose_name='官署特定', default=False)
+    is_add_offices = models.BooleanField(verbose_name='官署特定', default=True)
     offices = models.ManyToManyField(Office, verbose_name='官署', blank=True)
     is_disclosed = models.BooleanField(verbose_name='公開', default=True)
     disclosure_date = models.DateField(
