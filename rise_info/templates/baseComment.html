@@ -1,0 +1,13 @@
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="card-subtitle">{{ comment.comment_txt | linebreaksbr}}</div>
+        </div>
+        <div class="row">
+            <div class="col-6"></div>
+            <div class="col-3">投稿者：{{ comment.created_by }}</div>
+            <div class="col-3">投稿日時{{ comment.created_at }}</div>
+        </div>
+
+    </div>
+</div>

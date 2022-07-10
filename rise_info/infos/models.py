@@ -1,6 +1,6 @@
 from django.db import models
 
-from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path
+from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from eqs.models import Eqtype
 from offices.models import Office
 
@@ -109,3 +109,11 @@ class AttachmentFile(BaseAttachment):
 
     class Meta:
         db_table = 'info_attachment'
+
+
+class InfoComments(BaseCommnets):
+    info = models.ForeignKey(
+        Info, related_name='infoComment', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'info_comments'

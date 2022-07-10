@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 
 from infos.models import Info, AttachmentFile, InfoTypeChoices
-from infos.forms import InfoForm, FileFormSet
+from infos.forms import InfoForm, FileFormSet, InfoCommentsForm
 from accounts.views import isInTmcGroup, addTmcAuth
 from offices.models import Office
 
@@ -62,6 +62,19 @@ class InfoList(ListView):
         context['selelcted_info_type'] = self.request.GET.get('info_type')
         context['selelcted_office'] = self.request.GET.get('office')
         return context
+
+
+@login_required
+def add_comment(request, info_id):
+    form = InfoCommentsForm(request.POST or None)
+    context = addTmcAuth({'form': form}, request.user)
+    if request.method == "POST" and form.is_valid():
+        commnet = form.save(commit=False)
+        commnet.save()
+        messages.add_message(request, messages.INFO, '更新されました。')
+    else:
+        messages.add_message(request, messages.INFO, '値がおかしいです。')
+    return redirect('/infos/' + str(info_id) + '/')
 
 
 @login_required

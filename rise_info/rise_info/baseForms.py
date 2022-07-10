@@ -1,7 +1,8 @@
+from dataclasses import field
 from django import forms
 from django.core.exceptions import ValidationError
 
-from rise_info.baseModels import CommonInfo
+from rise_info.baseModels import CommonInfo, BaseCommnets
 
 
 def csvFormatCheck(csvRow, checkLists):

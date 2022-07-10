@@ -32,6 +32,7 @@
     {% for file in files %}
     <p><a href="/media/{{ file.file }}">/media/{{ file.file.name }}</a></p>
     {% endfor %}
+    {% block commnets %}{% endblock %}
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>
         <div class="col-3">作成者:{{ info.created_by }}</div>

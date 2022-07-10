@@ -1,10 +1,28 @@
 from django import forms
 from django.urls import reverse_lazy
 
-from infos.models import Info, AttachmentFile
+from infos.models import Info, AttachmentFile, InfoComments
 from rise_info.baseForms import MetaCommonInfo
 from eqs.widgets import SuggestWidget
 from offices.widgets import OfficeSuggestWidget
+
+
+class InfoCommentsForm(forms.ModelForm):
+    info = forms.ModelChoiceField(queryset=Info.objects.all())
+
+    class Meta:
+        model = InfoComments
+        fields = ('info', 'comment_txt')
+        widgets = {
+            "comment_txt": forms.Textarea(attrs={
+                "class": "form-control",
+            })
+        }
+        error_messages = {
+            'comment': {
+                'max_length': 'コメントは512文字以内です',
+            },
+        }
 
 
 class InfoForm(forms.ModelForm):

@@ -18,14 +18,25 @@
         {% endfor %}
     </div>
 </div>
-{%endif%}
+{% endif %}
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">概要</h5>
         {{ info.sammary | linebreaksbr }}
     </div>
 </div>
+
 {% endblock %}
+
+{% block commnets %}
+<button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
+    コメント追加
+</button>
+{% for comment in info.infoComment.all|dictsortreversed:"created_at"%}
+{% include "../baseComment.html" %}
+{% endfor %}
+{% endblock %}
+
 
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
@@ -37,4 +48,7 @@
         {% bs_icon 'trash' %}
     </a></th>
 {% endif %}
+
+{% include "infos/comment_add_modal.html" %}
+
 {% endblock %}
