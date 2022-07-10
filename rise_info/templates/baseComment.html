@@ -1,12 +1,21 @@
+{% load bootstrap_icons %}
 <div class="card">
     <div class="card-body">
         <div class="row">
             <div class="card-subtitle">{{ comment.comment_txt | linebreaksbr}}</div>
         </div>
         <div class="row">
-            <div class="col-6"></div>
+            <div class="col-5"></div>
             <div class="col-3">投稿者：{{ comment.created_by }}</div>
             <div class="col-3">投稿日時{{ comment.created_at }}</div>
+            {% if user == comment.created_by %}
+            <div class="col-1">
+                <th><a class="btn btn-danger" href="{% url 'info_del_comment' info.id comment.id %}"
+                        onclick='return confirm("よろしいですか？");'>
+                        {% bs_icon 'trash' %}
+                    </a></th>
+            </div>
+            {% endif %}
         </div>
 
     </div>

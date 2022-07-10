@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from infos.models import Info, AttachmentFile, InfoTypeChoices
+from infos.models import Info, AttachmentFile, InfoComments, InfoTypeChoices
 from infos.forms import InfoForm, FileFormSet, InfoCommentsForm
 from accounts.views import isInTmcGroup, addTmcAuth
 from offices.models import Office
@@ -67,7 +67,6 @@ class InfoList(ListView):
 @login_required
 def add_comment(request, info_id):
     form = InfoCommentsForm(request.POST or None)
-    context = addTmcAuth({'form': form}, request.user)
     if request.method == "POST" and form.is_valid():
         commnet = form.save(commit=False)
         commnet.save()
@@ -75,6 +74,18 @@ def add_comment(request, info_id):
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')
     return redirect('/infos/' + str(info_id) + '/')
+
+
+@login_required
+def del_comment(request, info_id, comment_id):
+    comment = InfoComments.objects.get_or_none(pk=comment_id)
+    if comment:
+        comment.delete()
+        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
+        return redirect('/infos/' + str(info_id) + '/')
+    else:
+        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
+        return redirect('/infos/' + str(info_id) + '/')
 
 
 @login_required

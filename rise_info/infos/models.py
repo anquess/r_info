@@ -123,3 +123,8 @@ class InfoComments(BaseCommnets):
 
     class Meta:
         db_table = 'info_comments'
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.info.save()
+        super(InfoComments, self).save(*args, **kwargs)
