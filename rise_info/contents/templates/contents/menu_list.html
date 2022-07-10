@@ -45,6 +45,10 @@
                             onclick="showModal({{menu.id}}, '{{menu.menu_title}}')">
                             {% bs_icon 'pencil-square' %}
                         </button>
+                        <a class="btn btn-danger" href="{% url 'menu_del' menu.id %}"
+                            onclick='return confirm("よろしいですか？");'>
+                            {% bs_icon 'trash' %}
+                        </a>
                     </div>
                     <div class="col-3">
                         <a class="btn btn-primary rounded-pill float-end"
