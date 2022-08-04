@@ -5,6 +5,11 @@
             <div class="card-subtitle">{{ comment.comment_txt | linebreaksbr}}</div>
         </div>
         <div class="row">
+            <div class="card-subtitle">
+                <p><a href="/media/{{ comment.file }}">{{ comment.filename }}</a></p>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-5"></div>
             <div class="col-3">投稿者：{{ comment.created_by }}</div>
             <div class="col-3">投稿日時{{ comment.created_at }}</div>

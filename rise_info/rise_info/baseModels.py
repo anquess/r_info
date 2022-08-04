@@ -35,24 +35,6 @@ class BaseManager(models.Manager):
             return None
 
 
-class BaseCommnets(models.Model):
-    objects = BaseManager()
-    comment_txt = models.TextField(
-        verbose_name='コメント', default="", null=False, blank=True, max_length=512)
-    created_by = CurrentUserField(verbose_name='登録者', on_update=True,
-                                  related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
-    created_at = models.DateTimeField(
-        verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
-
-    class Meta:
-        abstract = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.created_by = get_current_authenticated_user()
-        super(BaseCommnets, self).save(*args, **kwargs)
-
-
 class CommonInfo(models.Model):
     objects = BaseManager()
     title = models.CharField(
@@ -113,6 +95,46 @@ class BaseAttachment(models.Model):
         elif not os.path.isfile(f'uploads/{str(self.file)}'):
             self.file_delete()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.file_delete()
+        super().delete(*args, **kwargs)
+
+    def file_delete(self) -> None:
+        if os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
+            shutil.rmtree(
+                f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
+
+
+class BaseCommnets(models.Model):
+    objects = BaseManager()
+    upload_path = ''
+    comment_txt = models.TextField(
+        verbose_name='コメント', default="", null=False, blank=True, max_length=512)
+    file = models.FileField(
+        verbose_name='ファイル', upload_to=file_upload_path)
+    filename = models.CharField(
+        verbose_name='ファイル名', default="", null=True, blank=True, max_length=64)
+    created_by = CurrentUserField(verbose_name='登録者', on_update=True,
+                                  related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
+    created_at = models.DateTimeField(
+        verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.created_by = get_current_authenticated_user()
+        upload_file = self.file
+        self.filename = str(self.file)
+        self.file = None
+        super().save(*args, **kwargs)
+        self.file = upload_file
+        if "force_insert" in kwargs:
+            kwargs.pop("force_insert")
+
+        super(BaseCommnets, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.file_delete()

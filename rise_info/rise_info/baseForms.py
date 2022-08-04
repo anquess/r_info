@@ -24,3 +24,12 @@ class MetaCommonInfo:
             "class": "form-control",
         })
     }
+    error_messages = {
+        'title': {
+            'required': 'タイトルは必須です',
+            'max_length': 'タイトルは128文字以内です'
+        },
+        'content': {
+            'max_length': '内容は4096文字以内です',
+        },
+    }

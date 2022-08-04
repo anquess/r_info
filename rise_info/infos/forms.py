@@ -1,5 +1,8 @@
+from distutils.log import error
 from django import forms
 from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import UploadedFile
 
 from infos.models import Info, AttachmentFile, InfoComments
 from rise_info.baseForms import MetaCommonInfo
@@ -7,21 +10,56 @@ from eqs.widgets import SuggestWidget
 from offices.widgets import OfficeSuggestWidget
 
 
+class FileSizeValidator:
+    def __init__(self, val: float, byte_type="mb"):
+        assert byte_type in ["b", "kb", "mb", "gb"]
+        if byte_type == "b":
+            self._upper_byte_size = val
+        elif byte_type == "kb":
+            self._upper_byte_size = 1000 * val
+        elif byte_type == "mb":
+            self._upper_byte_size = (1000 ** 2) * val
+        elif byte_type == "gb":
+            self._upper_byte_size = (1000 ** 3) * val
+        self._err_message = f"アップロードファイルは{val}{byte_type.upper()}未満にしてください"
+
+    def __call__(self, file_val: UploadedFile):
+        byte_size = file_val.size
+        if byte_size > self._upper_byte_size:
+            raise ValidationError(
+                code='file',
+                message=self._err_message
+            )
+
+
 class InfoCommentsForm(forms.ModelForm):
-    info = forms.ModelChoiceField(queryset=Info.objects.all())
+    info = forms.ModelChoiceField(
+        queryset=Info.objects.all(),
+        error_messages={'required': 'infoは必須です', },
+    )
+    comment_txt = forms.CharField(
+        required=True,
+        max_length=512,
+        error_messages={
+            'max_length': 'コメントは512文字以内です',
+            'required': 'コメントは必須です',
+        },
+    )
+    file = forms.FileField(
+        validators=[FileSizeValidator(val=10, byte_type="mb")],
+        required=False,
+    )
 
     class Meta:
         model = InfoComments
-        fields = ('info', 'comment_txt')
+        fields = ('info', 'file', 'comment_txt')
         widgets = {
             "comment_txt": forms.Textarea(attrs={
                 "class": "form-control",
-            })
-        }
-        error_messages = {
-            'comment': {
-                'max_length': 'コメントは512文字以内です',
-            },
+            }),
+            "file": forms.FileInput(attrs={
+                "class": "form-control",
+            }),
         }
 
 
@@ -31,15 +69,21 @@ class InfoForm(forms.ModelForm):
         fields = MetaCommonInfo.fields + \
             ('info_type', 'managerID', 'sammary', 'is_rich_text', 'is_add_eqtypes',
              'is_add_offices', 'eqtypes', 'offices', 'is_disclosed', 'disclosure_date')
-        error_messages = {
+        error_messages = {**MetaCommonInfo.error_messages, **{
+            'info_type': {
+                'required': '情報種別は必須です',
+            },
             'managerID': {
                 'required': '管理番号は必須です',
-                'max_length': '管理番号は32文字以内です。'
+                'max_length': '管理番号は32文字以内です'
             },
             'sammary': {
-                'max_length': '概要への影響は512文字以内です',
+                'max_length': '概要は512文字以内です',
             },
-        }
+            'disclosure_date': {
+                'required': '公開日は必須です',
+            },
+        }}
         widgets = {**MetaCommonInfo.widgets, **{
             'info_type': forms.widgets.Select(attrs={
                 "class": "form-select",
@@ -72,6 +116,17 @@ class InfoForm(forms.ModelForm):
         }}
 
 
+class AttachmentFileForm(forms.ModelForm):
+    file = forms.FileField(
+        validators=[FileSizeValidator(val=100, byte_type="mb")],
+        required=True,
+    )
+
+    class Meta(MetaCommonInfo):
+        model = AttachmentFile
+        fields = '__all__'
+
+
 FileFormSet = forms.inlineformset_factory(
-    Info, AttachmentFile, fields='__all__', extra=1,
+    Info, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
 )

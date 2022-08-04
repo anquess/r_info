@@ -66,7 +66,7 @@ class InfoList(ListView):
 
 @login_required
 def add_comment(request, info_id):
-    form = InfoCommentsForm(request.POST or None)
+    form = InfoCommentsForm(request.POST or None, request.FILES)
     if request.method == "POST" and form.is_valid():
         commnet = form.save(commit=False)
         commnet.save()

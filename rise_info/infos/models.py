@@ -120,6 +120,7 @@ class AttachmentFile(BaseAttachment):
 class InfoComments(BaseCommnets):
     info = models.ForeignKey(
         Info, related_name='infoComment', on_delete=models.CASCADE)
+    upload_path = 'info_comments'
 
     class Meta:
         db_table = 'info_comments'
