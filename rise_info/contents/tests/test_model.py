@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from contents.models import Contents, Menu
+from contents.models import Contents, Menu, ContentComments
 
 
 def mock_menu(testCase: TestCase):
@@ -63,3 +63,9 @@ class ContensModelTest(TestCase):
         self.assertEqual(contents[0].sort_num, 2)
         self.assertEqual(contents[1].title, 'title1_2')
         self.assertEqual(contents[1].sort_num, 1)
+
+
+class ContentsCommentTest(TestCase):
+    def test_is_empty(self) -> None:
+        comment = ContentComments.objects.all()
+        self.assertEqual(comment.count(), 0)

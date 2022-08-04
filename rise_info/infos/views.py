@@ -68,8 +68,8 @@ class InfoList(ListView):
 def add_comment(request, info_id):
     form = InfoCommentsForm(request.POST or None, request.FILES)
     if request.method == "POST" and form.is_valid():
-        commnet = form.save(commit=False)
-        commnet.save()
+        comment = form.save(commit=False)
+        comment.save()
         messages.add_message(request, messages.INFO, '更新されました。')
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')

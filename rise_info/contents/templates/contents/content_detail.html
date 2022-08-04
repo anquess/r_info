@@ -1,8 +1,29 @@
 {% extends "baseDetail.html" %}
 {% load bootstrap_icons %}
+{% block sammary %}
+<ul>
+    {% for error in form.title.errors %}
+    <li>
+        {{ error }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block commnets %}
+<button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
+    コメント追加
+</button>
+{% for comment in info.contentComment.all|dictsortreversed:"created_at"%}
+{% include "../baseComment.html" %}
+{% endfor %}
+{% endblock %}
+
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
 {% if auth %}
 <th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}">{% bs_icon 'pencil-square' %}</a></th>
 {% endif %}
+
+{% include "contents/comment_add_modal.html" %}
 {% endblock %}

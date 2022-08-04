@@ -15,18 +15,10 @@
             <div class="col-3">投稿日時{{ comment.created_at }}</div>
             {% if user == comment.created_by %}
             <div class="col-1">
-                {% if is_content %}
                 <th><a class="btn btn-danger" href="{% url 'content_del_comment' info.id comment.id %}"
                         onclick='return confirm("よろしいですか？");'>
                         {% bs_icon 'trash' %}
                     </a></th>
-
-                {% else %}
-                <th><a class="btn btn-danger" href="{% url 'info_del_comment' info.id comment.id %}"
-                        onclick='return confirm("よろしいですか？");'>
-                        {% bs_icon 'trash' %}
-                    </a></th>
-                {% endif %}
             </div>
             {% endif %}
         </div>

@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from contents.models import Menu, Contents, AttachmentFile
-from contents.forms import ContentsForm, FileFormSet, MenuForm
+from contents.models import ContentComments, Menu, Contents, AttachmentFile
+from contents.forms import ContentsForm, FileFormSet, MenuForm, ContentCommentsForm
 
 
 def content_updown(request, content_id, order):
@@ -37,6 +37,7 @@ def content_detail(request, content_id):
         context = {
             'info': info,
             'files': files,
+            'is_content': True,
         }
         context = addTmcAuth(context, request.user)
         return render(request, 'contents/content_detail.html', context)
@@ -235,3 +236,27 @@ def menu_up(request, menu_id):
 @login_required
 def menu_down(request, menu_id):
     return menu_updown(request, menu_id, '-sort_num')
+
+
+@login_required
+def add_comment(request, content_id):
+    form = ContentCommentsForm(request.POST or None, request.FILES)
+    if request.method == "POST" and form.is_valid():
+        comment = form.save(commit=False)
+        comment.save()
+        messages.add_message(request, messages.INFO, '更新されました。')
+    else:
+        messages.add_message(request, messages.INFO, '値がおかしいです。')
+    return redirect('/contents/' + str(content_id) + '/')
+
+
+@login_required
+def del_comment(request, content_id, comment_id):
+    comment = ContentComments.objects.get_or_none(pk=comment_id)
+    if comment:
+        comment.delete()
+        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
+        return redirect('/contents/' + str(content_id) + '/')
+    else:
+        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
+        return redirect('/contents/' + str(content_id) + '/')

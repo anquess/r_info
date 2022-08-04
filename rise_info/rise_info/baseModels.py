@@ -69,7 +69,12 @@ class CommonInfo(models.Model):
 
 
 def file_upload_path(instance, filename):
-    return f"{instance.upload_path}/{str(instance.info.pk)}/{str(instance.pk)}/{filename}"
+    if hasattr(instance, 'info'):
+        info_pk = instance.info.pk
+    else:
+        info_pk = instance.content.pk
+
+    return f"{instance.upload_path}/{str(info_pk)}/{str(instance.pk)}/{filename}"
 
 
 class BaseAttachment(models.Model):
@@ -141,6 +146,10 @@ class BaseCommnets(models.Model):
         super().delete(*args, **kwargs)
 
     def file_delete(self) -> None:
-        if os.path.isdir(f'uploads/{self.upload_path}/{self.info.pk}/{self.id}'):
+        if hasattr(self, 'info'):
+            info_pk = self.info.pk
+        else:
+            info_pk = self.content.pk
+        if os.path.isdir(f'uploads/{self.upload_path}/{info_pk}/{self.id}'):
             shutil.rmtree(
-                f'uploads/{self.upload_path}/{self.info.pk}/{self.id}')
+                f'uploads/{self.upload_path}/{info_pk}/{self.id}')
