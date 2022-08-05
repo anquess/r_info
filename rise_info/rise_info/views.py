@@ -1,4 +1,4 @@
-import imp
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -13,14 +13,19 @@ from contents.models import Contents
 @login_required
 def top(request):
     context = addTmcAuth({}, request.user)
-#    ip = request.META.get('REMOTE_ADDR') # django toolbar
-#    context["IP"] = ip # django toolbar
-    info = Info.objects.filter(is_disclosed=True).filter(
-        disclosure_date__lte=datetime.today()).filter(
-        disclosure_date__gte=datetime.today() - relativedelta(months=24)).order_by('-disclosure_date')
+    # ip = request.META.get('REMOTE_ADDR') # django toolbar
+    # context["IP"] = ip # django toolbar
+    infos = Info.objects.filter(
+        Q(is_disclosed=True),
+        Q(disclosure_date__lte=datetime.today()),
+        (
+            Q(disclosure_date__gte=datetime.today() - relativedelta(months=1))
+            | Q(updated_at__gte=datetime.today() - relativedelta(months=1))
+        )
+    ).order_by('-updated_at')
     contents = Contents.objects.filter(updated_at__gte=datetime.today(
-    ) - relativedelta(months=3)).order_by('-updated_at')
-    context['infos'] = info
+    ) - relativedelta(months=1)).order_by('-updated_at')
+    context['infos'] = infos
     context['contents'] = contents
     return render(request, "top.html", context)
 
