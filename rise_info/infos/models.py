@@ -1,8 +1,10 @@
+from tokenize import String
 from django.db import models
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from eqs.models import Eqtype
 from offices.models import Office
+from django.core.files import File
 
 from datetime import date
 
@@ -69,6 +71,32 @@ def importInfoEqTypes():
             for eq in val:
                 info[0].eqtypes.add(eq)
             infos.append(info[0])
+
+
+def importInfoFiles():
+    attachmentFiles = []
+    wb_load_file_list = load_workbook('test_data/infoFileList.xlsx')
+    ws_file_lsit = wb_load_file_list['filelist']
+    for row in ws_file_lsit.iter_rows(min_row=2):
+        if row[3].value:
+            info_pk = row[1].value
+            flnm = row[2].value
+            print(row, flnm)
+            attachmentFile = importInfoFile(flnm=flnm, info_pk=info_pk)
+            attachmentFiles.append(attachmentFile)
+    AttachmentFile.objects.bulk_create(attachmentFiles)
+
+
+def importInfoFile(flnm: String, info_pk: int):
+    info = Info.objects.get_or_none(pk=info_pk)
+    file = getMigratedData(flnm)
+    attachmentFile = AttachmentFile(info=info, filename=flnm)
+    attachmentFile.file.save(flnm, file)
+    return attachmentFile
+
+
+def getMigratedData(flnm: String):
+    return File(open('/home/pi/django/rise_info/uploads/info/migratedData/' + flnm, 'rb'))
 
 
 class InfoTypeChoices(models.TextChoices):
