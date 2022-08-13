@@ -5,6 +5,7 @@ from django.shortcuts import render
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from rise_info.settings import TOP_PAGE_LAST_MONTH_NUM
 from accounts.views import addTmcAuth
 from infos.models import Info
 from contents.models import Contents
@@ -12,6 +13,7 @@ from contents.models import Contents
 
 @login_required
 def top(request):
+    last_month_num = TOP_PAGE_LAST_MONTH_NUM
     context = addTmcAuth({}, request.user)
     # ip = request.META.get('REMOTE_ADDR') # django toolbar
     # context["IP"] = ip # django toolbar
@@ -19,12 +21,14 @@ def top(request):
         Q(is_disclosed=True),
         Q(disclosure_date__lte=datetime.today()),
         (
-            Q(disclosure_date__gte=datetime.today() - relativedelta(months=1))
-            | Q(updated_at__gte=datetime.today() - relativedelta(months=1))
+            Q(disclosure_date__gte=datetime.today() -
+              relativedelta(months=last_month_num))
+            | Q(updated_at__gte=datetime.today() - relativedelta(months=last_month_num))
         )
     ).order_by('-updated_at')
     contents = Contents.objects.filter(updated_at__gte=datetime.today(
-    ) - relativedelta(months=1)).order_by('-updated_at')
+    ) - relativedelta(months=last_month_num)).order_by('-updated_at')
+    context['last_month_num'] = last_month_num
     context['infos'] = infos
     context['contents'] = contents
     return render(request, "top.html", context)
