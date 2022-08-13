@@ -6,9 +6,14 @@ from eqs.models import Eqtype
 from offices.models import Office
 from django.core.files import File
 
-from datetime import date
-
+from datetime import date, timedelta, datetime
+import pytz
 from openpyxl import load_workbook
+
+
+def excel_date(num):
+    print(num, type(num))
+    return(datetime(1899, 12, 30) + timedelta(days=num))
 
 
 def importInfo():
@@ -33,9 +38,12 @@ def importInfo():
                 disclosure_date = row[6].value
                 is_disclosed = row[8].value
                 info_type = infotype[row[5].value - 1]
+                updated_at = disclosure_date.replace(
+                    tzinfo=pytz.timezone('Asia/Tokyo'))
 
                 info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
-                            disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed)
+                            disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
+                            updated_at=updated_at)
                 infos.append(info)
     Info.objects.bulk_create(infos)
     importInfoEqTypes()
