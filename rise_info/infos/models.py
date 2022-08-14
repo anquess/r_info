@@ -1,5 +1,5 @@
 from tokenize import String
-from django.db import models
+from django.db import models, connection
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from eqs.models import Eqtype
@@ -82,29 +82,35 @@ def importInfoEqTypes():
 
 
 def importInfoFiles():
+    AttachmentFile.objects.all().delete()
+    cursor = connection.cursor()
+    cursor.execute('alter table info_attachment auto_increment = 1')
+
     attachmentFiles = []
     wb_load_file_list = load_workbook('test_data/infoFileList.xlsx')
     ws_file_lsit = wb_load_file_list['filelist']
+    pk = 1
     for row in ws_file_lsit.iter_rows(min_row=2):
         if row[3].value:
             info_pk = row[1].value
             flnm = row[2].value
             print(row, flnm)
-            attachmentFile = importInfoFile(flnm=flnm, info_pk=info_pk)
+            attachmentFile = importInfoFile(id=pk, flnm=flnm, info_pk=info_pk)
             attachmentFiles.append(attachmentFile)
+            pk = pk + 1
     AttachmentFile.objects.bulk_create(attachmentFiles)
 
 
-def importInfoFile(flnm: String, info_pk: int):
+def importInfoFile(flnm: String, info_pk: int, id: int):
     info = Info.objects.get_or_none(pk=info_pk)
     file = getMigratedData(flnm)
-    attachmentFile = AttachmentFile(info=info, filename=flnm)
+    attachmentFile = AttachmentFile(id=id, info=info, filename=flnm)
     attachmentFile.file.save(flnm, file)
     return attachmentFile
 
 
 def getMigratedData(flnm: String):
-    return File(open('/home/pi/django/rise_info/uploads/info/migratedData/' + flnm, 'rb'))
+    return File(open('/home/pi/django/rise_info/uploads/migratedData/info/' + flnm, 'rb'))
 
 
 class InfoTypeChoices(models.TextChoices):
