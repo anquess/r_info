@@ -16,6 +16,7 @@ urlpatterns = [
     path('infos/', include('infos.urls')),
     path('offices/', include('offices.urls')),
     path('eqs/', include('eqs.urls')),
+    path('tech_support/', include('tech_supports.urls')),
     url(r'mdeditor/', include('mdeditor.urls')),  # mdeditor
 ]
 
