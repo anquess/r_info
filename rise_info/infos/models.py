@@ -2,8 +2,11 @@ from tokenize import String
 from django.db import models
 
 
-from datetime import date
+from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
+from eqs.models import Eqtype
+from offices.models import Office
 
+from datetime import date
 from openpyxl import load_workbook
 
 
