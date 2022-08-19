@@ -1,6 +1,5 @@
-from tokenize import String
-from django.db import models
-
+from django.db import models, connection
+from django.core.files import File
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from eqs.models import Eqtype
@@ -8,6 +7,7 @@ from offices.models import Office
 
 from datetime import date
 from openpyxl import load_workbook
+import pytz
 
 
 def importInfo():
@@ -95,16 +95,16 @@ def importInfoFiles():
     AttachmentFile.objects.bulk_create(attachmentFiles)
 
 
-def importInfoFile(flnm: String, info_pk: int):
+def importInfoFile(flnm: str, info_pk: int, id: int):
     info = Info.objects.get_or_none(pk=info_pk)
     file = getMigratedData(flnm)
-    attachmentFile = AttachmentFile(info=info, filename=flnm)
+    attachmentFile = AttachmentFile(id=id, info=info, filename=flnm)
     attachmentFile.file.save(flnm, file)
     return attachmentFile
 
 
-def getMigratedData(flnm: String):
-    return File(open('/home/pi/django/rise_info/uploads/info/migratedData/' + flnm, 'rb'))
+def getMigratedData(flnm: str):
+    return File(open('/home/pi/django/rise_info/uploads/migratedData/info/' + flnm, 'rb'))
 
 
 class InfoTypeChoices(models.TextChoices):
