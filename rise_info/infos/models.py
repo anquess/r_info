@@ -1,9 +1,6 @@
+from tokenize import String
 from django.db import models
 
-from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
-from eqs.models import Eqtype
-from offices.models import Office
-from django.core.files import File
 
 from datetime import date
 
@@ -32,9 +29,12 @@ def importInfo():
                 disclosure_date = row[6].value
                 is_disclosed = row[8].value
                 info_type = infotype[row[5].value - 1]
+                updated_at = disclosure_date.replace(
+                    tzinfo=pytz.timezone('Asia/Tokyo'))
 
                 info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
-                            disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed)
+                            disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
+                            updated_at=updated_at)
                 infos.append(info)
     Info.objects.bulk_create(infos)
     importInfoEqTypes()
@@ -73,20 +73,26 @@ def importInfoEqTypes():
 
 
 def importInfoFiles():
+    AttachmentFile.objects.all().delete()
+    cursor = connection.cursor()
+    cursor.execute('alter table info_attachment auto_increment = 1')
+
     attachmentFiles = []
     wb_load_file_list = load_workbook('test_data/infoFileList.xlsx')
     ws_file_lsit = wb_load_file_list['filelist']
+    pk = 1
     for row in ws_file_lsit.iter_rows(min_row=2):
         if row[3].value:
             info_pk = row[1].value
             flnm = row[2].value
             print(row, flnm)
-            attachmentFile = importInfoFile(flnm=flnm, info_pk=info_pk)
+            attachmentFile = importInfoFile(id=pk, flnm=flnm, info_pk=info_pk)
             attachmentFiles.append(attachmentFile)
+            pk = pk + 1
     AttachmentFile.objects.bulk_create(attachmentFiles)
 
 
-def importInfoFile(flnm: str, info_pk: int):
+def importInfoFile(flnm: String, info_pk: int):
     info = Info.objects.get_or_none(pk=info_pk)
     file = getMigratedData(flnm)
     attachmentFile = AttachmentFile(info=info, filename=flnm)
@@ -94,7 +100,7 @@ def importInfoFile(flnm: str, info_pk: int):
     return attachmentFile
 
 
-def getMigratedData(flnm: str):
+def getMigratedData(flnm: String):
     return File(open('/home/pi/django/rise_info/uploads/info/migratedData/' + flnm, 'rb'))
 
 
