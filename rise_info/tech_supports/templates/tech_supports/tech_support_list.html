@@ -44,7 +44,7 @@
         <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
 </form>
-<a class="btn btn-primary float-end" href="{% url 'info_new' %}">＋</a>
+<a class="btn btn-primary float-end" href="{% url 'support_new' %}">＋</a>
 <div class="row mt-2">
     {% include "pagination.html" %}
 </div>
@@ -67,7 +67,7 @@
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
             <th>{{ info.created_by }}</th>
             {% if auth or user == info.created_by %}
-            <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+            <th><a class="btn btn-primary" href="{% url 'support_edit' info.id %}">
                     {% bs_icon 'pencil-square' %}
                 </a>
                 {% endif %}

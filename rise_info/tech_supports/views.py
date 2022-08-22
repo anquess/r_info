@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 
 from .models import TechSupports, AttachmentFile, TechSupportComments
-from .forms import TechSupportCommentsForm
+from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
 from accounts.views import isInTmcGroup, addTmcAuth
 from offices.models import Office
 
@@ -50,6 +50,55 @@ class TechSupportList(ListView):
         context['offices'] = Office.objects.all()
         context['selelcted_office'] = self.request.GET.get('office')
         return context
+
+
+@login_required
+def support_edit(request, info_id):
+    info = TechSupports.objects.get_or_none(pk=info_id)
+    if info:
+        form = TechSupportsForm(request.POST or None, instance=info)
+        formset = FileFormSet(request.POST or None,
+                              files=request.FILES or None, instance=info)
+        if (request.method == "POST" and form.is_valid()):
+            if (request.FILES or None) is not None:
+                if not formset.is_valid():
+                    context = addTmcAuth({
+                        'form': form,
+                        'formset': formset,
+                    }, request.user)
+                    for ele in formset:
+                        messages.add_message(
+                            request, messages.WARNING, str(ele))
+                    return render(request, 'tech_supports/edit.html', context)
+            form.save()
+            formset.save()
+            messages.add_message(request, messages.INFO, '更新されました。')
+            return redirect('support_list')
+        context = addTmcAuth({
+            'form': form,
+            'formset': formset,
+        },
+            request.user)
+        return render(request, 'tech_supports/edit.html', context)
+
+
+@login_required
+def support_new(request):
+    form = TechSupportsForm(request.POST or None)
+    context = addTmcAuth({'form': form}, request.user)
+    if request.method == "POST" and form.is_valid():
+        info = form.save(commit=False)
+        formset = FileFormSet(request.POST, request.FILES, instance=info)
+        if formset.is_valid():
+            info.save()
+            formset.save()
+            messages.add_message(request, messages.INFO, '更新されました。')
+            return redirect('support_list')
+        else:
+            context['formset'] = formset
+    else:
+        context['formset'] = FileFormSet()
+    return render(request, "tech_supports/new.html", context)
 
 
 @login_required

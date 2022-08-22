@@ -38,44 +38,42 @@ class TechSupportCommentsForm(forms.ModelForm):
         }
 
 
-# class TechSupportsForm(forms.ModelForm):
-#    class Meta(MetaCommonInfo):
-#        model = TechSupports
-#        fields = MetaCommonInfo.fields + \
-#            ('inquiry', 'is_rich_text', 'eqtypes', 'offices', 'is_closed')
-#        error_messages = {**MetaCommonInfo.error_messages, **{
-#            'inquiry': {
-#                'max_length': '概要は2048文字以内です',
-#            },
-#        }}
-#        widgets = {**MetaCommonInfo.widgets, **{
-#            'inquiry': forms.Textarea(attrs={
-#                "class": "form-control",
-#                "rows": "3",
-#            }),
-#            'is_rich_text': forms.CheckboxInput(attrs={
-#                'onclick': 'simplemde = makeSimplemde(this.checked)',
-#            }),
-#            'is_closed': forms.CheckboxInput(attrs={
-#                'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
-#            }),
-#            'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
-#            'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
-#        }}
-#
-#
-# class AttachmentFileForm(forms.ModelForm):
-#    file = forms.FileField(
-#        validators=[FileSizeValidator(val=100, byte_type="mb")],
-#        required=True,
-#    )
-#
-#    class Meta(MetaCommonInfo):
-#        model = AttachmentFile
-#        fields = '__all__'
-#
-#
-# FileFormSet = forms.inlineformset_factory(
-#    TechSupports, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
-# )
-#
+class TechSupportsForm(forms.ModelForm):
+    class Meta(MetaCommonInfo):
+        model = TechSupports
+        fields = MetaCommonInfo.fields + \
+            ('inquiry', 'is_rich_text', 'eqtypes', 'is_closed')
+        error_messages = {**MetaCommonInfo.error_messages, **{
+            'inquiry': {
+                'max_length': '概要は2048文字以内です',
+            },
+        }}
+        widgets = {**MetaCommonInfo.widgets, **{
+            'inquiry': forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": "3",
+            }),
+            'is_rich_text': forms.CheckboxInput(attrs={
+                'onclick': 'simplemde = makeSimplemde(this.checked)',
+            }),
+            'is_closed': forms.CheckboxInput(attrs={
+                'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
+            }),
+            'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
+        }}
+
+
+class AttachmentFileForm(forms.ModelForm):
+    file = forms.FileField(
+        validators=[FileSizeValidator(val=100, byte_type="mb")],
+        required=True,
+    )
+
+    class Meta(MetaCommonInfo):
+        model = AttachmentFile
+        fields = '__all__'
+
+
+FileFormSet = forms.inlineformset_factory(
+    TechSupports, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
+)
