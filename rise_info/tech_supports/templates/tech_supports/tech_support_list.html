@@ -62,15 +62,17 @@
     <tbody>
         {% for info in infos %}
         <tr>
-            <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
+            <th><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.inquiry }}</th>
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
             <th>{{ info.created_by }}</th>
-            {% if auth %}
+            {% if auth or user == info.created_by %}
             <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
                     {% bs_icon 'pencil-square' %}
                 </a>
-                <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+                {% endif %}
+                {% if auth %}
+                <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'>
                     {% bs_icon 'trash' %}
                 </a>
             </th>

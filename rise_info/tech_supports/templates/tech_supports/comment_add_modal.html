@@ -1,0 +1,39 @@
+<div class="modal fade" id="menuEditModal" tabindex="-1" aria-labelledby="menuEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="menuEditModalLabel">コメントの投稿</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="modalForm" action="/tech_supports/comment_new/" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="id_comment_txt">コメント</label>
+                        <textarea class="form-control" name="comment_txt" maxlength="512"
+                            id="id_comment_txt"></textarea>
+                        <label class="form-label" for="id_file">ファイル</label>
+                        <input class="form-control" type="file" name="file" id="id_file">
+                        <input type="hidden" name="info" maxlength="24" class="form-control" required="" id="id_info">
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit" id="modalBTN">投稿</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function showModal(id) {
+        var modal = new bootstrap.Modal(document.getElementById('menuEditModal'),);
+        var modalTitle = document.getElementById('menuEditModalLabel');
+        var modalBTN = document.getElementById('modalBTN');
+        var modalForm = document.getElementById('modalForm');
+        var input = document.getElementById('id_info');
+        input.value = id
+        modalForm.action = "/tech_support/" + id + "/comment/";
+        modalTitle.textContent = "コメントの投稿";
+        modalBTN.textContent = "投稿";
+        modal.show();
+    }
+</script>

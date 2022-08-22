@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 
 from .models import TechSupports, AttachmentFile, TechSupportComments
+from .forms import TechSupportCommentsForm
 from accounts.views import isInTmcGroup, addTmcAuth
 from offices.models import Office
 
@@ -49,3 +50,62 @@ class TechSupportList(ListView):
         context['offices'] = Office.objects.all()
         context['selelcted_office'] = self.request.GET.get('office')
         return context
+
+
+@login_required
+def support_detail(request, info_id):
+    info = TechSupports.objects.get_or_none(pk=info_id)
+    files = AttachmentFile.objects.filter(info=info)
+    if info:
+        context = {
+            'info': info,
+            'files': files,
+        }
+        context = addTmcAuth(context, request.user)
+        context['is_support'] = True
+        return render(request, 'tech_supports/detail.html', context)
+    else:
+        messages.add_message(request, messages.WARNING, "該当業務支援情報はありません。")
+        return redirect('support_list')
+
+
+@login_required
+def support_del(request, info_id):
+    if isInTmcGroup(request.user):
+        info = TechSupports.objects.get_or_none(pk=info_id)
+        if info:
+            title = info.title
+            info.delete()
+            messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
+            return redirect('support_list')
+        else:
+            messages.add_message(request, messages.WARNING,
+                                 '該当技術支援情報は既に削除されてありません。')
+            return redirect('support_list')
+    else:
+        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('support_list')
+
+
+@login_required
+def add_comment(request, info_id):
+    form = TechSupportCommentsForm(request.POST or None, request.FILES)
+    if request.method == "POST" and form.is_valid():
+        comment = form.save(commit=False)
+        comment.save()
+        messages.add_message(request, messages.INFO, '更新されました。')
+    else:
+        messages.add_message(request, messages.INFO, '値がおかしいです。')
+    return redirect('/tech_support/' + str(info_id) + '/')
+
+
+@login_required
+def del_comment(request, info_id, comment_id):
+    comment = TechSupportComments.objects.get_or_none(pk=comment_id)
+    if comment:
+        comment.delete()
+        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
+        return redirect('/tech_support/' + str(info_id) + '/')
+    else:
+        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
+        return redirect('/tech_support/' + str(info_id) + '/')

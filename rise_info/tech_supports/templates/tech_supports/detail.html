@@ -1,0 +1,61 @@
+{% extends "baseDetail.html" %}
+{% load bootstrap_icons %}
+{% block sammary %}
+<ul>
+    {% for error in form.title.errors %}
+    <li>
+        {{ error }}
+    </li>
+    {% endfor %}
+</ul>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">装置型式</h5>
+        {% for eqtype in info.eqtypes.all %}
+        <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
+        {% endfor %}
+    </div>
+</div>
+{% if info.is_add_offices %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">官署</h5>
+        {% for office in info.offices.all %}
+        <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">問い合わせ内容</h5>
+        {{ info.inquiry | linebreaksbr }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block commnets %}
+<button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
+    コメント追加
+</button>
+{% for comment in info.techSupportComment.all|dictsortreversed:"created_at"%}
+{% include "../baseComment.html" %}
+{% endfor %}
+{% endblock %}
+
+
+{% block btn %}
+<th><a class="btn btn-primary" href="{% url 'support_list' %}">戻る</a></th>
+{% if auth %}
+<th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+        {% bs_icon 'pencil-square' %}
+    </a></th>
+<th><a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+        {% bs_icon 'trash' %}
+    </a></th>
+{% endif %}
+
+{% include "tech_supports/comment_add_modal.html" %}
+
+{% endblock %}
