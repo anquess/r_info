@@ -1,25 +1,36 @@
 <h2>添付ファイル</h2>
 {{ formset.management_form }}
 <div id="file-area">
-{% for file_form in formset %}
+    {% for file_form in formset %}
     <div class="row pb-2">
-    <div class="col-5">
-        <input class="form-control" type="file" name="attachmentfile_set-{{ forloop.counter0 }}-file" id="id_attachmentfile_set-{{ forloop.counter0 }}-file" onchange="change('id_btn-{{ forloop.counter0 }}')">
-        {{ file_form.info }}
-        {{ file_form.id }}
-    </div>
-    {% if file_form.id.value %}
+        <div class="col-5">
+            <input class="form-control" type="file" name="attachmentfile_set-{{ forloop.counter0 }}-file"
+                id="id_attachmentfile_set-{{ forloop.counter0 }}-file"
+                onchange="change('id_btn-{{ forloop.counter0 }}')">
+            {{ file_form.info }}
+            {{ file_form.id }}
+        </div>
+        {% if file_form.id.value %}
         <div class="col-5">
             <a href="/media/{{ file_form.file.value }}">{{ file_form.filename.value }}</a>
-            <input type="text" id="id_file-{{ forloop.counter0 }}-img_link" value='&lt;img src="/media/{{ file_form.file.value }}" width="100%" /&gt;' hidden disabled>
-            <button id="id_btn-{{ forloop.counter0 }}" type="button" class="btn btn-primary" onclick="copy('id_file-{{ forloop.counter0 }}-img_link')">IMGLinkCopy</button>
+            <input type="text" id="id_file-{{ forloop.counter0 }}-img_link"
+                value='&lt;img src="/media/{{ file_form.file.value }}" width="100%" /&gt;' hidden disabled>
+            {% if '.jpg' in file_form.filename.value or '.jpeg' in file_form.filename.value %}
+            <button id="id_btn-{{ forloop.counter0 }}" type="button" class="btn btn-primary"
+                onclick="copy('id_file-{{ forloop.counter0 }}-img_link')">画像ファイルパスコピー</button>
+            {%endif%}
+            {% if '.gif' in file_form.filename.value or '.png' in file_form.filename.value %}
+            <button id="id_btn-{{ forloop.counter0 }}" type="button" class="btn btn-primary"
+                onclick="copy('id_file-{{ forloop.counter0 }}-img_link')">画像ファイルパスコピー</button>
+            {%endif%}
         </div>
         <div class="col-2">
-            <input class="form-check-input" type="checkbox" name="attachmentfile_set-{{ forloop.counter0 }}-DELETE" id="id_attachmentfile_set-{{ forloop.counter0 }}-DELETE">
+            <input class="form-check-input" type="checkbox" name="attachmentfile_set-{{ forloop.counter0 }}-DELETE"
+                id="id_attachmentfile_set-{{ forloop.counter0 }}-DELETE">
             <label class="form-check-label" for="id_attachmentfile_set-{{ forloop.counter0 }}-DELETE">削除</label>
         </div>
-    {% endif %}
+        {% endif %}
     </div>
-{% endfor %}
+    {% endfor %}
 </div>
 <button id="add" type="button" class="btn btn-primary">ファイルの追加</button></br>
