@@ -46,6 +46,26 @@
             <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">新着　技術支援</div>
+            <p class="card-text">
+            <div class="row">
+                <div class="col-2">更新日時</div>
+                <div class="col-2">更新者</div>
+                <div class="col-8">件名</div>
+            </div>
+            {% for tech_support in tech_supports %}
+            <div class="row">
+                <div class="col-2">{{tech_support.updated_at|date:"Y年m月d日"}}</div>
+                <div class="col-2">{{tech_support.updated_by.first_name}}</div>
+                <div class="col-8"><a href="{% url 'support_detail' support.id %}">{{ support.title }}</a></div>
+            </div>
+            </p>
+            {%endfor%}
+            <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -9,6 +9,7 @@ from rise_info.settings import TOP_PAGE_LAST_MONTH_NUM
 from accounts.views import addTmcAuth
 from infos.models import Info
 from contents.models import Contents
+from tech_supports.models import TechSupports
 
 
 @login_required
@@ -28,9 +29,12 @@ def top(request):
     ).order_by('-updated_at')
     contents = Contents.objects.filter(updated_at__gte=datetime.today(
     ) - relativedelta(months=last_month_num)).order_by('-updated_at')
+    tech_supports = TechSupports.objects.filter(updated_at__gte=datetime.today(
+    ) - relativedelta(months=last_month_num)).order_by('-updated_at')
     context['last_month_num'] = last_month_num
     context['infos'] = infos
     context['contents'] = contents
+    context['tech_supports'] = tech_supports
     return render(request, "top.html", context)
 
 
