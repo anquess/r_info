@@ -48,10 +48,10 @@
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'support_list' %}">戻る</a></th>
 {% if auth %}
-<th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+<th><a class="btn btn-primary" href="{% url 'support_edit' info.id %}">
         {% bs_icon 'pencil-square' %}
     </a></th>
-<th><a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+<th><a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'>
         {% bs_icon 'trash' %}
     </a></th>
 {% endif %}
