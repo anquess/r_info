@@ -1,5 +1,7 @@
+from venv import create
 from django.db import models, connection
 from django.core.files import File
+from django.contrib.auth import get_user_model
 
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from eqs.models import Eqtype
@@ -21,23 +23,41 @@ def importInfo():
     ws_info = wb_info['info']
     infos = []
     Info.objects.all().delete()
+    if ws_info.cell(1, 5) == '内容':
+        is_new_sys = True
     for row in ws_info.iter_rows(min_row=2):
         if row[5].value < 5:
             if row[3].value:
                 id = row[0].value
                 managerID = row[1].value
                 title = row[2].value
-                sammary = row[3].value[0:511]
-                content = row[3].value
                 disclosure_date = row[6].value
                 is_disclosed = row[8].value
-                info_type = infotype[row[5].value - 1]
-                updated_at = disclosure_date.replace(
-                    tzinfo=pytz.timezone('Asia/Tokyo'))
+                if is_new_sys:
+                    sammary = row[3].value
+                    content = row[4].value
+                    info_type = row[5].value
+                    updated_at = row[10].value.replace(
+                        tzinfo=pytz.timezone('Asia/Tokyo'))
+                    created_at = row[11].value.replace(
+                        tzinfo=pytz.timezone('Asia/Tokyo'))
+                    created_by = get_user_model().objects.get_or_create(
+                        username=row[7].value)
+                    updated_by = get_user_model().objects.get_or_create(
+                        username=row[11].value)
+                    info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
+                                disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
+                                updated_at=updated_at, created_at=created_at, created_by=created_by, updated_by=updated_by)
+                else:
+                    sammary = row[3].value[0:511]
+                    content = row[3].value
+                    info_type = infotype[row[5].value - 1]
+                    updated_at = disclosure_date.replace(
+                        tzinfo=pytz.timezone('Asia/Tokyo'))
+                    info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
+                                disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
+                                updated_at=updated_at)
 
-                info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
-                            disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
-                            updated_at=updated_at)
                 infos.append(info)
     Info.objects.bulk_create(infos)
     importInfoEqTypes()

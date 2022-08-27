@@ -7,10 +7,10 @@
 
 {% block main %}
 
-<div class="welcome">
-    <h1>信頼性情報一覧</h1>
+<div class="welcome row">
+    <h1 class="col-10">信頼性情報一覧</h1>
 </div>
-<form class="row g-3" method="get" action="" name="filter_form">
+<form class="row g-3 my-1" method="get" action="" name="filter_form">
     <div class="col-auto">
         <label for="keyword" class="form-label">キーワード:</label>
     </div>
@@ -69,12 +69,23 @@
         <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
     </div>
 </form>
-{% if auth %}
-<a class="btn btn-primary float-end" href="{% url 'info_new' %}">＋</a>
-{% endif %}
-<div class="row mt-2">
-    {% include "pagination.html" %}
+<div class="row align-items-start my-1">
+    <div class="col-11">
+        {% include "pagination.html" %}
+    </div>
+    {% if auth %}
+    <div class="col-1">
+        <a class="btn btn-primary mx-2" href="{% url 'info_new' %}">＋</a>
+        <a class="btn btn-primary mx-2" href="{% url 'exportInfo' %}">{% bs_icon 'file-earmark-excel' %}</a>
+    </div>
+    {% endif %}
+
 </div>
+
+</div>
+
+</div>
+
 {% if infos %}
 <table class="table">
     <thead>
