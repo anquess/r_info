@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load pygmentize %}
+{% load bootstrap_icons %}
+{% block header %}
+{% endblock %}
+
+{% block main %}
+
+<div class="welcome">
+    <h1>障害通報一覧</h1>
+</div>
+
+<form class="row g-3" method="get" action="" name="filter_form">
+    <div class="col-auto">
+        <label for="keyword" class="form-label">キーワード:</label>
+    </div>
+    <div class="col-auto">
+        <input class="form-control" type="search" id="keyword" name="keyword" value={{ request.GET|keyword }}>
+    </div>
+    <div class="col-auto">
+        <label for="created_by" class="form-label">官署:</label>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" type="search" id="created_by" name="created_by">
+            <option value="">指定なし</option>
+            {% for user in users %}
+            {% if selelcted_user == user.username %}
+            <option value="{{ user.username }}" selected>
+                {% else %}
+            <option value="{{ user.username }}">
+                {% endif %}
+                {{ user.last_name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="is_all" class="form-label">自官署のみ:</label>
+    </div>
+    <div class="col-auto">
+        <input type="checkbox" id="is_all" name="is_all" {{ request.GET|is_all }}>
+    </div>
+
+    <div class="col-auto">
+        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
+    </div>
+</form>
+
+
+<a class="btn btn-primary float-end" href="{% url 'failuer_report_new' %}">＋</a>
+<div class="row mt-2">
+    {% include "pagination.html" %}
+</div>
+{% if infos %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>タイトル</th>
+            <th>概要</th>
+            <th>投稿日</th>
+            <th>更新日</th>
+            <th>官署</th>
+            <th>編集</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for info in infos %}
+        <tr>
+            <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
+            <th>{{ info.sammary | linebreaksbr }}</th>
+            <th>{{ info.created_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.updated_at | date:"y/n/j H:i" }}</th>
+            <th>{{ info.created_by.last_name }}</th>
+            {% if user == info.created_by %}
+            <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">
+                    {% bs_icon 'pencil-square' %}
+                </a>
+                <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}"
+                    onclick='return confirm("よろしいですか？");'>
+                    {% bs_icon 'trash' %}
+                </a>
+            </th>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>障害通報はまだ登録されていません。</p>
+{% endif %}
+{% endblock %}
