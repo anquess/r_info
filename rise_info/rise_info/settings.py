@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'contents.apps.ContentsConfig',
     'eqs.apps.EqsConfig',
     'tech_supports.apps.TechSupportsConfig',
-    # 'failuer_reports.apps.FailuerReportsConfig',
+    'failuer_reports.apps.FailuerReportsConfig',
     'histories.apps.HistoriesConfig',
     'infos.apps.InfosConfig',
     'offices.apps.OfficesConfig',
