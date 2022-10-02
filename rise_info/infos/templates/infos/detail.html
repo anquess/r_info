@@ -8,31 +8,24 @@
     </li>
     {% endfor %}
 </ul>
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">装置型式</h5>
-        {% for eqtype in info.eqtypes.all %}
-        <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
-        {% endfor %}
-    </div>
+<div class="h5 pt-2 mt-2">装置型式</div>
+<div class="pb-2 mb-2 border-bottom">
+    {% for eqtype in info.eqtypes.all %}
+    <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
+    {% endfor %}
 </div>
 {% if info.is_add_offices %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">官署</h5>
-        {% for office in info.offices.all %}
-        <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
-        {% endfor %}
-    </div>
+<div class="h5 pt-2 mt-2">官署</div>
+<div class="pb-2 mb-2 border-bottom">
+    {% for office in info.offices.all %}
+    <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
+    {% endfor %}
 </div>
 {% endif %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">概要</h5>
-        {{ info.sammary | linebreaksbr }}
-    </div>
+<div class="h5 pt-2 mt-2">概要</div>
+<div class="pb-2 mb-2 border-bottom">
+    {{ info.sammary | linebreaksbr }}
 </div>
-
 {% endblock %}
 
 {% block commnets %}

@@ -1,45 +1,36 @@
 {% extends "baseDetail.html" %}
 {% load bootstrap_icons %}
 {% block sammary %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">概要</h5>
-        {{ info.sammary | linebreaksbr }}
-    </div>
+<div class="h5 pt-2 mt-2">概要</div>
+<div class="pb-2 mb-2 border-bottom">
+    {{ info.sammary | linebreaksbr }}
 </div>
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">経緯</h5>
-        {%for event in events%}
-        <div class="row">
-            <div class="col-2">
-                {%if event.date%}{{event.date}}{%endif%}
-            </div>
-            <div class="col-1">
-                {%if event.time%}{{event.time}}{%endif%}
-            </div>
-            <div class="col-9">
-                {{event.event|linebreaksbr}}
-            </div>
+<div class="h5 pt-2 mt-2">経緯</div>
+<div class="pb-2 mb-2 border-bottom">
+    {%for event in events%}
+    <div class="row">
+        <div class="col-2">
+            {%if event.date%}{{event.date}}{%endif%}
         </div>
-        {%endfor%}
+        <div class="col-1">
+            {%if event.time%}{{event.time}}{%endif%}
+        </div>
+        <div class="col-9">
+            {{event.event|linebreaksbr}}
+        </div>
     </div>
+    {%endfor%}
 </div>
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">運用への影響</h5>
-        <p class="card-text">{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}</p>
-        <p class="card-text">{{ info.operatinal_impact }}</p>
-    </div>
+<div class="h5 pt-2 mt-2">運用への影響</div>
+<div class="pb-2 mb-2 border-bottom">
+    <p>{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}</p>
+    <p>{{ info.operatinal_impact }}</p>
 </div>
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">運航への影響</h5>
-        <p class="card-text">{% if info.is_flight_impact %}あり{% else %}なし{% endif %}</p>
-        <p class="card-text">{{ info.flight_impact }}</p>
-    </div>
+<div class="h5 pt-2 mt-2">運航への影響</div>
+<div class="pb-2 mb-2 border-bottom">
+    <p>{% if info.is_flight_impact %}あり{% else %}なし{% endif %}</p>
+    <p>{{ info.flight_impact }}</p>
 </div>
-
 {% endblock %}
 
 {% block btn %}

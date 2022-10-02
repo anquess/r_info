@@ -8,45 +8,39 @@
 {% block main %}
 
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <h2>{{ info.title }}</h2>
-        </div>
-    </div>
+    <div class="h2 py-2 my-2 border-bottom">{{ info.title }}</div>
     {% block sammary %}{% endblock %}
     {% if info.is_rich_text %}
-    <div>
-        <h5 class="card-title">詳細</h5>
+    <div class="h5 pt-2 mt-2">詳細</div>
+    <div class="pb-2 mb-2 border-bottom">
         <textarea id="editor" name="name">{{ info.content }}</textarea>
         <script src="/static/simplemde/simplemde.min.js"></script>
         <script src="/static/infos/js/addSimpleMDE_preview.js"></script>
     </div>
-    {% else %}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">詳細</h5>
-            {{ info.content | linebreaksbr }}
-        </div>
-    </div>
-
-    {% endif %}
-    {% load custom_filters %}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">ファイル</h5>
-            {% for file in files %}
-            <p><a href="/media/{{ file.file }}">{{ file.file.name | remove_dirs }}</a></p>
-            {% endfor %}
-        </div>
-    </div>
-    {% block commnets %}{% endblock %}
+</div>
+{% else %}
+<div class="h5 pt-2 mt-2">詳細</div>
+<div class="pb-2 mb-2 border-bottom">
+    {{ info.content | linebreaksbr }}
+</div>
+{% endif %}
+{% load custom_filters %}
+<div class="h5 pt-2 mt-2">ファイル</div>
+<div class="pb-2 mb-2 border-bottom">
+    {% for file in files %}
+    <p><a href="/media/{{ file.file }}">{{ file.file.name | remove_dirs }}</a></p>
+    {% endfor %}
+</div>
+{% block commnets %}{% endblock %}
+<div class="pb-2 mb-2 border-bottom">
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>
         <div class="col-3">作成者:{{ info.created_by }}</div>
         <div class="col-3">投稿日時:{{ info.updated_at }}</div>
         <div class="col-3">投稿者:{{ info.updated_by }}</div>
     </div>
-    {% block btn %}{% endblock %}
+</div>
+{% block btn %}{% endblock %}
 </div>
 {% endblock %}
 {% block add_js %}
