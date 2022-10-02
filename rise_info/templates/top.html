@@ -7,66 +7,107 @@
     <div class="card">
         <div class="card-body">
             <div class="card-title">新着　信頼性情報</div>
-            <p class="card-text">
-            <div class="row">
-                <div class="col-2">公開日</div>
-                <div class="col-2">更新日時</div>
-                <div class="col-2">更新者</div>
-                <div class="col-6">件名</div>
+            <div class="card-text">
+                <div class="row">
+                    <div class="col-2">公開日</div>
+                    <div class="col-2">更新日時</div>
+                    <div class="col-2">更新者</div>
+                    <div class="col-6">件名</div>
+                </div>
+                {% for info in infos %}
+
+                {% if forloop.counter == 6 %}
+                <a href="#" onclick="ChangeHidden('new_r_info', this);">残りを表示</a>
+                <div id='new_r_info' class="d-none">
+                    {%endif%}
+
+                    <div class="row">
+                        <div class="col-2">{{info.disclosure_date|date:"Y年m月d日"}}</div>
+                        <div class="col-2">{{info.updated_at}}</div>
+                        <div class="col-2">{{info.updated_by.first_name}}</div>
+                        <div class="col-6"><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></div>
+                    </div>
+                    {%if forloop.last %}
+                    {%if forloop.counter > 5 %}
+                </div>
+                {%endif%}
+                {%endif%}
+                {%endfor%}
+                <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
             </div>
-            {% for info in infos %}
-            <div class="row">
-                <div class="col-2">{{info.disclosure_date|date:"Y年m月d日"}}</div>
-                <div class="col-2">{{info.updated_at}}</div>
-                <div class="col-2">{{info.updated_by.first_name}}</div>
-                <div class="col-6"><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></div>
-            </div>
-            </p>
-            {%endfor%}
-            <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <div class="card-title">新着　コンテンツ</div>
-            <p class="card-text">
-            <div class="row">
-                <div class="col-2">更新日時</div>
-                <div class="col-2">更新者</div>
-                <div class="col-8">件名</div>
+            <div class="card-text">
+                <div class="row">
+                    <div class="col-2">更新日時</div>
+                    <div class="col-2">更新者</div>
+                    <div class="col-8">件名</div>
+                </div>
+                {% for content in contents %}
+                {% if forloop.counter == 6 %}
+                <a href="#" onclick="ChangeHidden('new_content', this);">残りを表示</a>
+                <div id='new_content' class="d-none">
+                    {%endif%}
+
+                    <div class="row">
+                        <div class="col-2">{{content.updated_at|date:"Y年m月d日"}}</div>
+                        <div class="col-2">{{content.updated_by.first_name}}</div>
+                        <div class="col-8"><a href="{% url 'content_detail' content.id %}">{{ content.title }}</a></div>
+                    </div>
+
+                    {%if forloop.last %}
+                    {%if forloop.counter > 5 %}
+                </div>
+                {%endif%}
+                {%endif%}
+                {%endfor%}
             </div>
-            {% for content in contents %}
-            <div class="row">
-                <div class="col-2">{{content.updated_at|date:"Y年m月d日"}}</div>
-                <div class="col-2">{{content.updated_by.first_name}}</div>
-                <div class="col-8"><a href="{% url 'content_detail' content.id %}">{{ content.title }}</a></div>
-            </div>
-            </p>
-            {%endfor%}
             <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <div class="card-title">新着　技術支援</div>
-            <p class="card-text">
-            <div class="row">
-                <div class="col-2">更新日時</div>
-                <div class="col-2">更新者</div>
-                <div class="col-8">件名</div>
-            </div>
-            {% for tech_support in tech_supports %}
-            <div class="row">
-                <div class="col-2">{{tech_support.updated_at|date:"Y年m月d日"}}</div>
-                <div class="col-2">{{tech_support.updated_by.first_name}}</div>
-                <div class="col-8"><a href="{% url 'support_detail' tech_support.id %}">{{ tech_support.title }}</a>
+            <div class="card-text">
+                <div class="row">
+                    <div class="col-2">更新日時</div>
+                    <div class="col-2">更新者</div>
+                    <div class="col-8">件名</div>
                 </div>
+                {% for tech_support in tech_supports %}
+                {% if forloop.counter == 6 %}
+                <a href="#" onclick="ChangeHidden('new_tech_supo', this);">残りを表示</a>
+                <div id='new_tech_supo' class="d-none">
+                    {%endif%}
+
+                    <div class="row">
+                        <div class="col-2">{{tech_support.updated_at|date:"Y年m月d日"}}</div>
+                        <div class="col-2">{{tech_support.updated_by.first_name}}</div>
+                        <div class="col-8">
+                            <a href="{% url 'support_detail' tech_support.id %}">{{ tech_support.title }}</a>
+                        </div>
+                    </div>
+                    {%if forloop.last %}
+                    {%if forloop.counter > 5 %}
+                </div>
+                {%endif%}
+                {%endif%}
+
+                {%endfor%}
+                <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
             </div>
-            </p>
-            {%endfor%}
-            <div class="card-subtitle">直近{{last_month_num}}か月表示</div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function ChangeHidden(id, self) {
+        var elem = document.getElementById(id);
+        elem.classList.remove('d-none');
+        self.classList.add('d-none');
+    }
+</script>
 
 {% endblock %}
