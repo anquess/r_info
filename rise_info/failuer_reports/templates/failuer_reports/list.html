@@ -80,7 +80,8 @@
                     onclick='return confirm("よろしいですか？");'>
                     {% bs_icon 'trash' %}
                 </a>
-            <th><a class="btn btn-primary" href="{% url 'send_mail' %}" onclick='return confirm("メール送信をして、よろしいですか？");'>
+            <th><a class="btn btn-primary" href="{% url 'send_mail' info.id %}"
+                    onclick='return confirm("メール送信をして、よろしいですか？");'>
                     {% bs_icon 'send' %}
                 </a></th>
 

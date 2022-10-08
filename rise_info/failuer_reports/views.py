@@ -7,35 +7,51 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
-# from requests import request
+from django.template.loader import render_to_string
 
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.views import addTmcAuth
+from rise_info.settings import EMAIL_HOST_USER
+from rise_info.settings import EMAIL_TEST_USER
 
 
 @login_required
-def sendmail(request):
-    email1 = 'from@from.com'
-    email2 = 'to@to.com'
+def sendmail(request, info_id):
+    info = FailuerReport.objects.get_or_none(pk=info_id)
+    # files = AttachmentFile.objects.filter(info=info)
+    events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
+    if info:
+        context = {
+            'info': info,
+            # 'files': files,
+            'events': events,
+        }
+        email1 = EMAIL_HOST_USER
+        email2 = EMAIL_TEST_USER
 
-    subject = "Academic - Create New Password"
-    message = "Hi"
-    try:
-        send_mail(
-            subject,  # Subject of the email
-            message,  # Body or Message of the email
-            # from@gmail.com   (admin@gmail.com for gmail account)
-            email2,
-            [email1],  # to@gmail.com  # email that is filled in the form
-            fail_silently=False,
-        )
-        messages.add_message(request, messages.INFO, '送信されました。')
-        return redirect('failuer_report_list')
-    except Exception:
-        messages.add_message(request, messages.ERROR, '送信されませんでした。')
-        return redirect('failuer_report_list')
+        subject = "【障害通報】" + str(info.title)
+        msg_plain = render_to_string('failuer_reports/mail.txt', context)
+        msg_html = render_to_string('failuer_reports/mail.html', context)
+        try:
+            send_mail(
+                subject,  # Subject of the email
+                msg_plain,  # Body or Message of the email
+                # from@gmail.com   (admin@gmail.com for gmail account)
+                email1,
+                [email2],  # to@gmail.com  # email that is filled in the form
+                html_message=msg_html,
+                fail_silently=False,
+            )
+            messages.add_message(request, messages.INFO, '送信されました。')
+            return redirect('failuer_report_list')
+        except Exception:
+            messages.add_message(request, messages.ERROR, '送信されませんでした。')
+            return redirect('failuer_report_list')
+    else:
+        messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+        return redirect('info_list')
 
 
 class FailuerReportList(ListView):
