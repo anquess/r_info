@@ -17,8 +17,8 @@ from accounts.views import addTmcAuth
 
 @login_required
 def sendmail(request):
-    email1 = 'anquess@gmail.com'
-    email2 = 'higashiyama-k105r@tsuushin1.onmicrosoft.com'
+    email1 = 'from@from.com'
+    email2 = 'to@to.com'
 
     subject = "Academic - Create New Password"
     message = "Hi"
