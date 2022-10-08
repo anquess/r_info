@@ -5,12 +5,37 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 from django.contrib.auth.models import User
-from requests import request
+from django.core.mail import send_mail
+from django.conf import settings
+# from requests import request
 
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.views import addTmcAuth
+
+
+@login_required
+def sendmail(request):
+    email1 = 'anquess@gmail.com'
+    email2 = 'higashiyama-k105r@tsuushin1.onmicrosoft.com'
+
+    subject = "Academic - Create New Password"
+    message = "Hi"
+    try:
+        send_mail(
+            subject,  # Subject of the email
+            message,  # Body or Message of the email
+            # from@gmail.com   (admin@gmail.com for gmail account)
+            email2,
+            [email1],  # to@gmail.com  # email that is filled in the form
+            fail_silently=False,
+        )
+        messages.add_message(request, messages.INFO, '送信されました。')
+        return redirect('failuer_report_list')
+    except Exception:
+        messages.add_message(request, messages.ERROR, '送信されませんでした。')
+        return redirect('failuer_report_list')
 
 
 class FailuerReportList(ListView):

@@ -9,4 +9,6 @@ urlpatterns = [
     path("<int:info_id>/edit/", views.failuer_report_edit,
          name="failuer_report_edit"),
     path("<int:info_id>/del/", views.failuer_report_del, name="failuer_report_del"),
+    path("send_mail/", views.sendmail,
+         name="send_mail"),
 ]
