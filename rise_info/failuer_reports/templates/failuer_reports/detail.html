@@ -38,6 +38,9 @@
         戻る
     </a></th>
 {% if user == info.created_by %}
+<th><a class="btn btn-primary" href="{% url 'send_mail' info.id %}">
+        {% bs_icon 'send' %}
+    </a></th>
 <th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">
         {% bs_icon 'pencil-square' %}
     </a></th>
