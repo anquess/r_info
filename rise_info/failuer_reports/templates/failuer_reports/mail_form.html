@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_icons %}
+{% block extraheader %}
+{% endblock %}
+{% block main %}
+
+<h3>メール送信フォーム</h3>
+
+<form method="post" action name="mail_send_form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-2">
+            <label for="subject" class="form-label">メール件名</label>
+        </div>
+        <div class="col-9">
+            <input type="text" class="form-control" id=" subject" name="subject" value='【障害通報】{{info.title}} _第xx報'>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-2">
+            <label for="to" class="form-label">宛先</label>
+        </div>
+        <div class="col-9">
+            <input type="email" class="form-control" id="to" name="to" value
+                pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                placeholder="xxx@xxx.go.jp">
+        </div>
+        <div class="col-1">
+            <button id="send" type="submit" class="btn btn-secondary" onclick='return confirm("メール送信をして、よろしいですか？");'>
+                {% bs_icon 'send' %}
+            </button>
+        </div>
+    </div>
+</form>
+
+{% include "failuer_reports/mail.html" %}
+
+{% endblock %}
+{% block add_js %}
+{% endblock %}

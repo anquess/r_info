@@ -20,7 +20,6 @@ from rise_info.settings import EMAIL_TEST_USER
 @login_required
 def sendmail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
-    # files = AttachmentFile.objects.filter(info=info)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     if info:
         context = {
@@ -28,27 +27,38 @@ def sendmail(request, info_id):
             # 'files': files,
             'events': events,
         }
-        email1 = EMAIL_HOST_USER
-        email2 = EMAIL_TEST_USER
+        if request.method == "POST":
+            email1 = EMAIL_HOST_USER
 
-        subject = "【障害通報】" + str(info.title)
-        msg_plain = render_to_string('failuer_reports/mail.txt', context)
-        msg_html = render_to_string('failuer_reports/mail.html', context)
-        try:
-            send_mail(
-                subject,  # Subject of the email
-                msg_plain,  # Body or Message of the email
-                # from@gmail.com   (admin@gmail.com for gmail account)
-                email1,
-                [email2],  # to@gmail.com  # email that is filled in the form
-                html_message=msg_html,
-                fail_silently=False,
-            )
-            messages.add_message(request, messages.INFO, '送信されました。')
-            return redirect('failuer_report_list')
-        except Exception:
-            messages.add_message(request, messages.ERROR, '送信されませんでした。')
-            return redirect('failuer_report_list')
+            if request.POST.get("to"):
+                email2 = request.POST.get("to")
+            else:
+                email2 = None
+
+            if request.POST.get("subject"):
+                subject = request.POST.get("subject")
+            else:
+                subject = "【障害通報】" + str(info.title)
+            msg_plain = render_to_string('failuer_reports/mail.txt', context)
+            msg_html = render_to_string('failuer_reports/mail.html', context)
+            try:
+                send_mail(
+                    subject,  # Subject of the email
+                    msg_plain,  # Body or Message of the email
+                    # from@gmail.com   (admin@gmail.com for gmail account)
+                    email1,
+                    [email2],  # to@gmail.com  # email that is filled in the form
+                    html_message=msg_html,
+                    fail_silently=False,
+                )
+                messages.add_message(request, messages.INFO, '送信されました。')
+                return redirect('failuer_report_list')
+            except Exception:
+                messages.add_message(request, messages.ERROR, '送信されませんでした。')
+                return redirect('failuer_report_list')
+        else:
+            context = addTmcAuth(context, request.user)
+            return render(request, 'failuer_reports/mail_form.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Infoはありません。")
         return redirect('info_list')
