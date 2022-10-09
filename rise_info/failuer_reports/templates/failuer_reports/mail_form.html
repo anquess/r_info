@@ -4,39 +4,80 @@
 {% block extraheader %}
 {% endblock %}
 {% block main %}
-
-<h3>メール送信フォーム</h3>
-
-<form method="post" action name="mail_send_form">
-    {% csrf_token %}
+<div class="container-fluid">
     <div class="row">
-        <div class="col-2">
-            <label for="subject" class="form-label">メール件名</label>
-        </div>
-        <div class="col-9">
-            <input type="text" class="form-control" id=" subject" name="subject" value='【障害通報】{{info.title}} _第xx報'>
-        </div>
+        <div class="h2 py-2 my-2 border-bottom">メール送信フォーム</div>
     </div>
+    <div class="row">
+        <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-2">
+                    <label for="subject" class="form-label">メール件名</label>
+                </div>
+                <div class="col-9">
+                    <input type="text" class="form-control" id=" subject" name="subject"
+                        value='【障害通報】{{info.title}} _第xx報'>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-2">
+                    <label for="to" class="form-label">宛先</label>
+                </div>
+                <div class="col-9">
+                    <input type="email" class="form-control" id="to" name="to" required
+                        pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+                        placeholder="xxx@xxx.go.jp">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <label for="header" class="form-label">ヘッダー</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="form-control" id="header" name="header"
+                        placeholder="メール本文の前に文章を入れたい場合は入力してください"></textarea>
+                </div>
+
+                <div class="col-1">
+                    <button id="send" type="submit" class="btn btn-secondary"
+                        onclick='return confirm("メール送信をして、よろしいですか？");'>
+                        {% bs_icon 'send' %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        // 無効なフィールドがある場合にフォーム送信を無効にするスターターJavaScriptの例
+        (() => {
+            'use strict'
+
+            // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // ループして帰順を防ぐ
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
     <br>
-    <div class="row">
-        <div class="col-2">
-            <label for="to" class="form-label">宛先</label>
-        </div>
-        <div class="col-9">
-            <input type="email" class="form-control" id="to" name="to" value
-                pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
-                placeholder="xxx@xxx.go.jp">
-        </div>
-        <div class="col-1">
-            <button id="send" type="submit" class="btn btn-secondary" onclick='return confirm("メール送信をして、よろしいですか？");'>
-                {% bs_icon 'send' %}
-            </button>
+    <div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+            {% include "failuer_reports/mail.html" %}
         </div>
     </div>
-</form>
-
-{% include "failuer_reports/mail.html" %}
-
+</div>
 {% endblock %}
 {% block add_js %}
 {% endblock %}

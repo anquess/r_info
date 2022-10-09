@@ -39,6 +39,8 @@ def sendmail(request, info_id):
                 subject = request.POST.get("subject")
             else:
                 subject = "【障害通報】" + str(info.title)
+            if request.POST.get("header"):
+                context['mail_header'] = request.POST.get("header")
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
             try:

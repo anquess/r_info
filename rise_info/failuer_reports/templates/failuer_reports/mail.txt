@@ -1,3 +1,5 @@
+【障害通報通報】{{info.title}}
+
 概要
  {{ info.sammary | linebreaksbr }}
 
