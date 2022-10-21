@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 
 TOP_PAGE_LAST_MONTH_NUM = 12
+TOP_PAGE_LIST_NUM = 10
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 with (BASE_DIR / 'rise_info/settings.json').open() as json_file:
