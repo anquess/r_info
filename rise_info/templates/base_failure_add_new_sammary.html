@@ -1,20 +1,54 @@
+<div class="row mt-2 mb-0">
+    <div class="col-2">
+        障害発生日
+    </div>
+    <div class="col-2">
+        障害発生日時
+    </div>
+    <div class="col-4">
+        発生日時確認状態
+    </div>
+</div>
+<div id="event-area">
+    <div class="row">
+        <div class="col-2">
+            {{form.failuer_date}}
+        </div>
+        <div class="col-2">
+            {{form.failuer_time}}
+        </div>
+        <div class="col-4">
+            {{form.date_time_confirmation}}
+        </div>
+    </div>
+    <div id="confirmationHelp" class="row form-text">
+        <div class="col-12">
+            {{form.date_time_confirmation.help_text|safe}}
+        </div>
+    </div>
+</div>
+
 <label for="id_sammary" class="form-label">{{form.sammary.label}}</label>
 {{form.sammary}}
 <div class="row mt-1">
     <div class="col-3">
         <label for="id_is_operatinal_impact" class="form-label">{{form.is_operatinal_impact.label}}</label>
         {{form.is_operatinal_impact}}
-        </div>
-        <div class="col-9">
-            <input {% if form.is_operatinal_impact.value %} type="text" {% else %} type="hidden" {% endif %} class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact" value="{{ form.operatinal_impact.value }}" placeholder='運用への影響' aria-label="運用への影響" />
-        </div>    
+    </div>
+    <div class="col-9">
+        <input {% if form.is_operatinal_impact.value %} type="text" {% else %} type="hidden" {% endif %}
+            class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact"
+            value="{{ form.operatinal_impact.value }}" placeholder='運用への影響' aria-label="運用への影響" />
+    </div>
 </div>
 <div class="row mt-1">
     <div class="col-3">
-    <label for="id_is_flight_impact" class="form-label">{{form.is_flight_impact.label}}</label>
-    {{form.is_flight_impact}}
+        <label for="id_is_flight_impact" class="form-label">{{form.is_flight_impact.label}}</label>
+        {{form.is_flight_impact}}
     </div>
     <div class="col-9">
-        <input {% if form.is_flight_impact.value %} type="text" {% else %} type="hidden" {% endif %} class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact" value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
+        <input {% if form.is_flight_impact.value %} type="text" {% else %} type="hidden" {% endif %}
+            class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact"
+            value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
     </div>
 </div>

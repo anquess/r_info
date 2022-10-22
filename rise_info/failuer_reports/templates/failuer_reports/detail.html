@@ -1,7 +1,22 @@
 {% extends "baseDetail.html" %}
 {% load bootstrap_icons %}
 {% block sammary %}
-<div class="h5 pt-2 mt-2">概要</div>
+<div class="h5 pt-2 mt-2">障害発生日時</div>
+<div class="row">
+    <div class="col-2">
+        {{info.failuer_date}}
+    </div>
+    <div class="col-4">
+        {%if info.date_time_confirmation == "checking_now" %}
+        概ね
+        {%endif%}
+        {{info.failuer_time}}
+    </div>
+    <div class="col-4">
+        {{info.get_date_time_confirmation_display}}
+    </div>
+</div>
+<div class="h5 pt-2 mt-2">障害状況</div>
 <div class="pb-2 mb-2 border-bottom">
     {{ info.sammary | linebreaksbr }}
 </div>

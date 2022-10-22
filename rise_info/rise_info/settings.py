@@ -170,7 +170,7 @@ if DEBUG:
     STATIC_ROOT = ''
     BS_ICONS_BASE_URL = 'http://127.0.0.1:8000/static/bootstrap_icons/'
 else:
-    BS_ICONS_BASE_URL = 'http://prototype-rpi.local/static/bootstrap_icons/'
+    BS_ICONS_BASE_URL = 'http://cab-rhp.midmlit.local/static/bootstrap_icons/'
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 STATIC_URL = '/static/'
