@@ -1,6 +1,7 @@
 from django.db import models
 
 from rise_info.baseModels import CommonInfo, BaseAttachment
+from offices.models import Office
 
 
 class ConfirmationTypeChoices(models.TextChoices):
@@ -17,6 +18,7 @@ class FailuerReport(CommonInfo):
     date_time_confirmation = models.CharField(verbose_name='日時確認状態', max_length=16, choices=ConfirmationTypeChoices.choices,
                                               help_text='運用者等の管技官以外からの障害検知した場合は当該者と障害発生日時の調整が必要',
                                               default=ConfirmationTypeChoices.CHECKING_NOW, null=False, blank=False)
+    offices = models.ManyToManyField(Office, verbose_name='官署', blank=True)
     sammary = models.TextField(
         verbose_name='障害状況', default="確認中", null=False, blank=True, max_length=512)
     is_operatinal_impact = models.BooleanField(

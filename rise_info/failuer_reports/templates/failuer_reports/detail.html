@@ -16,6 +16,12 @@
         {{info.get_date_time_confirmation_display}}
     </div>
 </div>
+<div class="h5 pt-2 mt-2">官署</div>
+<div class="pb-2 mb-2 border-bottom">
+    {% for office in info.offices.all %}
+    <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
+    {% endfor %}
+</div>
 <div class="h5 pt-2 mt-2">障害状況</div>
 <div class="pb-2 mb-2 border-bottom">
     {{ info.sammary | linebreaksbr }}

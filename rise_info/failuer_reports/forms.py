@@ -1,7 +1,9 @@
 from django import forms
+from django.urls import reverse_lazy
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from rise_info.baseForms import MetaCommonInfo
+from offices.widgets import OfficeSuggestWidget
 
 
 class FailuerReportForm(forms.ModelForm):
@@ -18,6 +20,7 @@ class FailuerReportForm(forms.ModelForm):
             'failuer_date',
             'failuer_time',
             'date_time_confirmation',
+            'offices',
             'sammary',
             'is_operatinal_impact',
             'operatinal_impact',
@@ -57,6 +60,7 @@ class FailuerReportForm(forms.ModelForm):
                 "class": "form-select",
                 "aria-describedby": "confirmationHelp",
             }),
+            'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
             'sammary': forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": "3",
