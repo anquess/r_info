@@ -86,15 +86,30 @@ def offices_csv_import():
                      'uploads/documents/Offices_tmp.csv')
 
 
+class OfficesGroup(models.Model):
+    object = BaseManager()
+    group_name = models.CharField(
+        verbose_name='グループ名', null=False, blank=False, max_length=32)
+
+    def __str__(self):
+        return self.group_name
+
+    class Meta:
+        db_table = 'offices_groups'
+
+
 class Office(models.Model):
     objects = BaseManager()
     id = models.SlugField(verbose_name='官署コード', primary_key=True,
-                          editable=False, validators=[bigAlphaNumeric], max_length=4)
+                          editable=False, validators=[bigAlphaNumeric],
+                          max_length=4)
     unyo_sts = models.BooleanField(verbose_name='運用状態', default=True)
     name = models.CharField(
         verbose_name='官署名', null=False, blank=False, max_length=32)
     shortcut_name = models.CharField(
         verbose_name='官署略称', null=False, blank=False, max_length=8)
+    offices_group = models.ManyToManyField(
+        OfficesGroup, verbose_name='所属官署グループ', related_name='Offices')
     update_at = models.DateTimeField(verbose_name='更新日時')
 
     def __str__(self):
