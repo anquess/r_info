@@ -89,7 +89,11 @@
                 {{ message | linebreaksbr }}
             </div>
             {% endfor %}
-            {{ form.errors }}
+            {% if form.errors %}
+            <div class="alert alert-warning">
+                {{ form.errors }}
+            </div>
+            {%endif%}
             {%if formset.erros%}
             {%for error in formset.errors%}
             {%if error%}<div class="alert alert-warning">{{error}}</div>{%endif%}
