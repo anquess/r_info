@@ -45,6 +45,9 @@ class FailuerReportForm(forms.ModelForm):
             'date_time_confirmation': {
                 'required': '発生日時確認状態は必須です',
             },
+            'recovery_propects': {
+                'max_length': '復旧の見通しは1024文字以内です。'
+            },
             'sammary': {
                 'required': '障害状況は必須です',
                 'max_length': '障害状況は512文字以内です。'
