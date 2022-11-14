@@ -56,9 +56,6 @@ class TechSupportsForm(forms.ModelForm):
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
-            'is_closed': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
-            }),
             'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
         }}
 

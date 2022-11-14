@@ -52,8 +52,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th class="col-2">タイトル</th>
-            <th class="col-7">問い合わせ内容</th>
+            <th>解決済</th>
+            <th>タイトル</th>
+            <th>問い合わせ内容</th>
             <th>更新日</th>
             <th>問い合わせ官署</th>
             <th>編集</th>
@@ -62,6 +63,7 @@
     <tbody>
         {% for info in infos %}
         <tr>
+            <th>{% if info.is_closed %}☑{%endif%}</th>
             <th><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.inquiry }}</th>
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
