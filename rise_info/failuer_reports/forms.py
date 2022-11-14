@@ -111,7 +111,8 @@ class CircumstancesForm(forms.ModelForm):
         error_messages = {
             'event': {
                 'required': '事象は必須です',
-                'max_length': '事象は256文字以内です。'
+                'max_length': '事象は256文字以内です。',
+                'type': 'date',
             },
         }
 

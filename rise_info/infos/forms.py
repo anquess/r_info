@@ -84,7 +84,8 @@ class InfoForm(forms.ModelForm):
             }),
             'disclosure_date': forms.DateInput(attrs={
                 'class': 'form-control',
-                'onclick': "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
+                'type': 'date',
+
             }),
             'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
             'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
