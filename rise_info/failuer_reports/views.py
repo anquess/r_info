@@ -55,8 +55,9 @@ def sendmail(request, info_id):
                 )
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('failuer_report_list')
-            except Exception:
-                messages.add_message(request, messages.ERROR, '送信されませんでした。')
+            except Exception as e:
+                messages.add_message(
+                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
                 return redirect('failuer_report_list')
         else:
             context = addTmcAuth(context, request.user)

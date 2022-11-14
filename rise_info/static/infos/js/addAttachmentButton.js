@@ -62,15 +62,14 @@ $(function () {
         });
         var dateElement = $('<input>', {
             class: 'form-control',
-            type: 'text',
+            type: 'date',
             name: 'circumstances_set-' + currentEventCount + '-date',
-            onclick: "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
             id: 'id_circumstances_set-' + currentEventCount + '-date',
             value: currentEventDate,
         });
         var timeElement = $('<input>', {
             class: 'form-control',
-            type: 'text',
+            type: 'time',
             name: 'circumstances_set-' + currentEventCount + '-time',
             id: 'id_circumstances_set-' + currentEventCount + '-time',
             value: currentEventTime,

@@ -1,7 +1,16 @@
 【障害通報通報】{{info.title}}
 
-概要
- {{ info.sammary | linebreaksbr }}
+障害発生日時
+{{info.failuer_date}} {%if info.date_time_confirmation == "checking_now" %}概ね{%endif%} {{info.failuer_time}}
+
+障害発生場所
+{{info.failuer_place}}
+
+障害状況
+{{ info.sammary | linebreaksbr }}
+
+復旧の見通し
+{{ info.recovery_propects | linebreaksbr }}
 
 経緯
 {%for event in events%}
@@ -9,12 +18,9 @@
         {{event.event|linebreaksbr}}
 {%endfor%}
 
-運用への影響
-{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}
+運用への影響:{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}
     {{ info.operatinal_impact }}
-運航への影響
-{% if info.is_flight_impact %}あり{% else %}なし{% endif %}
+運航への影響:{% if info.is_flight_impact %}あり{% else %}なし{% endif %}
     {{ info.flight_impact }}
-
-詳細
-    {{ info.content | linebreaksbr }}
+取材の有無：{{ info.get_is_press_display }}
+{{ info.press_contents | linebreaksbr }}

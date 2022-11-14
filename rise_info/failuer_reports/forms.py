@@ -11,6 +11,7 @@ class FailuerReportForm(forms.ModelForm):
         super(FailuerReportForm, self).__init__(*args, **kwd)
         self.fields["failuer_date"].required = True
         self.fields["failuer_time"].required = True
+        self.fields["failuer_place"].required = True
         self.fields["date_time_confirmation"].required = True
         self.fields["sammary"].required = True
 
@@ -19,8 +20,12 @@ class FailuerReportForm(forms.ModelForm):
         fields = MetaCommonInfo.fields + (
             'failuer_date',
             'failuer_time',
+            'failuer_place',
             'date_time_confirmation',
             'offices',
+            'recovery_propects',
+            'is_press',
+            'press_contents',
             'sammary',
             'is_operatinal_impact',
             'operatinal_impact',
@@ -33,6 +38,9 @@ class FailuerReportForm(forms.ModelForm):
             },
             'failuer_time': {
                 'required': '障害発生時間は必須です',
+            },
+            'failuer_place': {
+                'required': '障害発生場所は必須です',
             },
             'date_time_confirmation': {
                 'required': '発生日時確認状態は必須です',
@@ -50,26 +58,37 @@ class FailuerReportForm(forms.ModelForm):
         }
         widgets = {**MetaCommonInfo.widgets, **{
             'failuer_date': forms.DateInput(attrs={
+                'type': 'date',
                 'class': 'form-control',
-                'onclick': "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
             }),
             'failuer_time': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'form-control',
+            }),
+            'failuer_place': forms.TimeInput(attrs={
+                'type': 'text',
                 'class': 'form-control',
             }),
             'date_time_confirmation': forms.widgets.Select(attrs={
                 "class": "form-select",
                 "aria-describedby": "confirmationHelp",
             }),
-            'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
+            'is_press': forms.widgets.Select(attrs={
+                "class": "form-select"
+            }),
+            'offices': OfficeSuggestWidget(attrs={
+                'data-url': reverse_lazy('api_posts_get')}),
             'sammary': forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": "3",
             }),
-            'is_operatinal_impact': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_operatinal_impact", true)',
+            'recovery_propects': forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": "3",
             }),
-            'is_flight_impact': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_flight_impact", true)',
+            'press_contents': forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": "3",
             }),
         }}
 
@@ -98,13 +117,15 @@ FileFormSet = forms.inlineformset_factory(
     FailuerReport, AttachmentFile, fields='__all__', extra=1,
 )
 CircumstancesFormSet = forms.inlineformset_factory(
-    FailuerReport, Circumstances, fields='__all__', extra=1, form=CircumstancesForm,
+    FailuerReport, Circumstances, fields='__all__', extra=1,
+    form=CircumstancesForm,
     widgets={
         'date': forms.DateInput(attrs={
+            'type': 'date',
             'class': 'form-control',
-            'onclick': "$(this).not('.hasDatePicker').datepicker();$(this).datepicker('show')",
         }),
         'time': forms.TimeInput(attrs={
+            'type': 'time',
             'class': 'form-control',
         }),
         'event': forms.Textarea(attrs={

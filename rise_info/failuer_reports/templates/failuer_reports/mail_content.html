@@ -36,12 +36,40 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
+                                    <mail_h3>障害発生場所</mail_h3>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td align="left">&nbsp;</td>
+                                <td align="left">
+                                    {{info.failuer_place}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table></br>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th colspan="2" align="left">
                                     <mail_h3>障害状況</mail_h3>
                                 </th>
                             </tr>
                             <tr>
                                 <td align="left">&nbsp;</td>
                                 <td align="left">{{ info.sammary | linebreaksbr }}</td>
+                            </tr>
+                        </tbody>
+                    </table></br>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th colspan="2" align="left">
+                                    <mail_h3>復旧の見通し</mail_h3>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td align="left">&nbsp;</td>
+                                <td align="left">{{ info.recovery_propects | linebreaksbr }}</td>
                             </tr>
                         </tbody>
                     </table></br>
@@ -71,12 +99,10 @@
                                     </mail_h3>
                                 </th>
                             </tr>
-                            {% if info.is_operatinal_impact %}
                             <tr>
                                 <td align="left">&nbsp;</td>
                                 <td align="left">{{ info.operatinal_impact }}</td>
                             </tr>
-                            {% endif %}
                         </tbody>
                     </table></br>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -88,12 +114,25 @@
                                     </mail_h3>
                                 </th>
                             </tr>
-                            {% if info.is_flight_impact %}
                             <tr>
                                 <td align="left">&nbsp;</td>
                                 <td align="left">{{ info.flight_impact }}</td>
                             </tr>
-                            {% endif %}
+                        </tbody>
+                    </table>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th colspan="2" align="left">
+                                    <mail_h3>取材の有無：
+                                        {{ info.get_is_press_display }}
+                                    </mail_h3>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td align="left">&nbsp;</td>
+                                <td align="left">{{ info.press_contents | linebreaksbr }}</td>
+                            </tr>
                         </tbody>
                     </table>
                     </br>
