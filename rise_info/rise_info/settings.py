@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     # APPS
     'accounts.apps.AccountsConfig',
+    'addresses.apps.AddressesConfig',
     'contents.apps.ContentsConfig',
     'eqs.apps.EqsConfig',
     'tech_supports.apps.TechSupportsConfig',
