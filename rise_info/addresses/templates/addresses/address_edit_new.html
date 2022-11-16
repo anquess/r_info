@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load pygmentize %}
+{% load bootstrap_icons %}
+{% block header %}
+{% endblock %}
+
+{% block main %}
+{% if is_new %}
+<h1>配信先の登録</h1>
+{% else %}
+<h1>配信先の更新</h1>
+{% endif %}
+<form action="{% url 'address_new' %}" method="post">
+    {% csrf_token %}
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_name" class="form-label">{{form.name.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.name}}
+        </div>
+    </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_position" class="form-label">{{form.position.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.position}}
+        </div>
+    </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_mail" class="form-label">{{form.mail.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.mail}}
+        </div>
+    </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_offices" class="form-label">{{form.offices.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.offices}}
+        </div>
+    </div>
+    {% if auth %}
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_offices_groups" class="form-label">{{form.offices_groups.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.offices_groups}}
+        </div>
+    </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_is_required_when_send_mail"
+                class="form-label">{{form.is_required_when_send_mail.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.is_required_when_send_mail}}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-2">
+            <button class="btn btn-primary mr-2" type="submit" value="post">
+                {% if is_new %}登録{% else %}更新{% endif %}
+            </button>
+            <a class="btn btn-primary" href="{% url 'address_list' %}">
+                戻る
+            </a>
+        </div>
+    </div>
+</form>
+{% endblock %}

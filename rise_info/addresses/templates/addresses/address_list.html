@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load pygmentize %}
+{% load bootstrap_icons %}
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="welcome">
+    <h1>配信先一覧</h1>
+</div>
+<a class="btn btn-primary float-end" href="{% url 'address_new' %}">＋</a>
+{% if addresses %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>登録官署</th>
+            <th>役職</th>
+            <th>氏名</th>
+            <th>メールアドレス</th>
+            <th>編集</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for address in addresses %}
+        <tr>
+            <th>{{address.created_by}}</th>
+            <th>{{address.position}}</th>
+            <th>{{address.name}}</th>
+            <th>{{address.mail}}</th>
+            <th>
+                {% if user == address.created_by %}
+                <a class="btn btn-primary" href="{% url 'address_edit' address.id %}">
+                    {% bs_icon 'pencil-square' %}
+                </a>
+                <a class="btn btn-danger" href="{% url 'address_del' address.id %}"
+                    onclick='return confirm("よろしいですか？");'>
+                    {% bs_icon 'trash' %}
+                </a>
+
+                {% endif %}
+            </th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>配信先一覧はまだ登録されていません。</p>
+{% endif %}
+
+
+
+{% endblock %}
