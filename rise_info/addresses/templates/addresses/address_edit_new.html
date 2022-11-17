@@ -41,8 +41,13 @@
         <div class="col-1">
             <label for="id_offices" class="form-label">{{form.offices.label}}</label>
         </div>
-        <div class="col-11">
+        <div class="col-11 pr-2">
             {{form.offices}}
+        </div>
+    </div>
+    <div id="confirmationHelp" class="row form-text">
+        <div class="col-12">
+            {{form.offices.help_text|safe}}
         </div>
     </div>
     {% if auth %}

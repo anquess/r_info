@@ -19,7 +19,7 @@ class Addresses(models.Model):
     is_required_when_send_mail = models.BooleanField(
         verbose_name='送信時必須', default=False)
     offices = models.ManyToManyField(
-        Office, verbose_name='配信官署タグ', related_name='addresses', blank=True)
+        Office, verbose_name='配信官署タグ', related_name='addresses', blank=True, help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます')
     offices_groups = models.ManyToManyField(
         OfficesGroup, verbose_name='配信官署タグGRP', related_name='addresses', blank=True)
     created_by = CurrentUserField(verbose_name='登録者', on_update=True,
