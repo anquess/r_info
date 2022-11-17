@@ -1,4 +1,5 @@
 {% extends "baseInfoNewOrEdit.html" %}
+{% load bootstrap_icons %}
 
 {% block title %}
 <h1>障害通報の変更</h1>
@@ -11,12 +12,24 @@
 {% endblock %}
 {% block btn %}
 <button class="btn btn-primary" type="submit" value="post">変更</button>
+<button class="btn btn-primary" onclick='addSendMailFLG()'>
+    {% bs_icon 'send' %}
+</button>
 {% endblock %}
 
 {% block add_js2 %}
 <script src="/static/infos/js/addAttachmentButton.js"></script>
 <script src="/static/infos/js/clickCheck.js"></script>
 <script>
+    <!-- メール送信フラグ追加 -->
+    function addSendMailFLG() {
+        var sendMailFLG = document.createElement('input');
+        sendMailFLG.type = "hidden";
+        sendMailFLG.name = "sendMailFLG";
+        sendMailFLG.value = false;
+        document.forms[0].appendChild(sendMailFLG);
+    }
+
     $(document).ready(setMaxlength('#id_sammary'));
     $(document).ready(setMaxlength('#id_operatinal_impact'));
     $(document).ready(setMaxlength('#id_flight_impact'));
