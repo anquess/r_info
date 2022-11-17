@@ -1,6 +1,6 @@
 <div class="row mb-2 ms-1 me-1">
-    <input class="form-control" type="text" id="{{ widget.name }}-input" data-target="{{ widget.name }}"
-        placeholder="官署を入力し選択したら追加されます" autocomplete="off" {% include "django/forms/widgets/attrs.html" %}>
+    <input type="text" id="{{ widget.name }}-input" data-target="{{ widget.name }}" placeholder="官署を入力し選択したら追加されます"
+        autocomplete="off" {% include "django/forms/widgets/attrs.html" %}>
 </div>
 <ul id="{{ widget.name }}-list" class="suggest-office-dropdown"></ul>
 

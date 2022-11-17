@@ -11,8 +11,9 @@
 {% else %}
 <h1>配信先の更新</h1>
 {% endif %}
-<form action="{% url 'address_new' %}" method="post">
+<form action="{% url 'address_new' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    {{form.media}}
     <div class="row mt-2 mb-0">
         <div class="col-1">
             <label for="id_name" class="form-label">{{form.name.label}}</label>
@@ -81,3 +82,17 @@
     </div>
 </form>
 {% endblock %}
+<script>
+    $(function () {
+        $("input").on("keydown", function (e) {
+            if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    });
+</script>
+<script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
+<script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
