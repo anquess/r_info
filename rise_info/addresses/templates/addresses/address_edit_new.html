@@ -11,7 +11,7 @@
 {% else %}
 <h1>配信先の更新</h1>
 {% endif %}
-<form action="{% url 'address_new' %}" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.media}}
     <div class="row mt-2 mb-0">
