@@ -1,10 +1,10 @@
-<div class="row mb-2 ms-1">
-    <input type="text" id="{{ widget.name }}-input" data-target="{{ widget.name }}" placeholder="官署を入力し選択したら追加されます"
-        autocomplete="off" {% include "django/forms/widgets/attrs.html" %}>
+<div class="row mb-2 ms-1 me-1">
+    <input class="form-control" type="text" id="{{ widget.name }}-input" data-target="{{ widget.name }}"
+        placeholder="官署を入力し選択したら追加されます" autocomplete="off" {% include "django/forms/widgets/attrs.html" %}>
 </div>
 <ul id="{{ widget.name }}-list" class="suggest-office-dropdown"></ul>
 
-<div id="{{ widget.name }}-display">
+<div id="{{ widget.name }}-display" class="ms-1">
     {% for group, options, index in widget.optgroups %}{% for option in options %}{% if option.selected %}
     <button type="button" class="suggest-item btn btn-outline-secondary" data-target="{{ widget.name }}"
         data-pk="{{ option.value }}">{{ option.label }} ×</button>
