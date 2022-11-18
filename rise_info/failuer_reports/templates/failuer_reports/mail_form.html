@@ -9,10 +9,60 @@
         <div class="h2 py-2 my-2 border-bottom">メール送信フォーム</div>
         <p>メール送信はできません。SafeNet移行時に設定します。</p>
     </div>
-    <div class="row">
-        <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
-            {% csrf_token %}
-            <div class="row">
+    <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
+        {% csrf_token %}
+        {% if send_required_list %}
+        <h4>必須送信先</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>登録官署</th>
+                    <th>役職</th>
+                    <th>氏名</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for send_required in send_required_list %}
+                <tr>
+                    <td>{{send_required.created_by}}</td>
+                    <td>{{send_required.position}}</td>
+                    <td>{{send_required.name}}</td>
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+        {%endif%}
+        {% if send_any_list %}
+        <h4>任意送信先</h4>
+        <table class="table mb-2">
+            <thead>
+                <tr>
+                    <th>登録官署</th>
+                    <th>役職</th>
+                    <th>氏名</th>
+                    <th>
+                        配信&nbsp;
+                        <input id="checkAll" type="checkbox" name="lang" value="checkall"
+                            class="form-check-input">全て選択</label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for send_any in send_any_list %}
+                <tr>
+                    <td>{{send_any.created_by}}</td>
+                    <td>{{send_any.position}}</td>
+                    <td>{{send_any.name}}</td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_any.id}}"></td>
+
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+        {% endif %}
+        <div class="row">
+            <div class="row mb-2">
                 <div class="col-2">
                     <label for="subject" class="form-label">メール件名</label>
                 </div>
@@ -21,18 +71,7 @@
                         value='【障害通報】{{info.title}} _第xx報'>
                 </div>
             </div>
-            <br>
-            <div class="row">
-                <div class="col-2">
-                    <label for="to" class="form-label">宛先</label>
-                </div>
-                <div class="col-9">
-                    <input type="email" class="form-control" id="to" name="to" required
-                        pattern="^[a-zA-Z0-9.!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
-                        placeholder="xxx@xxx.go.jp">
-                </div>
-            </div>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-2">
                     <label for="header" class="form-label">ヘッダー</label>
                 </div>
@@ -48,36 +87,73 @@
                     </button>
                 </div>
             </div>
-        </form>
+    </form>
+</div>
+<script>
+    // 無効なフィールドがある場合にフォーム送信を無効にするスターターJavaScriptの例
+    (() => {
+        'use strict'
+
+        // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // ループして帰順を防ぐ
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+
+    let checkAll = document.getElementById("checkAll");
+    //「全て選択」以外のチェックボックス
+    let el = document.getElementsByClassName("checks");
+    //全てのチェックボックスをON/OFFする
+    const funcCheckAll = (bool) => {
+        for (let i = 0; i < el.length; i++) {
+            el[i].checked = bool;
+        }
+    }
+
+    //「checks」のclassを持つ要素のチェック状態で「全て選択」のチェック状態をON/OFFする
+    const funcCheck = () => {
+        let count = 0;
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                count += 1;
+            }
+        }
+
+        if (el.length === count) {
+            checkAll.checked = true;
+        } else {
+            checkAll.checked = false;
+        }
+    };
+
+    //「全て選択」のチェックボックスをクリックした時
+    checkAll.addEventListener("click", () => {
+        funcCheckAll(checkAll.checked);
+    }, false);
+
+    //「全て選択」以外のチェックボックスをクリックした時
+    for (let i = 0; i < el.length; i++) {
+        el[i].addEventListener("click", funcCheck, false);
+    }
+</script>
+<br>
+<div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
+<div class="card" style="width: 40rem;">
+    <div class="card-body">
+        {% include "failuer_reports/mail.html" %}
     </div>
-    <script>
-        // 無効なフィールドがある場合にフォーム送信を無効にするスターターJavaScriptの例
-        (() => {
-            'use strict'
-
-            // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
-            const forms = document.querySelectorAll('.needs-validation')
-
-            // ループして帰順を防ぐ
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
-    </script>
-    <br>
-    <div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
-    <div class="card" style="width: 40rem;">
-        <div class="card-body">
-            {% include "failuer_reports/mail.html" %}
-        </div>
-    </div>
+</div>
 </div>
 {% endblock %}
 {% block add_js %}

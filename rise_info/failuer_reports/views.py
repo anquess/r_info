@@ -1,39 +1,51 @@
-from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.contrib import messages
-from django.views.generic import ListView
-from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
-from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.conf import settings
+from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-
+from django.views.generic import ListView
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.views import addTmcAuth
+from addresses.models import Addresses
+from offices.models import OfficesGroup
 from rise_info.settings import EMAIL_HOST_USER
-from rise_info.settings import EMAIL_TEST_USER
+
+import operator
+from functools import reduce
 
 
-@login_required
+def get_addresses(fail_rep, need: bool):
+    offices = fail_rep.offices.all()
+    grp_offices = OfficesGroup.object.filter(
+        reduce(operator.or_, (Q(Offices__id__icontains=i.id) for i in offices)))
+    q1 = reduce(operator.or_, (Q(offices__id__contains=i.id) for i in offices))
+    q2 = reduce(operator.or_, (Q(offices_groups__id__contains=i.id)
+                for i in grp_offices))
+    return Addresses.object.filter(q1 | q2).filter(is_required_when_send_mail=need).distinct()
+
+
+@ login_required
 def sendmail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
+    send_required = get_addresses(info, True)
+    send_any = get_addresses(info, False)
     if info:
         context = {
             'info': info,
             # 'files': files,
             'events': events,
+            'send_required_list': send_required,
+            'send_any_list': send_any,
         }
         if request.method == "POST":
             email1 = EMAIL_HOST_USER
-
-            if request.POST.get("to"):
-                email2 = request.POST.get("to")
-            else:
-                email2 = None
 
             if request.POST.get("subject"):
                 subject = request.POST.get("subject")
@@ -41,15 +53,21 @@ def sendmail(request, info_id):
                 subject = "【障害通報】" + str(info.title)
             if request.POST.get("header"):
                 context['mail_header'] = request.POST.get("header")
+            is_send_list = request.POST.getlist('is_send_list[]')
+            dist_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
+            for dist_required in send_required:
+                dist_list.append(dist_required.mail)
+            for is_send in is_send_list:
+                dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
             try:
                 send_mail(
                     subject,  # Subject of the email
                     msg_plain,  # Body or Message of the email
                     # from@gmail.com   (admin@gmail.com for gmail account)
                     email1,
-                    [email2],  # to@gmail.com  # email that is filled in the form
+                    dist_list,  # to@gmail.com  # email that is filled in the form
                     html_message=msg_html,
                     fail_silently=False,
                 )
@@ -58,6 +76,7 @@ def sendmail(request, info_id):
             except Exception as e:
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+
                 return redirect('failuer_report_list')
         else:
             context = addTmcAuth(context, request.user)
@@ -121,7 +140,10 @@ def failuer_report_new(request):
             formset.save()
             formset2.save()
             messages.add_message(request, messages.INFO, '更新されました。')
-            return redirect('failuer_report_list')
+            if request.POST.get("sendMailFLG"):
+                return redirect('send_mail', info_id=info.pk)
+            else:
+                return redirect('failuer_report_list')
         else:
             context['formset'] = formset
             context['formset2'] = formset2
@@ -162,7 +184,10 @@ def failuer_report_edit(request, info_id):
                     formset.save()
                     formset2.save()
                     messages.add_message(request, messages.INFO, '更新されました。')
-                    return redirect('failuer_report_list')
+                    if request.POST.get("sendMailFLG"):
+                        return redirect('send_mail', info_id=info_id)
+                    else:
+                        return redirect('failuer_report_list')
             context = addTmcAuth({
                 'form': form,
                 'formset': formset,
