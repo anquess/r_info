@@ -82,6 +82,7 @@
     </div>
 </form>
 {% endblock %}
+{% block add_js %}
 <script>
     $(function () {
         $("input").on("keydown", function (e) {
@@ -96,3 +97,4 @@
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
 <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+{% endblock %}
