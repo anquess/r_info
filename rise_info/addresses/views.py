@@ -7,6 +7,7 @@ from django.db.models import Q
 from .models import Addresses
 from .forms import AddressesForm
 from accounts.views import addTmcAuth
+from offices.models import getOffices
 
 
 class AddressList(ListView):
@@ -31,8 +32,10 @@ def addresses_new(request):
     form = AddressesForm(request.POST or None)
     context = addTmcAuth({'form': form, 'is_new': True}, request.user)
     if request.method == "POST" and form.is_valid():
-        address = form.save(commit=False)
-        address.save()
+        new_address = form.save(commit=False)
+        new_address.save()
+        form.save()
+
         messages.add_message(request, messages.INFO, '追加されました')
         return redirect('address_list')
     return render(request, "addresses/address_edit_new.html", context)

@@ -182,6 +182,7 @@ def info_new(request):
             if formset.is_valid():
                 info.save()
                 formset.save()
+                form.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('info_list')
             else:

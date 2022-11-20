@@ -139,6 +139,7 @@ def failuer_report_new(request):
             info.save()
             formset.save()
             formset2.save()
+            form.save()
             messages.add_message(request, messages.INFO, '更新されました。')
             if request.POST.get("sendMailFLG"):
                 return redirect('send_mail', info_id=info.pk)
