@@ -7,7 +7,6 @@ from django.db.models import Q
 from .models import Addresses
 from .forms import AddressesForm
 from accounts.views import addTmcAuth
-from offices.models import getOffices
 
 
 class AddressList(ListView):
