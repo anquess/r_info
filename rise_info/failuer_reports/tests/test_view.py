@@ -8,16 +8,26 @@ from accounts.tests.com_setup import loginTestAccount
 
 import shutil
 import os
+from datetime import datetime
 
 
 def addMockFailuereReports(testCase) -> None:
+    now_date = datetime.now()
     data = {
         'title': 'タイトル',
+        'failuer_date': now_date.strftime('%Y-%m-%d'),
+        'failuer_time': now_date.strftime('%H:%M'),
+        'date_time_confirmation': 'confirmed',
+        'failuer_place': 'xx空港',
+        'recovery_propects': 'aa',
         'sammary': '概要',
-        'attachmentfile_set-TOTAL_FORMS': 1,
-        'attachmentfile_set-INITIAL_FORMS': 0,
+        'operatinal_impact': 'operatinal_impact_test',
+        'flight_impact': 'flight_impact_test',
+        'is_press': 'checking_now',
         'circumstances_set-TOTAL_FORMS': 1,
         'circumstances_set-INITIAL_FORMS': 0,
+        'attachmentfile_set-TOTAL_FORMS': 1,
+        'attachmentfile_set-INITIAL_FORMS': 0,
     }
     testCase.response = testCase.client.post("/failuer_reports/new/", data)
 
@@ -60,7 +70,7 @@ class CreateFailureReportTest(TestCase):
 
     def test_create_failuer_report(self):
         addMockFailuereReports(self)
-        info = FailuerReport.objects.get(title='タイトル')
+        info = FailuerReport.objects.get_or_none(title='タイトル')
         self.assertEqual('概要', info.sammary)
 
 
@@ -96,7 +106,7 @@ class InfoDelTest(TestCase):
 
     def test_info_del_count(self):
         try:
-            info = FailuerReport.objects.get(title='タイトル')
+            info = FailuerReport.objects.get_or_none(title='タイトル')
         except:
             self.fail('あるはずのmockInfoが見つからない')
         response = self.client.get(
@@ -105,10 +115,11 @@ class InfoDelTest(TestCase):
                              target_status_code=200, msg_prefix='', fetch_redirect_response=True)
 
         try:
-            info = FailuerReport.objects.get(title='タイトル')
+            info = FailuerReport.objects.get_or_none(title='タイトル')
         except:
             return None
-        self.fail('ないはずのmockInfoが見つかった')
+        if info:
+            self.fail('ないはずのmockInfoが見つかった')
 
 
 class AddReportAttachmentFileTest(TestCase):
@@ -118,7 +129,7 @@ class AddReportAttachmentFileTest(TestCase):
         shutil.copy('uploads/sorry.jpg', 'abc.jpg')
         shutil.copy('uploads/user.png', 'abc.png')
         try:
-            self.info = FailuerReport.objects.get(title='タイトル')
+            self.info = FailuerReport.objects.get_or_none(title='タイトル')
         except:
             self.fail('あるはずのmockReportsが見つからない')
         if not os.path.isfile("abc.jpg"):
