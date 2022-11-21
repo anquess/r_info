@@ -28,7 +28,8 @@ def make_mock_right_param(testCase: TestCase):
         'position': text_len_16,
         'mail': text_mail_addr,
         'offices': offices,
-        'grp': grp,
+        'offices_groups': grp,
+        'is_required_when_send_mail': False,
     }
 
 

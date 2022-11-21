@@ -25,6 +25,6 @@ class AddresseModelTest(TestCase):
         self.assertEqual(None, actual)
         try:
             expected.offices.set(self.params['offices'])
-            expected.offices_groups.set(self.params['grp'])
+            expected.offices_groups.set(self.params['offices_groups'])
         except:
             self.fail('manytomany Error')
