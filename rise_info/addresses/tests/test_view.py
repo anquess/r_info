@@ -82,22 +82,22 @@ class EditInfoTest(TestCase):
         self.assertEqual(addresses_edit, found.func)
 
 
-# class AddresseDelTest(TestCase):
-#    def setUp(self) -> None:
-#        login(self)
-#        addMockAddress(self)
-#
-#    def test_addresse_del_count(self):
-#        try:
-#            address = Addresses.object.get(name=self.params['name'])
-#        except:
-#            self.fail('あるはずのmockAddressが見つからない')
-#        response = self.client.get("/addresses/" + str(address.pk) + "/del/")
-#        self.assertRedirects(response, reverse('addresses_list'), status_code=302,
-#                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
-#        try:
-#            address = Addresses.object.get(name=self.params['name'])
-#        except:
-#            return None
-#        self.fail('ないはずのmockAddressが見つかった')
-#
+class AddresseDelTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+        addMockAddress(self)
+
+    def test_addresse_del_count(self):
+        try:
+            address = Addresses.object.get_or_none(name=self.params['name'])
+        except:
+            self.fail('あるはずのmockAddressが見つからない')
+        response = self.client.get("/addresses/" + str(address.pk) + "/del/")
+        self.assertRedirects(response, reverse('address_list'), status_code=302,
+                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        try:
+            address = Addresses.object.get_or_none(name=self.params['name'])
+        except:
+            return None
+        if address:
+            self.fail('ないはずのmockAddressが見つかった')
