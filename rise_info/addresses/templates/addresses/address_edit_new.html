@@ -51,6 +51,14 @@
             {{form.offices.help_text|safe}}
         </div>
     </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_department" class="form-label">{{form.department.label}}</label>
+        </div>
+        <div class="col-11">
+            {{form.department}}
+        </div>
+    </div>
     {% if auth %}
     <div class="row mt-2 mb-0">
         <div class="col-1">

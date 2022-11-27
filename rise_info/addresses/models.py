@@ -4,6 +4,7 @@ from django_currentuser.middleware import (get_current_authenticated_user)
 
 
 from rise_info.baseModels import BaseManager
+from eqs.models import DepartmentForEq
 from offices.models import Office, OfficesGroup
 
 # Create your models here.
@@ -19,11 +20,20 @@ class Addresses(models.Model):
     is_required_when_send_mail = models.BooleanField(
         verbose_name='送信時必須', default=False)
     offices = models.ManyToManyField(
-        Office, verbose_name='配信官署タグ', related_name='addresses', blank=True, help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます')
+        Office, verbose_name='配信官署タグ', related_name='addresses', blank=True,
+        help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます')
     offices_groups = models.ManyToManyField(
-        OfficesGroup, verbose_name='配信官署タグGRP', related_name='addresses', blank=True)
-    created_by = CurrentUserField(verbose_name='登録者', on_update=True,
-                                  related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
+        OfficesGroup, verbose_name='配信官署タグGRP', related_name='addresses',
+        blank=True)
+    created_by = CurrentUserField(
+        verbose_name='登録者', on_update=True,
+        related_name='%(app_label)s_%(class)s_create', null=False, blank=False
+    )
+    department = models.ManyToManyField(
+        DepartmentForEq,
+        verbose_name='担当装置分類', related_name='addresses', blank=True,
+        help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます'
+    )
 
     def __str__(self):
         return self.position + ' ' + self.name

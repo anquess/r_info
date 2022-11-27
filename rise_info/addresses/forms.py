@@ -13,6 +13,7 @@ class AddressesForm(forms.ModelForm):
             'position',
             'mail',
             'is_required_when_send_mail',
+            'department',
             'offices',
             'offices_groups',
         )
@@ -46,6 +47,10 @@ class AddressesForm(forms.ModelForm):
                 'data-url': reverse_lazy('api_posts_get')
             }),
             'offices_groups': forms.SelectMultiple(attrs={
+                'class': 'form-select',
+                'mutiple': True,
+            }),
+            'department': forms.SelectMultiple(attrs={
                 'class': 'form-select',
                 'mutiple': True,
             })

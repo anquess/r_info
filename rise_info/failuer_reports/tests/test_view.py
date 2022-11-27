@@ -5,6 +5,8 @@ from django.core.files.base import File
 from ..models import FailuerReport, AttachmentFile
 from ..views import failuer_report_edit
 from accounts.tests.com_setup import loginTestAccount
+from eqs.models import DepartmentForEq
+from offices.tests.test_model import make_mock_office
 
 import shutil
 import os
@@ -13,12 +15,20 @@ from datetime import datetime
 
 def addMockFailuereReports(testCase) -> None:
     now_date = datetime.now()
+    mock_department = DepartmentForEq.objects.create(id="TEST", name='モック')
+    testCase.parms = {
+        'offices': [make_mock_office().id],
+        'department': [mock_department.id],
+    }
     data = {
         'title': 'タイトル',
         'failuer_date': now_date.strftime('%Y-%m-%d'),
         'failuer_time': now_date.strftime('%H:%M'),
         'date_time_confirmation': 'confirmed',
         'failuer_place': 'xx空港',
+        'offices': testCase.parms['offices'],
+        'department': testCase.parms['department'],
+        'eq': 'xx装置',
         'recovery_propects': 'aa',
         'sammary': '概要',
         'operatinal_impact': 'operatinal_impact_test',
