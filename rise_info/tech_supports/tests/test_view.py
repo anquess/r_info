@@ -1,104 +1,114 @@
-#from django.test import TestCase
-#from django.urls import resolve, reverse
-#
-#
-#from addresses.views import addresses_new, addresses_edit, addresses_del
-#from addresses.models import Addresses
-#from addresses.tests.test_form import make_mock_right_param
-#from accounts.tests.com_setup import login
-#
-#
-# def addMockAddress(testCase) -> None:
-#    testCase.client.force_login(testCase.user)
-#    make_mock_right_param(testCase)
-#    data = {
-#        'name': testCase.params['name'],
-#        'position': testCase.params['position'],
-#        'mail': testCase.params['mail'],
-#    }
-#    testCase.response = testCase.client.post(
-#        "/addresses/new/", data)
-#
-#
-# class AddressesListTest(TestCase):
-#    def setUp(self) -> None:
-#        login(self)
-#
-#    def test_addresse_list_return_200_and_expected_title(self) -> None:
-#        response = self.client.get("/addresses/")
-#        self.assertContains(response, "配信先一覧", status_code=200)
-#
-#    def test_addresse_list_uses_expected_template(self) -> None:
-#        response = self.client.get("/addresses/")
-#        self.assertTemplateUsed(response, "addresses/address_list.html")
-#
-#
-# class CreateAddressTest(TestCase):
-#    def setUp(self) -> None:
-#        login(self)
-#
-#    def test_render_creation_form(self):
-#        response = self.client.get("/addresses/new/")
-#        self.assertContains(response, "配信先の登録", status_code=200)
-#
-#    def test_create_info(self):
-#        login(self)
-#        addMockAddress(self)
-#        address = Addresses.object.get_or_none(name=self.params['name'])
-#        if address:
-#            self.assertEqual(self.params['position'], address.position)
-#        else:
-#            self.assertEqual(Addresses.object.all().count(), 1)
-#            self.fail('addressが空')
-#
-#
-# def edit_common_setUp(testCase, isEdit: bool):
-#    login(testCase)
-#    addMockAddress(testCase)
-#    address = Addresses.object.get_or_none(name=testCase.params['name'])
-#    if address:
-#        if isEdit:
-#            testCase.response = testCase.client.get(
-#                "/addresses/%s/edit/" % address.id)
-#        else:
-#            testCase.response = testCase.client.get(
-#                "/addresses/%s/" % address.id)
-#    else:
-#        testCase.fail('あるはずのMockInfoが見つからない')
-#
-#
-# class EditInfoTest(TestCase):
-#    def setUp(self) -> None:
-#        edit_common_setUp(self, True)
-#
-#    def test_should_use_expected_template(self):
-#        self.assertTemplateUsed(
-#            self.response, "addresses/address_edit_new.html")
-#
-#
-# class EditInfoTest(TestCase):
-#    def test_should_resolve_addresse_edit(self):
-#        found = resolve("/addresses/1/edit/")
-#        self.assertEqual(addresses_edit, found.func)
-#
-#
-# class AddresseDelTest(TestCase):
-#    def setUp(self) -> None:
-#        login(self)
-#        addMockAddress(self)
-#
-#    def test_addresse_del_count(self):
-#        try:
-#            address = Addresses.object.get_or_none(name=self.params['name'])
-#        except:
-#            self.fail('あるはずのmockAddressが見つからない')
-#        response = self.client.get("/addresses/" + str(address.pk) + "/del/")
-#        self.assertRedirects(response, reverse('address_list'), status_code=302,
-#                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
-#        try:
-#            address = Addresses.object.get_or_none(name=self.params['name'])
-#        except:
-#            return None
-#        if address:
-#            self.fail('ないはずのmockAddressが見つかった')
-#
+from django.test import TestCase
+from django.urls import resolve, reverse
+
+
+from ..views import TechSupportList, support_del, support_detail, support_edit, support_new
+from ..models import TechSupports, TechSupportComments
+from ..tests.test_form import make_mock_right_param
+from accounts.tests.com_setup import login
+
+
+def addMockTechSupport(testCase) -> None:
+    testCase.client.force_login(testCase.user)
+    make_mock_right_param(testCase)
+    data = {
+        'title': testCase.params['title'],
+        'content': testCase.params['content'],
+        'is_rich_text': testCase.params['is_rich_text'],
+        'inquiry': testCase.params['inquiry'],
+        'eqtypes': testCase.params['eqtypes'],
+        'is_closed': testCase.params['is_closed'],
+        'attachmentfile_set-TOTAL_FORMS': 1,
+        'attachmentfile_set-INITIAL_FORMS': 0,
+    }
+    testCase.response = testCase.client.post(
+        "/tech_support/new/", data)
+
+
+class TechSupportsListTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+
+    def test_techSupport_list_return_200_and_expected_title(self) -> None:
+        response = self.client.get("/tech_support/")
+        self.assertContains(response, "技術支援一覧", status_code=200)
+
+    def test_addresse_list_uses_expected_template(self) -> None:
+        response = self.client.get("/tech_support/")
+        self.assertTemplateUsed(
+            response, "tech_supports/tech_support_list.html")
+
+
+class CreateAddressTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+
+    def test_render_creation_form(self):
+        response = self.client.get("/tech_support/new/")
+        self.assertContains(response, "技術支援の登録", status_code=200)
+        self.assertTemplateUsed(response, "tech_supports/new.html")
+
+    def test_create_info(self):
+        login(self)
+        addMockTechSupport(self)
+        print(self.response)
+        support = TechSupports.objects.get_or_none(title=self.params['title'])
+        if support:
+            self.assertEqual(self.params['content'], support.content)
+        else:
+            self.assertEqual(TechSupports.objects.all().count(), 1)
+            self.fail('addressが空')
+
+
+def edit_common_setUp(testCase, isEdit: bool):
+    login(testCase)
+    addMockTechSupport(testCase)
+    support = TechSupports.objects.get_or_none(title=testCase.params['title'])
+    if support:
+        if isEdit:
+            testCase.response = testCase.client.get(
+                "/tech_support/%s/edit/" % support.id)
+        else:
+            testCase.response = testCase.client.get(
+                "/tech_support/%s/" % support.id)
+    else:
+        testCase.fail('あるはずのMockInfoが見つからない')
+
+
+class EditSupportTest(TestCase):
+    def setUp(self) -> None:
+        edit_common_setUp(self, True)
+
+    def test_should_use_expected_template(self):
+        self.assertTemplateUsed(
+            self.response, "tech_supports/edit.html")
+
+
+class EditSupportsTest(TestCase):
+    def test_should_resolve_support_edit(self):
+        found = resolve("/tech_support/1/edit/")
+        self.assertEqual(support_edit, found.func)
+
+
+class SupportDelTest(TestCase):
+    def setUp(self) -> None:
+        login(self)
+        addMockTechSupport(self)
+
+    def test_support_del_count(self):
+        try:
+            support = TechSupports.objects.get_or_none(
+                title=self.params['title'])
+        except:
+            self.fail('あるはずのmockが見つからない')
+        response = self.client.get(
+            "/tech_support/" + str(support.pk) + "/del/")
+        self.assertRedirects(response, reverse('support_list'), status_code=302,
+                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        try:
+            support = TechSupports.objects.get_or_none(
+                title=self.params['title'])
+        except:
+            return None
+        if support:
+            self.fail('ないはずのmockが見つかった')

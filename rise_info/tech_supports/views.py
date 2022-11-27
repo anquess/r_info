@@ -92,7 +92,7 @@ def support_new(request):
         if formset.is_valid():
             info.save()
             formset.save()
-            messages.add_message(request, messages.INFO, '更新されました。')
+            messages.add_message(request, messages.INFO, '追加されました。')
             return redirect('support_list')
         else:
             context['formset'] = formset
