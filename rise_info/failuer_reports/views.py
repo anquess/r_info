@@ -63,11 +63,10 @@ def sendmail(request, info_id):
                 dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
             try:
                 send_mail(
-                    subject,  # Subject of the email
-                    msg_plain,  # Body or Message of the email
-                    # from@gmail.com   (admin@gmail.com for gmail account)
+                    subject,
+                    msg_plain,
                     email1,
-                    dist_list,  # to@gmail.com  # email that is filled in the form
+                    dist_list,
                     html_message=msg_html,
                     fail_silently=False,
                 )
@@ -181,9 +180,10 @@ def failuer_report_edit(request, info_id):
                                 request, messages.WARNING, str(ele))
                         return render(request, 'failuer_reports/edit.html', context)
                 if formset2.is_valid():
-                    form.save()
+                    info = form.save(commit=False)
                     formset.save()
                     formset2.save()
+                    form.save()
                     messages.add_message(request, messages.INFO, '更新されました。')
                     if request.POST.get("sendMailFLG"):
                         return redirect('send_mail', info_id=info_id)

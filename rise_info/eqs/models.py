@@ -45,6 +45,16 @@ def eqtypes_csv_import():
                      'uploads/documents/EQTypes_tmp.csv')
 
 
+class DepartmentForEq(models.Model):
+    objects = BaseManager()
+    id = models.SlugField(verbose_name='担当部署略号',
+                          primary_key=True, max_length=8)
+    name = models.CharField(verbose_name="担当部署名", max_length=24)
+
+    def __str__(self):
+        return self.name
+
+
 class Eqtype(models.Model):
     objects = BaseManager()
     id = models.CharField(verbose_name='装置型式',
@@ -52,6 +62,8 @@ class Eqtype(models.Model):
     slug = models.SlugField(verbose_name='装置型式(URL)',
                             unique=True, null=False, editable=False, max_length=24)
     create_at = models.DateTimeField(verbose_name='登録日時')
+    department = models.ManyToManyField(
+        DepartmentForEq, verbose_name="装置担当部署", related_name="EqType")
 
     def __str__(self):
         return self.id

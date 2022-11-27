@@ -15,10 +15,15 @@
     {% block sammary %}{% endblock %}
     <div class="row mt-1">
         <div class="col-2">
+            <label for="id_content" class="form-label">
+                {{form.content.label}}
+            </label>
+        </div>
+        <div class="col-2">
             <label for="id_is_rich_text" class="form-label">{{form.is_rich_text.label}}</label>
             {{form.is_rich_text}}
         </div>
-        {{form.content.label}}{{form.content}}
+        {{form.content}}
         <script src="/static/simplemde/simplemde.min.js"></script>
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
