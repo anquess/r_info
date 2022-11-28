@@ -1,15 +1,15 @@
 <div class="row mt-2 mb-0">
     <div class="col-2">
-        障害発生日
+        <label for="id_failuer_date" class="form-label">{{form.failuer_date.label}}</label>
     </div>
     <div class="col-2">
-        障害発生時間
+        <label for="id_failuer_time" class="form-label">{{form.failuer_time.label}}</label>
     </div>
     <div class="col-4">
-        発生日時確認状態
+        <label for="id_date_time_confirmation" class="form-label">{{form.date_time_confirmation.label}}</label>
     </div>
 </div>
-<div class="row">
+<div class="row mt-1">
     <div class="col-2">
         {{form.failuer_date}}
     </div>
@@ -26,65 +26,84 @@
     </div>
 </div>
 <div class="row mt-2 mb-0">
-    <div class="col-2">
+    <div class="col-1">
         <label for="id_failuer_place" class="form-label">{{form.failuer_place.label}}</label>
     </div>
-    <div class="col-6">
+    <div class="col-5">
         {{form.failuer_place}}
     </div>
     <div class="col-1">
         <label for="id_offices" class="form-label">{{form.offices.label}}</label>
     </div>
-    <div class="col-3">
+    <div class="col-5">
         {{form.offices}}
     </div>
 </div>
 <div class="row mt-2 mb-0">
-    <div class="col-2">
+    <div class="col-1">
         <label for="id_eq" class="form-label">{{form.eq.label}}</label>
     </div>
-    <div class="col-6">
+    <div class="col-5">
         {{form.eq}}
     </div>
     <div class="col-1">
         <label for="id_department" class="form-label">{{form.department.label}}</label>
     </div>
-    <div class="col-3">
+    <div class="col-5">
         {{form.department}}
     </div>
 </div>
-<label for="id_recovery_propects" class="form-label">{{form.recovery_propects.label}}</label>
-{{form.recovery_propects}}
-<label for="id_sammary" class="form-label">{{form.sammary.label}}</label>
-{{form.sammary}}
 <div class="row mt-1">
-    <div class="col-3">
+    <label for="id_sammary" class="form-label">{{form.sammary.label}}</label>
+</div>
+<div class="row mt-1">
+    {{form.sammary}}
+</div>
+<div class="row mt-1">
+    <label for="id_recovery_propects" class="form-label">{{form.recovery_propects.label}}</label>
+</div>
+<div class="row mt-1">
+    {{form.recovery_propects}}
+</div>
+<div class="row mt-1">
+    <div class="col-1">
         <label for="id_is_operatinal_impact" class="form-label">{{form.is_operatinal_impact.label}}</label>
+    </div>
+    <div class="col-2">
         {{form.is_operatinal_impact}}
     </div>
     <div class="col-9">
-        <input type="text" class="form-control" name="operatinal_impact" maxlength="128" id="id_operatinal_impact"
-            value="{{ form.operatinal_impact.value }}" placeholder='運用への影響' aria-label="運用への影響" />
+        {{form.operatinal_impact}}
     </div>
 </div>
 <div class="row mt-1">
-    <div class="col-3">
+    <div class="col-1">
         <label for="id_is_flight_impact" class="form-label">{{form.is_flight_impact.label}}</label>
+    </div>
+    <div class="col-2">
         {{form.is_flight_impact}}
     </div>
     <div class="col-9">
-        <input type="text" class="form-control" name="flight_impact" maxlength="128" id="id_flight_impact"
-            value="{{ form.flight_impact.value }}" placeholder='運航への影響' aria-label="運航への影響" />
+        {{form.flight_impact}}
     </div>
+</div>
+<div class="row mt-1">
+    <div class="col-1">
+        <label for="id_notam" class="form-label">{{form.notam.label}}</label>
+    </div>
+    <div class="col-11">
+        {{form.notam}}
+    </div>
+
 </div>
 <div class="row mt-1">
     <div class="col-1">
         <label for="id_is_press" class="form-label">{{form.is_press.label}}</label>
     </div>
-    <div class="col-3">
+    <div class="col-2">
         {{form.is_press}}
     </div>
-</div>
-<div class="row mt-1">
-    {{form.press_contents}}
+    <div class="col-9">
+        {{form.press_contents}}
+    </div>
 </div>

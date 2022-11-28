@@ -10,8 +10,13 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.media}}
-    <label for="id_title" class="form-label">{{ form.title.label }}</label>
-    {{ form.title }}
+    <div class="row mt-1">
+        <label for="id_title" class="form-label">{{ form.title.label }}</label>
+    </div>
+    <div class="row mt-1">
+        {{ form.title }}
+    </div>
+
     {% block sammary %}{% endblock %}
     <div class="row mt-1">
         <div class="col-2">

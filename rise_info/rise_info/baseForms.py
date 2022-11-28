@@ -42,6 +42,9 @@ class MetaCommonInfo:
     widgets = {
         "title": forms.TextInput(attrs={
             "class": "form-control",
+            "placeholder": 'タイトル(必須)',
+            "aria-label": "運用への影響",
+
         }),
         "content": forms.Textarea(attrs={
             "class": "form-control",
@@ -50,7 +53,7 @@ class MetaCommonInfo:
     error_messages = {
         'title': {
             'required': 'タイトルは必須です',
-            'max_length': 'タイトルは128文字以内です'
+            'max_length': 'タイトルは128文字以内です',
         },
         'content': {
             'max_length': '内容は4096文字以内です',

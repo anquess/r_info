@@ -13,6 +13,7 @@ from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.views import addTmcAuth
 from addresses.models import Addresses
+from eqs.models import DepartmentForEq
 from offices.models import OfficesGroup
 from rise_info.settings import EMAIL_HOST_USER
 
@@ -24,10 +25,22 @@ def get_addresses(fail_rep, need: bool):
     offices = fail_rep.offices.all()
     grp_offices = OfficesGroup.object.filter(
         reduce(operator.or_, (Q(Offices__id__icontains=i.id) for i in offices)))
-    q1 = reduce(operator.or_, (Q(offices__id__contains=i.id) for i in offices))
-    q2 = reduce(operator.or_, (Q(offices_groups__id__contains=i.id)
-                for i in grp_offices))
-    return Addresses.object.filter(q1 | q2).filter(is_required_when_send_mail=need).distinct()
+    q_offices = reduce(operator.or_, (
+        Q(offices__id__contains=i.id)for i in offices
+    ))
+    q_offices_grp = reduce(operator.or_, (
+        Q(offices_groups__id__contains=i.id)for i in grp_offices
+    ))
+
+    department = fail_rep.department.all()
+    q_department = reduce(operator.or_, (
+        Q(department__id__contains=i.id)for i in department
+    ))
+
+    return Addresses.object.filter(
+        q_department).filter(
+        q_offices | q_offices_grp).filter(
+        is_required_when_send_mail=need).distinct()
 
 
 @ login_required
@@ -39,7 +52,6 @@ def sendmail(request, info_id):
     if info:
         context = {
             'info': info,
-            # 'files': files,
             'events': events,
             'send_required_list': send_required,
             'send_any_list': send_any,

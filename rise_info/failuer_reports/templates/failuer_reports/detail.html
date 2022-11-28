@@ -17,18 +17,34 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-2">
+    <div class="col-1">
         障害発生場所
     </div>
     <div class="col-5">
         {{info.failuer_place}}
     </div>
     <div class="col-1">
-        官署
+        関係官署
     </div>
-    <div class="col-4">
+    <div class="col-5">
         {% for office in info.offices.all %}
-        <button type="button" class="btn btn-outline-secondary">{{ office }}</button>
+        <span class="badge bg-info text-dark">{{ office }}</span>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-1">
+        障害装置
+    </div>
+    <div class="col-5">
+        {{info.eq}}
+    </div>
+    <div class="col-1">
+        関係装置分類
+    </div>
+    <div class="col-5">
+        {% for department in info.department.all %}
+        <span class="badge bg-info text-dark">{{ department }}</span>
         {% endfor %}
     </div>
 </div>
@@ -40,6 +56,32 @@
 <div class="pb-2 mb-2 border-bottom">
     {{ info.recovery_propects | linebreaksbr }}
 </div>
+<div class="row pt-2 mt-2">
+    <h5 class="col-2">運用への影響：</h5>
+    <div class="col-auto">{{ info.get_is_operatinal_impact_display }}</div>
+</div>
+<div class="pb-2 mb-2 border-bottom">
+    <p>{{ info.operatinal_impact }}</p>
+</div>
+<div class="row pt-2 mt-2">
+    <h5 class="col-2">運航への影響：</h5>
+    <div class="col-auto">{{ info.get_is_flight_impact_display }}</div>
+</div>
+<div class="pb-2 mb-2 border-bottom">
+    <p>{{ info.flight_impact }}</p>
+</div>
+<div class="row pt-2 mt-2">
+    <h5 class="col-2">ノータム：</h5>
+    <div class="col-auto">{{ info.notam | linebreaksbr }}</div>
+</div>
+<div class="row pt-2 mt-2">
+    <h5 class="col-1">取材の有無：</h5>
+    <div class="col-auto">{{ info.get_is_press_display }}</div>
+</div>
+<div class="pb-2 mb-2 border-bottom">
+    <p>{{ info.press_contents | linebreaksbr }}</p>
+</div>
+
 <div class="h5 pt-2 mt-2">経緯</div>
 <div class="pb-2 mb-2 border-bottom">
     {%for event in events%}
@@ -55,27 +97,6 @@
         </div>
     </div>
     {%endfor%}
-</div>
-<div class="h5 pt-2 mt-2">運用への影響</div>
-<div class="pb-2 mb-2 border-bottom">
-    <p>{% if info.is_operatinal_impact %}あり{% else %}なし{% endif %}</p>
-    <p>{{ info.operatinal_impact }}</p>
-</div>
-<div class="h5 pt-2 mt-2">運航への影響</div>
-<div class="pb-2 mb-2 border-bottom">
-    <p>{% if info.is_flight_impact %}あり{% else %}なし{% endif %}</p>
-    <p>{{ info.flight_impact }}</p>
-</div>
-<div class="row">
-    <div class="h5 col-2">
-        取材の有無
-    </div>
-    <div class="col-auto">
-        {{ info.get_is_press_display }}
-    </div>
-</div>
-<div class="pb-2 mb-2 border-bottom">
-    {{ info.press_contents | linebreaksbr }}
 </div>
 
 {% endblock %}

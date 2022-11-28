@@ -56,14 +56,15 @@ class FailuerReportForm(forms.ModelForm):
             'offices',
             'eq',
             'department',
-            'recovery_propects',
-            'is_press',
-            'press_contents',
             'sammary',
+            'recovery_propects',
             'is_operatinal_impact',
             'operatinal_impact',
             'is_flight_impact',
             'flight_impact',
+            'notam',
+            'is_press',
+            'press_contents',
         )
         error_messages = {
             'failuer_date': {
@@ -83,12 +84,13 @@ class FailuerReportForm(forms.ModelForm):
                 'required': '障害装置は必須です',
                 'max_length': '障害装置は32文字以内です。',
             },
-            'recovery_propects': {
-                'max_length': '復旧の見通しは1024文字以内です。'
-            },
             'sammary': {
                 'required': '障害状況は必須です',
                 'max_length': '障害状況は512文字以内です。'
+            },
+            'recovery_propects': {
+                'required': '復旧の見通しは必須です',
+                'max_length': '復旧の見通しは1024文字以内です。'
             },
             'operatinal_impact': {
                 'max_length': '運用への影響は128文字以内です',
@@ -96,8 +98,18 @@ class FailuerReportForm(forms.ModelForm):
             'flight_impact': {
                 'max_length': '運航への影響は128文字以内です',
             },
+            'notam': {
+                'max_length': 'ノータムは512文字以内です',
+            },
+            'press_contents': {
+                'max_length': '取材の内容は1024文字以内です',
+            },
+            'content': {
+                'max_length': '備考は4096文字以内です',
+            },
         }
         widgets = {**MetaCommonInfo.widgets, **{
+
             'failuer_date': forms.DateInput(attrs={
                 'type': 'date',
                 'class': 'form-control',
@@ -113,6 +125,7 @@ class FailuerReportForm(forms.ModelForm):
             'failuer_place': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
+                "placeholder": '障害発生場所(必須)',
             }),
             'offices':  OfficeSuggestWidget(
                 attrs={'data-url': reverse_lazy('api_posts_get')
@@ -120,6 +133,7 @@ class FailuerReportForm(forms.ModelForm):
             'eq': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
+                "placeholder": '障害装置(必須)',
             }),
             'department': forms.SelectMultiple(attrs={
                 'class': 'form-control',
@@ -127,18 +141,45 @@ class FailuerReportForm(forms.ModelForm):
             'sammary': forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": "3",
+                "placeholder": '障害概要(必須)',
             }),
             'recovery_propects': forms.Textarea(attrs={
                 "class": "form-control",
+                "placeholder": '復旧の見通し(必須)',
                 "rows": "3",
+            }),
+            'is_operatinal_impact': forms.widgets.Select(attrs={
+                "class": "form-select"
+            }),
+            'operatinal_impact': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": '運用への影響',
+            }),
+            'is_flight_impact': forms.widgets.Select(attrs={
+                "class": "form-select"
+            }),
+            'flight_impact': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": '運航への影響',
+            }),
+            'notam': forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": 'ノータム内容',
+                "rows": "1",
             }),
             'is_press': forms.widgets.Select(attrs={
                 "class": "form-select"
             }),
             'press_contents': forms.Textarea(attrs={
                 "class": "form-control",
-                "rows": "3",
+                "rows": "1",
+                "placeholder": "取材の内容",
             }),
+            "content": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": "3",
+                "placeholder": "備考",
+            })
         }}
 
 
@@ -179,8 +220,9 @@ CircumstancesFormSet = forms.inlineformset_factory(
             'class': 'form-control',
         }),
         'event': forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': '2',
+            "class": "form-control",
+            "rows": "2",
+            "placeholder": "日付、時間が入った行は必須(256文字以内)",
         }),
     }
 )

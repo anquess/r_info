@@ -19,7 +19,11 @@
     </div>
 </div>
 {% else %}
+{% if info.failuer_date %}
+<div class="h5 pt-2 mt-2">備考</div>
+{%else%}
 <div class="h5 pt-2 mt-2">詳細</div>
+{%endif%}
 <div class="pb-2 mb-2 border-bottom">
     {{ info.content | linebreaksbr }}
 </div>
