@@ -6,7 +6,17 @@ from eqs.models import Eqtype
 # Create your models here.
 
 
+class InfoTypeChoices(models.TextChoices):
+    SUPPORT = 'support', '技術支援'
+    IMPROVEMENT_PLAN = 'improvement', '技術改善提案'
+    PUBLIC_RELATION = 'pr', '情報発信'
+    ETC = 'etc', 'その他'
+
+
 class TechSupports(CommonInfo):
+    info_type = models.CharField(
+        verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices,
+        default=InfoTypeChoices.SUPPORT, null=False, blank=False)
     is_rich_text = models.BooleanField(
         verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
     inquiry = models.TextField(

@@ -42,13 +42,19 @@ class TechSupportsForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = TechSupports
         fields = MetaCommonInfo.fields + \
-            ('inquiry', 'is_rich_text', 'eqtypes', 'is_closed')
+            ('info_type', 'inquiry', 'is_rich_text', 'eqtypes', 'is_closed')
         error_messages = {**MetaCommonInfo.error_messages, **{
+            'info_type': {
+                'required': '情報種別は必須です',
+            },
             'inquiry': {
                 'max_length': '概要は2048文字以内です',
             },
         }}
         widgets = {**MetaCommonInfo.widgets, **{
+            'info_type': forms.widgets.Select(attrs={
+                "class": "form-select",
+            }),
             'inquiry': forms.Textarea(attrs={
                 "class": "form-control",
                 "rows": "3",

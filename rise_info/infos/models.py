@@ -10,11 +10,11 @@ from datetime import date
 
 
 class InfoTypeChoices(models.TextChoices):
-    TECHINICAL = 'technical', '信頼性技術情報'
-    FAILURE_CASE = 'failure_case', '障害事例情報'
-    SAFETY = 'safety', '安全情報'
+    TECHINICAL = 'technical', '技術情報'
+    FAILURE_CASE = 'failure_case', '障害情報'
+    SAFETY = 'safety', '安全情報事例'
     EVENT = 'event', 'イベント情報'
-    MANUAL = 'manual', '完成図書差し替え'
+    MANUAL = 'manual', '完成図書差替'
 
 
 class Info(CommonInfo):
