@@ -18,4 +18,5 @@ urlpatterns = [
     path('password_change/done/', views.PasswordChangeDone.as_view(),
          name='password_change_done'),
     path('is_login', views.is_login, name="is_login"),
+    path('userconfig/', views.edit_user_mail_config, name='userconfig'),
 ]

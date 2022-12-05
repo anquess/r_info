@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -11,9 +10,9 @@ from django.views.generic import ListView
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
+from accounts.models import User_mail_config
 from accounts.views import addTmcAuth
 from addresses.models import Addresses
-from eqs.models import DepartmentForEq
 from offices.models import OfficesGroup
 from rise_info.settings import EMAIL_HOST_USER
 
@@ -46,6 +45,7 @@ def get_addresses(fail_rep, need: bool):
 @ login_required
 def sendmail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
+    user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     send_required = get_addresses(info, True)
     send_any = get_addresses(info, False)
@@ -55,9 +55,13 @@ def sendmail(request, info_id):
             'events': events,
             'send_required_list': send_required,
             'send_any_list': send_any,
+            'mail_config': user_mail_config,
         }
         if request.method == "POST":
-            email1 = EMAIL_HOST_USER
+            if user_mail_config.email_address:
+                email1 = user_mail_config.email_address
+            else:
+                email1 = EMAIL_HOST_USER
 
             if request.POST.get("subject"):
                 subject = request.POST.get("subject")
@@ -65,6 +69,7 @@ def sendmail(request, info_id):
                 subject = "【障害通報】" + str(info.title)
             if request.POST.get("header"):
                 context['mail_header'] = request.POST.get("header")
+                context['mail_footer'] = request.POST.get("footer")
             is_send_list = request.POST.getlist('is_send_list[]')
             dist_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)

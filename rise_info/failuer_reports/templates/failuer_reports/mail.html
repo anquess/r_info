@@ -372,11 +372,15 @@
                         <!-- START MAIN CONTENT AREA -->
                         {% include "failuer_reports/mail_content.html" %}
                         <!-- END MAIN CONTENT AREA -->
+                        {% if mail_footer %}
+                        <!-- START FOOTER CONTENT AREA -->
+                        {% include "failuer_reports/mail_footer.html" %}
+                        <!-- END FOOTER CONTENT AREA -->
+                        {% endif %}
+
                     </table>
                     <!-- END CENTERED WHITE CONTAINER -->
 
-                    <!-- START FOOTER -->
-                    <!-- END FOOTER -->
 
                 </div>
             </td>

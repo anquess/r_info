@@ -76,16 +76,25 @@
                     <label for="header" class="form-label">ヘッダー</label>
                 </div>
                 <div class="col-9">
-                    <textarea class="form-control" id="header" name="header"
-                        placeholder="メール本文の前に文章を入れたい場合は入力してください"></textarea>
+                    <textarea class="form-control" id="header" name="header" placeholder="メール本文の前に文章を入れたい場合は入力してください"
+                        value="{{mail_config.default_email_header}}"></textarea>
                 </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-2">
+                    <label for="header" class="form-label">フッター</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="form-control" id="footer" name="header" placeholder="メール本文の後ろに文章を入れたい場合は入力してください"
+                        value="{{mail_config.default_email_footer}}"></textarea>
+                </div>
+            </div>
 
-                <div class="col-1">
-                    <button id="send" type="submit" class="btn btn-secondary"
-                        onclick='return confirm("メール送信をして、よろしいですか？");'>
-                        {% bs_icon 'send' %}
-                    </button>
-                </div>
+            <div class="col-1">
+                <button id="send" type="submit" class="btn btn-secondary"
+                    onclick='return confirm("メール送信をして、よろしいですか？");'>
+                    {% bs_icon 'send' %}
+                </button>
             </div>
     </form>
 </div>

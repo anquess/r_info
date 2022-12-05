@@ -1,3 +1,4 @@
+{{mail_header | linebreaksbr}}
 【障害通報通報】{{info.title}}
 
 障害発生日時
@@ -24,3 +25,6 @@
     {{ info.flight_impact }}
 取材の有無：{{ info.get_is_press_display }}
 {{ info.press_contents | linebreaksbr }}
+備考
+{{ info.content | linebreaksbr }}
+{{mail_footer | linebreaksbr}}

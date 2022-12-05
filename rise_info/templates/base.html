@@ -71,6 +71,7 @@
                             <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
                             <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
                             <li><a class="dropdown-item" href="{% url 'address_list' %}">配信先管理</a></li>
+                            <li><a class="dropdown-item" href="{% url 'userconfig' %}">メール設定</a></li>
                             {% if user.username == 'root' %}
                             <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
                             {% endif %}

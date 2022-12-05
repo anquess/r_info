@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
-from .forms import MyPasswordChangeForm, UserAddForm
+from .forms import MyPasswordChangeForm, UserAddForm, UserMailConfigForm
+from .models import User_mail_config
 from contents.views import addMenus
 
 
@@ -85,3 +86,22 @@ def account_delete(request, pk):
     else:
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
     return redirect('account_list')
+
+
+@login_required
+def edit_user_mail_config(request):
+    user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
+    form = UserMailConfigForm(request.POST or None, instance=user_mail_config)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.add_message(request, messages.INFO,
+                             "%sアカウントのメール設定が更新されました" % request.user)
+        return redirect('top')
+    else:
+        context = addTmcAuth(
+            {
+                'form': form,
+                'pk': request.user,
+            },
+            request.user)
+        return render(request, 'accounts/edit_user_mail_config.html', context)

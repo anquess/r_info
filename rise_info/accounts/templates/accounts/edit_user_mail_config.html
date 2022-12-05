@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block extraheader %}
+<link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
+<link rel="stylesheet" href="/static/fontawesome/css/fontawesome.min.css">
+<script src="/static/infos/js/clickCheck.js"></script>
+
+{% endblock %}
+{% block main %}
+<p class="h2">ユーザメール設定</p>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="user" required="" id="id_user" value="{{user.pk}}" hidden>
+    <label for="id_email_address">{{form.email_address.label}}:</label>{{form.email_address}}
+    <label for="id_default_email_header">{{form.default_email_header.label}}:</label>{{form.default_email_header}}
+    <label for="id_default_email_footer">{{form.default_email_footer.label}}:</label>{{form.default_email_footer}}
+    <button class="btn btn-primary" type="submit" value="post">登録</button>
+</form>
+
+<script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
+<script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $("input").on("keydown", function (e) {
+            if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    });
+
+    function setMaxlength(id) {
+        $(id).maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
+    $(document).ready(setMaxlength('#id_default_email_header'));
+    $(document).ready(setMaxlength('#id_default_email_footer'));
+</script>
+
+{% endblock %}
