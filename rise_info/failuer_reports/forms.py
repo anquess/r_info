@@ -25,6 +25,10 @@ class IsNullValidator:
 class FailuerReportForm(forms.ModelForm):
     def __init__(self, *args, **kwd):
         super(FailuerReportForm, self).__init__(*args, **kwd)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
         self.fields["failuer_date"].required = True
         self.fields["failuer_time"].required = True
         self.fields["date_time_confirmation"].required = True
@@ -100,6 +104,7 @@ class FailuerReportForm(forms.ModelForm):
             },
             'notam': {
                 'max_length': 'ノータムは512文字以内です',
+                'rows': 3,
             },
             'press_contents': {
                 'max_length': '取材の内容は1024文字以内です',
@@ -112,73 +117,38 @@ class FailuerReportForm(forms.ModelForm):
 
             'failuer_date': forms.DateInput(attrs={
                 'type': 'date',
-                'class': 'form-control',
             }),
             'failuer_time': forms.TimeInput(attrs={
                 'type': 'time',
-                'class': 'form-control',
             }),
             'date_time_confirmation': forms.widgets.Select(attrs={
                 "class": "form-select",
                 "aria-describedby": "confirmationHelp",
             }),
-            'failuer_place': forms.TextInput(attrs={
-                'type': 'text',
-                'class': 'form-control',
-                "placeholder": '障害発生場所(必須)',
-            }),
             'offices':  OfficeSuggestWidget(
                 attrs={'data-url': reverse_lazy('api_posts_get')
                        }),
-            'eq': forms.TextInput(attrs={
-                'type': 'text',
-                'class': 'form-control',
-                "placeholder": '障害装置(必須)',
-            }),
-            'department': forms.SelectMultiple(attrs={
-                'class': 'form-control',
-            }),
             'sammary': forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": "3",
-                "placeholder": '障害概要(必須)',
             }),
             'recovery_propects': forms.Textarea(attrs={
-                "class": "form-control",
-                "placeholder": '復旧の見通し(必須)',
                 "rows": "3",
-            }),
-            'is_operatinal_impact': forms.widgets.Select(attrs={
-                "class": "form-select"
-            }),
-            'operatinal_impact': forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": '運用への影響',
             }),
             'is_flight_impact': forms.widgets.Select(attrs={
                 "class": "form-select"
             }),
-            'flight_impact': forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": '運航への影響',
-            }),
             'notam': forms.Textarea(attrs={
-                "class": "form-control",
                 "placeholder": 'ノータム内容',
-                "rows": "1",
+                "rows": "3",
             }),
             'is_press': forms.widgets.Select(attrs={
                 "class": "form-select"
             }),
             'press_contents': forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": "1",
-                "placeholder": "取材の内容",
+                "rows": "3",
             }),
             "content": forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": "3",
-                "placeholder": "備考",
             })
         }}
 

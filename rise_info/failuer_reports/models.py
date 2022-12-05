@@ -35,7 +35,7 @@ class FailuerReport(CommonInfo):
     )
     failuer_place = models.CharField(
         verbose_name='障害発生場所', default="xx空港",
-        null=False, blank=True, max_length=32,
+        null=False, blank=True, max_length=128,
         help_text="必須"
     )
     offices = models.ManyToManyField(
@@ -46,7 +46,7 @@ class FailuerReport(CommonInfo):
     )
     eq = models.CharField(
         verbose_name="障害装置", null=False,
-        blank=True, max_length=32,
+        blank=True, max_length=128,
         help_text="必須"
     )
     department = models.ManyToManyField(
@@ -55,7 +55,7 @@ class FailuerReport(CommonInfo):
     )
     sammary = models.TextField(
         verbose_name='障害状況', default="確認中", null=False, blank=True,
-        max_length=512, help_text="必須"
+        max_length=1024, help_text="必須"
     )
     recovery_propects = models.TextField(
         verbose_name='復旧の見通し', default="確認中",
@@ -94,7 +94,15 @@ class FailuerReport(CommonInfo):
     )
     press_contents = models.TextField(
         verbose_name='取材内容', default="取材の内容",
-        null=False, blank=True, max_length=1024
+        null=False, blank=True, max_length=1024,
+        help_text="\
+有の場合はその概要を記入\n\
+基本対応\n\
+    ①基本的に発生事案については、全ての事項を本省管制技術課で対応\n\
+    ②官署への取材等がおこなれる場合を想定し、菅家官署の広報担当者に\n\
+    　答弁ラインを連絡するとともに、当該官署における航法対応の体制\n\
+    　について確認を行う(答弁は当該官署の広報担当者にて実施)\n\
+    ③現地官署での取材内容は、本省管制技術課危機管理担当に逐次報告"
     )
     content = models.TextField(
         verbose_name='備考', default="", null=False, blank=True, max_length=4096
