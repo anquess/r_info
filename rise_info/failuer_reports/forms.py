@@ -28,7 +28,7 @@ class FailuerReportForm(forms.ModelForm):
         for key, value in self.fields.items():
             if key != 'offices':
                 value.widget.attrs['placeholder'] = value.help_text
-                if key.startswith('is') or key == 'date_time_confirmation':
+                if key.startswith('is') or key == 'date_time_confirmation' or key.startswith('select'):
                     value.widget.attrs['class'] = 'form-select'
                 else:
                     value.widget.attrs['class'] = 'form-control'

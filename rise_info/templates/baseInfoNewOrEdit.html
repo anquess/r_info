@@ -33,11 +33,13 @@
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
     <div class="row mt-2">
-        <div class="col-2">
-            <label for="id_is_disclosed" class="form-label">{{form.is_disclosed.label}}</label>
-            {{form.is_disclosed}}
+        <div class="col-1">
+            <label for="id_select_register" class="form-label">{{form.select_register.label}}</label>
         </div>
-        <div class="col-10">
+        <div class="col-2">
+            {{form.select_register}}
+        </div>
+        <div class="col-9">
             <link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
             <script src="/static/jquery/jquery-3.6.0.min.js"></script>
             <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>

@@ -48,7 +48,7 @@ class TechSupportsForm(forms.ModelForm):
         for key, value in self.fields.items():
             if key != 'eqtypes' and not key.startswith('is_'):
                 value.widget.attrs['placeholder'] = value.help_text
-                if key == 'info_type':
+                if key == 'info_type' or key.startswith('select'):
                     value.widget.attrs['class'] = 'form-select'
                 else:
                     value.widget.attrs['class'] = 'form-control'
@@ -56,7 +56,7 @@ class TechSupportsForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = TechSupports
         fields = MetaCommonInfo.fields + \
-            ('info_type', 'inquiry', 'is_rich_text', 'eqtypes', 'is_closed')
+            ('info_type', 'inquiry', 'is_rich_text', 'eqtypes')
         error_messages = {**MetaCommonInfo.error_messages, **{
             'info_type': {
                 'required': '情報種別は必須です',

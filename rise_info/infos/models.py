@@ -15,6 +15,7 @@ class InfoTypeChoices(models.TextChoices):
     SAFETY = 'safety', '安全情報事例'
     EVENT = 'event', 'イベント情報'
     MANUAL = 'manual', '完成図書差替'
+    APPS = 'apps', 'APPS'
 
 
 class Info(CommonInfo):
@@ -30,7 +31,6 @@ class Info(CommonInfo):
     eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
     is_add_offices = models.BooleanField(verbose_name='官署特定', default=True)
     offices = models.ManyToManyField(Office, verbose_name='官署', blank=True)
-    is_disclosed = models.BooleanField(verbose_name='公開', default=True)
     disclosure_date = models.DateField(
         verbose_name='公開日', default=date.today())
 

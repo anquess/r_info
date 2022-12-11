@@ -38,16 +38,13 @@ def csvFormatCheck(csvRow, checkLists):
 
 class MetaCommonInfo:
     model = CommonInfo
-    fields = ('title', 'content')
+    fields = ('title', 'content', 'select_register')
     widgets = {
         "title": forms.TextInput(attrs={
-            "class": "form-control",
-            "placeholder": 'タイトル(必須)',
             "aria-label": "運用への影響",
 
         }),
         "content": forms.Textarea(attrs={
-            "class": "form-control",
         })
     }
     error_messages = {

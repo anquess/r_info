@@ -24,6 +24,12 @@ def getSysupdtime(row) -> dt:
     return sysupdtime
 
 
+class RegisterStatusChoices(models.TextChoices):
+    NOT_REGISTERED = 'not_registered', '未登録'
+    UNDER_RENEWAL = 'under_renewal', '更新中'
+    REGISTER = 'register', '登録済'
+
+
 class BaseManager(models.Manager):
     def get_or_none(self, **kwargs):
         """
@@ -41,6 +47,11 @@ class CommonInfo(models.Model):
         verbose_name='タイトル', default="", null=False, blank=False, max_length=128)
     content = models.TextField(
         verbose_name='内容', default="", null=False, blank=True, max_length=4096)
+    select_register = models.CharField(
+        verbose_name='登録状態', max_length=16,
+        choices=RegisterStatusChoices.choices,
+        default=RegisterStatusChoices.NOT_REGISTERED, null=False, blank=False
+    )
     created_by = CurrentUserField(verbose_name='登録者', on_update=True,
                                   related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
     created_at = models.DateTimeField(

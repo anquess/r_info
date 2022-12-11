@@ -19,7 +19,8 @@ def top(request):
     # ip = request.META.get('REMOTE_ADDR') # django toolbar
     # context["IP"] = ip # django toolbar
     infos = Info.objects.filter(
-        Q(is_disclosed=True),
+        Q(select_register='under_renewal') |
+        Q(select_register='register'),
     ).order_by('-updated_at')[:10]
     contents = Contents.objects.order_by('-updated_at')[:10]
     tech_supports = TechSupports.objects.order_by('-updated_at')[:10]

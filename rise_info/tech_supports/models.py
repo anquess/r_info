@@ -6,6 +6,13 @@ from eqs.models import Eqtype
 # Create your models here.
 
 
+class RegisterStatusChoices(models.TextChoices):
+    NOT_REGISTERED = 'not_registered', '未登録'
+    REGISTER = 'register', '登録依頼中'
+    DOING = 'doing', '登録受付完了 対応中'
+    DONE = 'done', '解決済'
+
+
 class InfoTypeChoices(models.TextChoices):
     SUPPORT = 'support', '技術支援'
     IMPROVEMENT_PLAN = 'improvement', '技術改善提案'
@@ -22,7 +29,11 @@ class TechSupports(CommonInfo):
     inquiry = models.TextField(
         verbose_name='問い合わせ内容', default="", null=False, blank=True, max_length=2048)
     eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
-    is_closed = models.BooleanField(verbose_name='解決済', default=False)
+    select_register = models.CharField(
+        verbose_name='登録状態', max_length=16,
+        choices=RegisterStatusChoices.choices,
+        default=RegisterStatusChoices.NOT_REGISTERED, null=False, blank=False
+    )
 
     def save(self, *args, **kwargs):
         super(TechSupports, self).save(self, *args, **kwargs)

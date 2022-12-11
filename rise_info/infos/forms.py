@@ -46,7 +46,7 @@ class InfoForm(forms.ModelForm):
         for key, value in self.fields.items():
             if key != 'offices' and key != 'eqtypes' and not key.startswith('is_'):
                 value.widget.attrs['placeholder'] = value.help_text
-                if key == 'info_type':
+                if key == 'info_type' or key.startswith('select'):
                     value.widget.attrs['class'] = 'form-select'
                 else:
                     value.widget.attrs['class'] = 'form-control'
@@ -54,8 +54,9 @@ class InfoForm(forms.ModelForm):
     class Meta(MetaCommonInfo):
         model = Info
         fields = MetaCommonInfo.fields + \
-            ('info_type', 'managerID', 'sammary', 'is_rich_text', 'is_add_eqtypes',
-             'is_add_offices', 'eqtypes', 'offices', 'is_disclosed', 'disclosure_date')
+            ('info_type', 'managerID', 'sammary', 'is_rich_text',
+             'is_add_eqtypes', 'is_add_offices', 'eqtypes', 'offices',
+             'disclosure_date')
         error_messages = {**MetaCommonInfo.error_messages, **{
             'info_type': {
                 'required': '情報種別は必須です',
@@ -85,9 +86,6 @@ class InfoForm(forms.ModelForm):
             }),
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
-            }),
-            'is_disclosed': forms.CheckboxInput(attrs={
-                'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
             }),
             'disclosure_date': forms.DateInput(attrs={
                 'type': 'date',

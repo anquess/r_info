@@ -45,7 +45,10 @@ class InfoList(ListView):
             queryset = super().get_queryset(**kwargs)
         else:
             queryset = super().get_queryset(
-                **kwargs).filter(is_disclosed=True).filter(disclosure_date__lte=datetime.today())
+                **kwargs).filter(
+                    Q(select_register='under_renewal') |
+                    Q(select_register='register')
+            ).filter(disclosure_date__lte=datetime.today())
 
         q_info_type = self.request.GET.get('info_type')
         q_keyword = self.request.GET.get('keyword')

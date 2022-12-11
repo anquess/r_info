@@ -52,26 +52,26 @@
 <table class="table">
     <thead>
         <tr>
-            <th>解決済</th>
-            <th>情報種別</th>
-            <th>タイトル</th>
-            <th>問い合わせ内容</th>
-            <th>更新日</th>
-            <th>問い合わせ官署</th>
-            <th>編集</th>
+            <th scope="col" colspan="1">解決済</th>
+            <th scope="col" colspan="1">情報種別</th>
+            <th scope="col" colspan="3">タイトル</th>
+            <th scope="col" colspan="3">問い合わせ内容</th>
+            <th scope="col" colspan="1">更新日</th>
+            <th scope="col" colspan="1">官署</th>
+            <th scope="col" colspan="1">編集</th>
         </tr>
     </thead>
     <tbody>
         {% for info in infos %}
         <tr>
-            <th>{% if info.is_closed %}☑{%endif%}</th>
-            <th>{{ info.get_info_type_display }}</th>
-            <th><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.inquiry }}</th>
-            <th>{{ info.updated_at | date:"y/n/j" }}</th>
-            <th>{{ info.created_by }}</th>
+            <th colspan="1">{{info.get_select_register_display}}</th>
+            <th colspan="1">{{ info.get_info_type_display }}</th>
+            <th colspan="3"><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></th>
+            <th colspan="3">{{ info.inquiry }}</th>
+            <th colspan="1">{{ info.updated_at | date:"y/n/j" }}</th>
+            <th colspan="1">{{ info.created_by }}</th>
             {% if auth or user == info.created_by %}
-            <th><a class="btn btn-primary" href="{% url 'support_edit' info.id %}">
+            <th colspan="1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}">
                     {% bs_icon 'pencil-square' %}
                 </a>
                 {% endif %}
