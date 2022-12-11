@@ -20,6 +20,11 @@ def formatCheck(offices):
 
 
 class UploadFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
     file = forms.FileField(
         label='Office.csvファイル',
         help_text='RISE/APPS 専用エクスポートツール(Access or Excel)で抽出したデータのみ',

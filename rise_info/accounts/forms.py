@@ -10,11 +10,18 @@ class MyPasswordChangeForm(PasswordChangeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
 
 
 class UserAddForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name',
@@ -41,15 +48,11 @@ class UserMailConfigForm(forms.ModelForm):
         }
         widgets = {
             "user": forms.Select(),
-            "email_address": forms.EmailInput(attrs={
-                "class": "form-control",
-            }),
+            "email_address": forms.EmailInput(),
             "default_email_header": forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": 3,
             }),
             "default_email_footer": forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": 3,
             }),
 

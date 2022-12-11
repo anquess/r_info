@@ -4,10 +4,14 @@ from django.urls import reverse_lazy
 from .models import TechSupports, AttachmentFile, TechSupportComments
 from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 from eqs.widgets import SuggestWidget
-from offices.widgets import OfficeSuggestWidget
 
 
 class TechSupportCommentsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
     info = forms.ModelChoiceField(
         queryset=TechSupports.objects.all(),
         error_messages={'required': 'infoは必須です', },
@@ -39,6 +43,16 @@ class TechSupportCommentsForm(forms.ModelForm):
 
 
 class TechSupportsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'eqtypes' and not key.startswith('is_'):
+                value.widget.attrs['placeholder'] = value.help_text
+                if key == 'info_type':
+                    value.widget.attrs['class'] = 'form-select'
+                else:
+                    value.widget.attrs['class'] = 'form-control'
+
     class Meta(MetaCommonInfo):
         model = TechSupports
         fields = MetaCommonInfo.fields + \
@@ -52,17 +66,16 @@ class TechSupportsForm(forms.ModelForm):
             },
         }}
         widgets = {**MetaCommonInfo.widgets, **{
-            'info_type': forms.widgets.Select(attrs={
-                "class": "form-select",
-            }),
+            'info_type': forms.widgets.Select(),
             'inquiry': forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": "3",
             }),
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
-            'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
+            'eqtypes': SuggestWidget(attrs={
+                'data-url': reverse_lazy('eqs:api_posts_get')
+            }),
         }}
 
 

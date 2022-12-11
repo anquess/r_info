@@ -23,11 +23,15 @@ class IsNullValidator:
 
 
 class FailuerReportForm(forms.ModelForm):
-    def __init__(self, *args, **kwd):
-        super(FailuerReportForm, self).__init__(*args, **kwd)
-        for _, value in self.fields.items():
-            value.widget.attrs['placeholder'] = value.help_text
-            value.widget.attrs['class'] = 'form-control'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'offices':
+                value.widget.attrs['placeholder'] = value.help_text
+                if key.startswith('is') or key == 'date_time_confirmation':
+                    value.widget.attrs['class'] = 'form-select'
+                else:
+                    value.widget.attrs['class'] = 'form-control'
 
         self.fields["failuer_date"].required = True
         self.fields["failuer_time"].required = True
@@ -122,7 +126,6 @@ class FailuerReportForm(forms.ModelForm):
                 'type': 'time',
             }),
             'date_time_confirmation': forms.widgets.Select(attrs={
-                "class": "form-select",
                 "aria-describedby": "confirmationHelp",
             }),
             'offices':  OfficeSuggestWidget(
@@ -134,16 +137,11 @@ class FailuerReportForm(forms.ModelForm):
             'recovery_propects': forms.Textarea(attrs={
                 "rows": "3",
             }),
-            'is_flight_impact': forms.widgets.Select(attrs={
-                "class": "form-select"
-            }),
+            'is_flight_impact': forms.widgets.Select(),
             'notam': forms.Textarea(attrs={
-                "placeholder": 'ノータム内容',
                 "rows": "3",
             }),
-            'is_press': forms.widgets.Select(attrs={
-                "class": "form-select"
-            }),
+            'is_press': forms.widgets.Select(),
             'press_contents': forms.Textarea(attrs={
                 "rows": "3",
             }),
@@ -154,6 +152,13 @@ class FailuerReportForm(forms.ModelForm):
 
 
 class CircumstancesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'delete':
+                value.widget.attrs['placeholder'] = value.help_text
+                value.widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = Circumstances
         fields = '__all__'
@@ -183,16 +188,12 @@ CircumstancesFormSet = forms.inlineformset_factory(
     widgets={
         'date': forms.DateInput(attrs={
             'type': 'date',
-            'class': 'form-control',
         }),
         'time': forms.TimeInput(attrs={
             'type': 'time',
-            'class': 'form-control',
         }),
         'event': forms.Textarea(attrs={
-            "class": "form-control",
             "rows": "2",
-            "placeholder": "日付、時間が入った行は必須(256文字以内)",
         }),
     }
 )

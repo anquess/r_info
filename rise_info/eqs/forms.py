@@ -15,6 +15,12 @@ def formatCheck(eqtypes):
 
 
 class EqTypeCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = Eqtype
         fields = '__all__'
@@ -24,6 +30,11 @@ class EqTypeCreateForm(forms.ModelForm):
 
 
 class UploadFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
     file = forms.FileField(
         label='EQType.csvファイル',
         help_text='RISE/APPS 専用エクスポートツール(Access or Excel)で抽出したデータのみ',

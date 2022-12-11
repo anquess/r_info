@@ -5,6 +5,12 @@ from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 
 
 class ContentCommentsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     content = forms.ModelChoiceField(
         queryset=Contents.objects.all(),
         error_messages={'required': 'contentは必須です', },
@@ -42,6 +48,16 @@ class MenuForm(forms.ModelForm):
 
 
 class ContentsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if not key.startswith('is_'):
+                value.widget.attrs['placeholder'] = value.help_text
+                if key == 'menu':
+                    value.widget.attrs['class'] = 'form-select'
+                else:
+                    value.widget.attrs['class'] = 'form-control'
+
     class Meta(MetaCommonInfo):
         model = Contents
         fields = MetaCommonInfo.fields + ('is_rich_text', 'menu',)
@@ -55,13 +71,17 @@ class ContentsForm(forms.ModelForm):
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
-            'menu': forms.Select(attrs={
-                "class": "form-control",
-            })
+            'menu': forms.Select()
         }}
 
 
 class AttachmentFileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     file = forms.FileField(
         validators=[FileSizeValidator(val=100, byte_type="mb")],
         required=True,

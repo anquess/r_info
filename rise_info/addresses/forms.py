@@ -6,6 +6,13 @@ from offices.widgets import OfficeSuggestWidget
 
 
 class AddressesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'offices' and not key.startswith('is_'):
+                value.widget.attrs['placeholder'] = value.help_text
+                value.widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = Addresses
         fields = (
@@ -31,18 +38,9 @@ class AddressesForm(forms.ModelForm):
             },
         }
         widgets = {
-            'name': forms.TextInput(attrs={
-                'type': 'text',
-                'class': 'form-control',
-            }),
-            'position': forms.TextInput(attrs={
-                'type': 'text',
-                'class': 'form-control',
-            }),
-            'mail': forms.EmailInput(attrs={
-                'type': 'mail',
-                'class': 'form-control',
-            }),
+            'name': forms.TextInput(),
+            'position': forms.TextInput(),
+            'mail': forms.EmailInput(),
             'offices': OfficeSuggestWidget(attrs={
                 'data-url': reverse_lazy('api_posts_get')
             }),

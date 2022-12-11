@@ -8,6 +8,12 @@ from offices.widgets import OfficeSuggestWidget
 
 
 class InfoCommentsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     info = forms.ModelChoiceField(
         queryset=Info.objects.all(),
         error_messages={'required': 'infoは必須です', },
@@ -29,16 +35,22 @@ class InfoCommentsForm(forms.ModelForm):
         model = InfoComments
         fields = ('info', 'file', 'comment_txt')
         widgets = {
-            "comment_txt": forms.Textarea(attrs={
-                "class": "form-control",
-            }),
-            "file": forms.FileInput(attrs={
-                "class": "form-control",
-            }),
+            "comment_txt": forms.Textarea(),
+            "file": forms.FileInput(),
         }
 
 
 class InfoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'offices' and key != 'eqtypes' and not key.startswith('is_'):
+                value.widget.attrs['placeholder'] = value.help_text
+                if key == 'info_type':
+                    value.widget.attrs['class'] = 'form-select'
+                else:
+                    value.widget.attrs['class'] = 'form-control'
+
     class Meta(MetaCommonInfo):
         model = Info
         fields = MetaCommonInfo.fields + \
@@ -60,14 +72,9 @@ class InfoForm(forms.ModelForm):
             },
         }}
         widgets = {**MetaCommonInfo.widgets, **{
-            'info_type': forms.widgets.Select(attrs={
-                "class": "form-select",
-            }),
-            'managerID': forms.TextInput(attrs={
-                "class": "form-control",
-            }),
+            'info_type': forms.widgets.Select(),
+            'managerID': forms.TextInput(),
             'sammary': forms.Textarea(attrs={
-                "class": "form-control",
                 "rows": "3",
             }),
             'is_add_offices': forms.CheckboxInput(attrs={
@@ -83,16 +90,21 @@ class InfoForm(forms.ModelForm):
                 'onclick': 'clickCheck(this.id, "id_disclosure_date", false)',
             }),
             'disclosure_date': forms.DateInput(attrs={
-                'class': 'form-control',
                 'type': 'date',
-
             }),
-            'eqtypes': SuggestWidget(attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
+            'eqtypes': SuggestWidget(
+                attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
             'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
         }}
 
 
 class AttachmentFileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, value in self.fields.items():
+            value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
+
     file = forms.FileField(
         validators=[FileSizeValidator(val=100, byte_type="mb")],
         required=True,
