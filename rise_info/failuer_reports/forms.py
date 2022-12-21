@@ -54,9 +54,9 @@ class FailuerReportForm(forms.ModelForm):
             'eq',
             'department',
             'sammary',
+            'recovery_date',
+            'recovery_time',
             'recovery_propects',
-            'is_operatinal_impact',
-            'operatinal_impact',
             'is_flight_impact',
             'flight_impact',
             'notam',
@@ -89,9 +89,6 @@ class FailuerReportForm(forms.ModelForm):
                 'required': '復旧の見通しは必須です',
                 'max_length': '復旧の見通しは1024文字以内です。'
             },
-            'operatinal_impact': {
-                'max_length': '運用への影響は128文字以内です',
-            },
             'flight_impact': {
                 'max_length': '運航への影響は128文字以内です',
             },
@@ -107,7 +104,6 @@ class FailuerReportForm(forms.ModelForm):
             },
         }
         widgets = {**MetaCommonInfo.widgets, **{
-
             'failuer_date': forms.DateInput(attrs={
                 'type': 'date',
             }),
@@ -119,6 +115,12 @@ class FailuerReportForm(forms.ModelForm):
             }),
             'sammary': forms.Textarea(attrs={
                 "rows": "3",
+            }),
+            'recovery_date': forms.DateInput(attrs={
+                'type': 'date',
+            }),
+            'recovery_time': forms.TimeInput(attrs={
+                'type': 'time',
             }),
             'recovery_propects': forms.Textarea(attrs={
                 "rows": "3",

@@ -5,32 +5,30 @@
     <div class="col-2">
         <label for="id_failuer_time" class="form-label">{{form.failuer_time.label}}</label>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <label for="id_date_time_confirmation" class="form-label">{{form.date_time_confirmation.label}}</label>
     </div>
+    <div class="col-5">
+        <label for="id_failuer_place" class="form-label">{{form.failuer_place.label}}</label>
+    </div>
 </div>
-<div class="row mt-1">
+<div class="row mt-0">
     <div class="col-2">
         {{form.failuer_date}}
     </div>
     <div class="col-2">
         {{form.failuer_time}}
     </div>
-    <div class="col-4">
+    <div class="col-3">
         {{form.date_time_confirmation}}
+    </div>
+    <div class="col-5">
+        {{form.failuer_place}}
     </div>
 </div>
 <div id="confirmationHelp" class="row form-text">
     <div class="col-12">
         {{form.date_time_confirmation.help_text|safe}}
-    </div>
-</div>
-<div class="row mt-2 mb-0">
-    <div class="col-1">
-        <label for="id_failuer_place" class="form-label">{{form.failuer_place.label}}</label>
-    </div>
-    <div class="col-5">
-        {{form.failuer_place}}
     </div>
 </div>
 <div class="row mt-2 mb-0">
@@ -50,25 +48,30 @@
 <div class="row mt-1">
     <label for="id_sammary" class="form-label">{{form.sammary.label}}</label>
 </div>
-<div class="row mt-1">
+<div class="row mt-0">
     {{form.sammary}}
+</div>
+<div class="row mt-2 mb-0">
+    <div class="col-2">
+        <label for="id_recovery_date" class="form-label">{{form.recovery_date.label}}</label>
+    </div>
+    <div class="col-2">
+        <label for="id_recovery_time" class="form-label">{{form.recovery_time.label}}</label>
+    </div>
+</div>
+<div class="row mt-0">
+    <div class="col-2">
+        {{form.recovery_date}}
+    </div>
+    <div class="col-2">
+        {{form.recovery_time}}
+    </div>
 </div>
 <div class="row mt-1">
     <label for="id_recovery_propects" class="form-label">{{form.recovery_propects.label}}</label>
 </div>
-<div class="row mt-1">
+<div class="row mt-0">
     {{form.recovery_propects}}
-</div>
-<div class="row mt-1">
-    <div class="col-1">
-        <label for="id_is_operatinal_impact" class="form-label">{{form.is_operatinal_impact.label}}</label>
-    </div>
-    <div class="col-2">
-        {{form.is_operatinal_impact}}
-    </div>
-    <div class="col-9">
-        {{form.operatinal_impact}}
-    </div>
 </div>
 <div class="row mt-1">
     <div class="col-1">

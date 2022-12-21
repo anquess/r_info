@@ -17,7 +17,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>障害発生日時</mail_h3>
+                                    <mail_h3>1.障害発生日時</mail_h3>
                                 </th>
                             </tr>
                             <tr>
@@ -36,7 +36,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>障害発生場所</mail_h3>
+                                    <mail_h3>2.障害発生場所</mail_h3>
                                 </th>
                             </tr>
                             <tr>
@@ -66,7 +66,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>障害状況</mail_h3>
+                                    <mail_h3>3.障害概要</mail_h3>
                                 </th>
                             </tr>
                             <tr>
@@ -79,7 +79,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>復旧の見通し</mail_h3>
+                                    <mail_h3>5.復旧の見通し</mail_h3>
                                 </th>
                             </tr>
                             <tr>
@@ -92,22 +92,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>運用への影響：
-                                        {{ info.get_is_operatinal_impact_display }}
-                                    </mail_h3>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td align="left">&nbsp;</td>
-                                <td align="left">{{ info.operatinal_impact }}</td>
-                            </tr>
-                        </tbody>
-                    </table></br>
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                            <tr>
-                                <th colspan="2" align="left">
-                                    <mail_h3>運航への影響：
+                                    <mail_h3>6.運航への影響：
                                         {{ info.get_is_flight_impact_display }}
                                     </mail_h3>
                                 </th>
@@ -117,7 +102,8 @@
                                 <td align="left">{{ info.flight_impact }}</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></br>
+                    </b>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tbody>
                             <tr>
@@ -135,7 +121,7 @@
                         <tbody>
                             <tr>
                                 <th colspan="2" align="left">
-                                    <mail_h3>取材の有無：
+                                    <mail_h3>7.取材の有無：
                                         {{ info.get_is_press_display }}
                                     </mail_h3>
                                 </th>
@@ -162,7 +148,7 @@
                             </tr>
                             {%endfor%}
                         </tbody>
-                    </table>
+                    </table></br>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tbody>
                             <tr>

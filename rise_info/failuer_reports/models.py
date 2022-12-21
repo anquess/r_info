@@ -50,20 +50,18 @@ class FailuerReport(CommonInfo):
         verbose_name='障害状況', default="確認中", null=False, blank=True,
         max_length=1024, help_text="必須"
     )
+    recovery_date = models.DateField(
+        verbose_name='復旧日', null=True, blank=True,
+        help_text="復旧日　復旧後記載"
+    )
+    recovery_time = models.TimeField(
+        verbose_name='復旧時', null=True, blank=True,
+        help_text="復旧時間　復旧後記載"
+    )
     recovery_propects = models.TextField(
         verbose_name='復旧の見通し', default="確認中",
         null=False, blank=True, max_length=1024,
         help_text="必須"
-    )
-    is_operatinal_impact = models.CharField(
-        verbose_name='運用への影響有無', max_length=16,
-        choices=IsConfirmChoices.choices,
-        default=IsConfirmChoices.CHECKING_NOW,
-        null=False, blank=False
-    )
-    operatinal_impact = models.CharField(
-        verbose_name='運用への影響', default="",
-        null=False, blank=True, max_length=128
     )
     is_flight_impact = models.CharField(
         verbose_name='運航への影響有無', max_length=16,
