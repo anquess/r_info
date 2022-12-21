@@ -43,12 +43,14 @@
     </div>
 
     <div class="col-auto">
-        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
+        <button id="filter" type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="検索">{% bs_icon 'search' %}</button>
     </div>
 </form>
 
 
-<a class="btn btn-primary float-end" href="{% url 'failuer_report_new' %}">＋</a>
+<a class="btn btn-primary float-end" href="{% url 'failuer_report_new' %}" data-bs-toggle="tooltip"
+    data-bs-placement="bottom" title="追加">＋</a>
 <div class="row mt-2">
     {% include "pagination.html" %}
 </div>
@@ -74,14 +76,17 @@
             <th>{{ info.created_by.last_name }}</th>
             <th>
                 {% if user == info.created_by %}
-                <a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">
+                <a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="編集">
                     {% bs_icon 'pencil-square' %}
                 </a>
-                <a class="btn btn-primary" href="{% url 'send_mail' info.id %}">
+                <a class="btn btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="メール送信">
                     {% bs_icon 'send' %}
                 </a>
                 <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}"
-                    onclick='return confirm("よろしいですか？");'>
+                    onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="削除">
                     {% bs_icon 'trash' %}
                 </a>
                 {% endif %}

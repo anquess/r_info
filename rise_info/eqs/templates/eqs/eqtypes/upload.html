@@ -20,7 +20,8 @@
       {{ form.as_p }}
     </div>
     <div class="col-1">
-      <button class="btn btn-primary" type="submit">
+      <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="ファイルアップロード">
         {% bs_icon 'upload' %}
       </button>
     </div>
@@ -43,8 +44,8 @@
     {% for eqtype in eqtypes|dictsort:"id" %}
     <tr>
       <td>{{ eqtype.id }}</td>
-      <th><a class="btn btn-danger" href="{% url 'eqs:eqtype_del' eqtype.slug %}"
-          onclick='return confirm("よろしいですか？");'>削除</a></th>
+      <th><a class="btn btn-danger" href="{% url 'eqs:eqtype_del' eqtype.slug %}" onclick='return confirm("よろしいですか？");'
+          data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">削除</a></th>
     </tr>
     {% endfor %}
   </tbody>

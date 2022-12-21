@@ -16,7 +16,8 @@
             {% if user == comment.created_by %}
             <div class="col-1">
                 <th><a class="btn btn-danger" href="{% url 'content_del_comment' info.id comment.id %}"
-                        onclick='return confirm("よろしいですか？");'>
+                        onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="削除">
                         {% bs_icon 'trash' %}
                     </a></th>
             </div>

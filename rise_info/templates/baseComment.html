@@ -17,17 +17,20 @@
             <div class="col-1">
                 {% if is_content %}
                 <th><a class="btn btn-danger" href="{% url 'content_del_comment' info.id comment.id %}"
-                        onclick='return confirm("よろしいですか？");'>
+                        onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="削除">
                         {% bs_icon 'trash' %}
                     </a></th>
                 {% elif is_support %}
                 <th><a class="btn btn-danger" href="{% url 'support_del_comment' info.id comment.id %}"
-                        onclick='return confirm("よろしいですか？");'>
+                        onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="削除">
                         {% bs_icon 'trash' %}
                     </a></th>
                 {% else %}
                 <th><a class="btn btn-danger" href="{% url 'info_del_comment' info.id comment.id %}"
-                        onclick='return confirm("よろしいですか？");'>
+                        onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="削除">
                         {% bs_icon 'trash' %}
                     </a></th>
                 {% endif %}

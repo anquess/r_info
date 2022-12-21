@@ -41,10 +41,12 @@
         </select>
     </div>
     <div class="col-auto">
-        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
+        <button id="filter" type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="検索">{% bs_icon 'search' %}</button>
     </div>
 </form>
-<a class="btn btn-primary float-end" href="{% url 'support_new' %}">＋</a>
+<a class="btn btn-primary float-end" href="{% url 'support_new' %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+    title="追加">＋</a>
 <div class="row mt-2">
     {% include "pagination.html" %}
 </div>
@@ -71,12 +73,14 @@
             <th colspan="1">{{ info.updated_at | date:"y/n/j" }}</th>
             <th colspan="1">{{ info.created_by }}</th>
             {% if auth or user == info.created_by %}
-            <th colspan="1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}">
+            <th colspan="1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="編集">
                     {% bs_icon 'pencil-square' %}
                 </a>
                 {% endif %}
                 {% if auth %}
-                <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+                <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
                     {% bs_icon 'trash' %}
                 </a>
             </th>

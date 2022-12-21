@@ -66,7 +66,8 @@
     </div>
     {%endif%}
     <div class="col-auto">
-        <button id="filter" type="submit" class="btn btn-secondary">{% bs_icon 'search' %}</button>
+        <button id="filter" type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="検索">{% bs_icon 'search' %}</button>
     </div>
 </form>
 <div class="row align-items-start my-1">
@@ -75,8 +76,10 @@
     </div>
     {% if auth %}
     <div class="col-1">
-        <a class="btn btn-primary mx-2" href="{% url 'info_new' %}">＋</a>
-        <a class="btn btn-outline-success mx-2" href="{% url 'exportInfo' %}">{% bs_icon 'file-earmark-excel' %}</a>
+        <a class="btn btn-primary mx-2" href="{% url 'info_new' %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="追加">＋</a>
+        <a class="btn btn-outline-success mx-2" href="{% url 'exportInfo' %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="Excel一覧出力">{% bs_icon 'file-earmark-excel' %}</a>
     </div>
     {% endif %}
 
@@ -107,10 +110,12 @@
             <th>{{ info.disclosure_date | date:"y/n/j" }}</th>
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
             {% if auth %}
-            <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}">
+            <th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="編集">
                     {% bs_icon 'pencil-square' %}
                 </a>
-                <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+                <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
                     {% bs_icon 'trash' %}
                 </a>
             </th>

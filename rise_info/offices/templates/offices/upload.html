@@ -20,10 +20,12 @@
       {{ form.as_p }}
     </div>
     <div class="col-1">
-      <button class="btn btn-primary" type="submit">{% bs_icon 'upload' %}</button>
+      <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="ファイルアップロード">{% bs_icon 'upload' %}</button>
     </div>
     <div class="col-1">
-      <a class="btn btn-success" href="{% url 'office_download' %}">
+      <a class="btn btn-success" href="{% url 'office_download' %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="ファイルダウンロード">
         {% bs_icon 'file-earmark-arrow-down' %}
       </a>
     </div>

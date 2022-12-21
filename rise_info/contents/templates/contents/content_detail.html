@@ -22,7 +22,8 @@
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
 {% if auth %}
-<th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}">{% bs_icon 'pencil-square' %}</a></th>
+<th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}" data-bs-toggle="tooltip"
+        data-bs-placement="bottom" title="編集">{% bs_icon 'pencil-square' %}</a></th>
 {% endif %}
 
 {% include "contents/comment_add_modal.html" %}

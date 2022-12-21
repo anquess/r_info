@@ -7,7 +7,8 @@
 <div id="{{ widget.name }}-display">
     {% for group, options, index in widget.optgroups %}{% for option in options %}{% if option.selected %}
     <button type="button" class="suggest-item btn btn-outline-secondary" data-target="{{ widget.name }}"
-        data-pk="{{ option.value }}">{{ option.label }} ×</button>
+        data-pk="{{ option.value }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">{{ option.label }}
+        ×</button>
     {% endif %}{% endfor %}{% endfor %}
 </div>
 

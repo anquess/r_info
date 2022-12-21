@@ -5,7 +5,8 @@
 <div>
     <h1>メニュー一覧</h1>
     <div class="float-end">
-        <button type="button" class="btn btn-primary rounded-pill" onclick="showModal(false, null)">
+        <button type="button" class="btn btn-primary rounded-pill" onclick="showModal(false, null)"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="追加">
             ＋
         </button>
     </div>
@@ -28,31 +29,36 @@
                 <div class="row">
                     <div class="col-3">
                         {% if not forloop.first %}
-                        <a class="btn btn-outline-primary" href="{% url 'menu_up' menu.id%}">
+                        <a class="btn btn-outline-primary" href="{% url 'menu_up' menu.id%}" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title="上へ移動">
                             {% bs_icon 'chevron-compact-up' %}
                         </a>
                         {%endif%}
                     </div>
                     <div class="col-3">
                         {% if not forloop.last %}
-                        <a class="btn btn-outline-primary" href="{% url 'menu_down' menu.id%}">
+                        <a class="btn btn-outline-primary" href="{% url 'menu_down' menu.id%}" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title="下へ移動">
                             {% bs_icon 'chevron-compact-down' %}
                         </a>
                         {%endif%}
                     </div>
                     <div class="col-3">
                         <button type="button" class="btn btn-primary"
-                            onclick="showModal({{menu.id}}, '{{menu.menu_title}}')">
+                            onclick="showModal({{menu.id}}, '{{menu.menu_title}}')" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title="編集">
                             {% bs_icon 'pencil-square' %}
                         </button>
                         <a class="btn btn-danger" href="{% url 'menu_del' menu.id %}"
-                            onclick='return confirm("よろしいですか？");'>
+                            onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="削除">
                             {% bs_icon 'trash' %}
                         </a>
                     </div>
                     <div class="col-3">
                         <a class="btn btn-primary rounded-pill float-end"
-                            href="{% url 'content_new' %}?menu={{ menu.id }}">＋</a>
+                            href="{% url 'content_new' %}?menu={{ menu.id }}" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title="追加">＋</a>
                     </div>
                 </div>
             </th>

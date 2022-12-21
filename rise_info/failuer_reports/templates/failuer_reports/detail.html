@@ -101,13 +101,16 @@
         戻る
     </a></th>
 {% if user == info.created_by %}
-<th><a class="btn btn-primary" href="{% url 'send_mail' info.id %}">
+<th><a class="btn btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="メール送信">
         {% bs_icon 'send' %}
     </a></th>
-<th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}">
+<th><a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
+        data-bs-placement="bottom" title="編集">
         {% bs_icon 'pencil-square' %}
     </a></th>
-<th><a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}" onclick='return confirm("よろしいですか？");'>
+<th><a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}" onclick='return confirm("よろしいですか？");'
+        data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
         {% bs_icon 'trash' %}
     </a></th>
 {% endif %}
