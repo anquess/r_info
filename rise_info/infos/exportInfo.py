@@ -12,7 +12,7 @@ def makeInfoSheet(ws):
     ws.cell(1, 6).value = 'InfoType_ID'
     ws.cell(1, 7).value = '発行年月日'
     ws.cell(1, 8).value = '登録者'
-    ws.cell(1, 9).value = '掲載'
+    ws.cell(1, 9).value = '登録状態'
     ws.cell(1, 10).value = '投稿日'
     ws.cell(1, 11).value = '更新日'
     ws.cell(1, 12).value = '更新者'
@@ -29,7 +29,7 @@ def makeInfoSheet(ws):
         if info.created_by:
             user = info.created_by.username
             ws.cell(row, 8).value = user
-        ws.cell(row, 9).value = info.is_disclosed
+        ws.cell(row, 9).value = info.select_register
         ws.cell(row, 10).value = info.created_at.replace(tzinfo=None)
         ws.cell(row, 11).value = info.updated_at.replace(tzinfo=None)
         if info.updated_by:
