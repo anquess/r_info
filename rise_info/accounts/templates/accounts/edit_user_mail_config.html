@@ -10,9 +10,31 @@
 <form method="post">
     {% csrf_token %}
     <input type="text" name="user" required="" id="id_user" value="{{user.pk}}" hidden>
-    <label for="id_email_address">{{form.email_address.label}}:</label>{{form.email_address}}
-    <label for="id_default_email_header">{{form.default_email_header.label}}:</label>{{form.default_email_header}}
-    <label for="id_default_email_footer">{{form.default_email_footer.label}}:</label>{{form.default_email_footer}}
+    <div class="row mt-2">
+        <div class="col-2">
+            <label for="id_email_address">{{form.email_address.label}}:</label>
+        </div>
+        <div class="col-10">
+            {{form.email_address}}
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-2">
+            <label for="id_default_email_header">{{form.default_email_header.label}}:</label>
+        </div>
+        <div class="col-10">
+            {{form.default_email_header}}
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-2">
+            <label for="id_default_email_footer">{{form.default_email_footer.label}}:</label>
+        </div>
+        <div class="col-10">
+            {{form.default_email_footer}}
+        </div>
+    </div>
+    <div class="row mt-2"></div>
     <button class="btn btn-primary" type="submit" value="post">登録</button>
 </form>
 

@@ -33,6 +33,7 @@ class UserMailConfigForm(forms.ModelForm):
         super(UserMailConfigForm, self).__init__(*args, **kwargs)
         for _, value in self.fields.items():
             value.widget.attrs['placeholder'] = value.help_text
+            value.widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User_mail_config
