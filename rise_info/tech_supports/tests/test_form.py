@@ -31,7 +31,8 @@ def make_mock_right_param(testCase: TestCase):
         'is_rich_text': True,
         'inquiry': text_len_2048,
         'eqtypes': eq_types,
-        'is_closed': False,
+        'select_register': 'register',
+        'info_type': 'support',
     }
 
 
@@ -44,7 +45,8 @@ def make_mock_wrong_param(testCase: TestCase):
         'content': text_len_4097,
         'is_rich_text': True,
         'inquiry': text_len_2049,
-        'is_closed': False,
+        'select_register': 'register',
+        'info_type': 'support',
     }
 
 
@@ -54,7 +56,7 @@ def mock_tech_support(testCase):
         content=testCase.params['content'],
         is_rich_text=testCase.params['is_rich_text'],
         inquiry=testCase.params['inquiry'],
-        is_closed=testCase.params['is_closed'],
+        select_register=testCase.params['select_register'],
     )
 
 
@@ -75,7 +77,9 @@ class EqtypesFormTests(TestCase):
         form = TechSupportsForm(params, instance=techSupports)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['title'][0], 'タイトルは必須です')
-        self.assertEqual(len(form.errors), 1)
+        self.assertEqual(form.errors['select_register'][0], 'この項目は必須です。')
+        self.assertEqual(form.errors['info_type'][0], '情報種別は必須です')
+        self.assertEqual(len(form.errors), 3)
 
     def test_valid_when_too_long(self):
         techSupports = TechSupports()

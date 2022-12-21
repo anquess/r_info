@@ -18,6 +18,7 @@ def addMockInfo(testCase) -> None:
         'info_type': InfoTypeChoices.TECHINICAL,
         'managerID': 'test-00',
         'sammary': '概要',
+        'select_register': 'register',
         'attachmentfile_set-TOTAL_FORMS': 1,
         'attachmentfile_set-INITIAL_FORMS': 0,
         'disclosure_date': datetime.date(2017, 11, 12)

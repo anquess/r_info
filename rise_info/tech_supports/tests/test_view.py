@@ -14,10 +14,11 @@ def addMockTechSupport(testCase) -> None:
     data = {
         'title': testCase.params['title'],
         'content': testCase.params['content'],
+        'select_register': testCase.params['select_register'],
+        'info_type': testCase.params['info_type'],
         'is_rich_text': testCase.params['is_rich_text'],
         'inquiry': testCase.params['inquiry'],
         'eqtypes': testCase.params['eqtypes'],
-        'is_closed': testCase.params['is_closed'],
         'attachmentfile_set-TOTAL_FORMS': 1,
         'attachmentfile_set-INITIAL_FORMS': 0,
     }
@@ -51,7 +52,6 @@ class CreateAddressTest(TestCase):
     def test_create_info(self):
         login(self)
         addMockTechSupport(self)
-        print(self.response)
         support = TechSupports.objects.get_or_none(title=self.params['title'])
         if support:
             self.assertEqual(self.params['content'], support.content)

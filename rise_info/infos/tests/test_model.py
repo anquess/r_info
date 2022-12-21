@@ -21,6 +21,7 @@ class InfoModelTest(TestCase):
             info_type=InfoTypeChoices.TECHINICAL,
             managerID='test-00',
             sammary='概要',
+            select_register='register',
             disclosure_date=datetime.date(2017, 11, 12),
             created_by=user,
         )
@@ -37,6 +38,7 @@ class InfoModelTest(TestCase):
             info_type=InfoTypeChoices.TECHINICAL,
             managerID='test-00',
             sammary='概要',
+            select_register='register',
             disclosure_date=datetime.date(2017, 11, 12),
             created_by=user,
         )

@@ -54,6 +54,7 @@ class ContentFormTests(TestCase):
             'title': text_len_128,
             'content': text_len_4096,
             'menu': self.menu_1,
+            'select_register': 'register',
         }
         content = Contents()
         form = ContentsForm(params, instance=content)

@@ -55,6 +55,7 @@ class InfoFormTests(TestCase):
             'managerID': text_len_32,
             'sammary': text_len_512,
             'content': text_len_4096,
+            'select_register': 'register',
             'disclosure_date': datetime.date(2017, 11, 12)
         }
         info = Info()
@@ -81,6 +82,7 @@ class InfoFormTests(TestCase):
             'managerID': text_len_33,
             'content': text_len_4097,
             'sammary': text_len_513,
+            'select_register': 'register',
             'disclosure_date': datetime.date(2017, 11, 12)
         }
         info = Info()
