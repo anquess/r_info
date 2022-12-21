@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.db import models
 from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
@@ -17,22 +18,19 @@ class Addresses(models.Model):
     position = models.CharField(
         verbose_name='役職', null=False, blank=False, max_length=16)
     mail = models.EmailField(verbose_name='メールアドレス', null=False, blank=False)
-    is_required_when_send_mail = models.BooleanField(
-        verbose_name='送信時必須', default=False)
-    offices = models.ManyToManyField(
-        Office, verbose_name='配信官署タグ', related_name='addresses', blank=True,
-        help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます')
-    offices_groups = models.ManyToManyField(
-        OfficesGroup, verbose_name='配信官署タグGRP', related_name='addresses',
-        blank=True)
-    created_by = CurrentUserField(
-        verbose_name='登録者', on_update=True,
-        related_name='%(app_label)s_%(class)s_create', null=False, blank=False
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name='障害通報書配信元官署グループ', related_name='addresses', blank=True,
+        help_text='障害通報書の配信元官署グループ(Ctrlにより複数選択可能)'
     )
     department = models.ManyToManyField(
         DepartmentForEq,
         verbose_name='担当装置分類', related_name='addresses', blank=True,
         help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます'
+    )
+    created_by = CurrentUserField(
+        verbose_name='登録者', on_update=True,
+        related_name='%(app_label)s_%(class)s_create', null=False, blank=False
     )
 
     def __str__(self):

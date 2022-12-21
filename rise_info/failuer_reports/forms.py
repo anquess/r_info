@@ -5,8 +5,6 @@ from django.core.exceptions import ValidationError
 
 from .models import FailuerReport, AttachmentFile, Circumstances
 from rise_info.baseForms import MetaCommonInfo
-from offices.widgets import OfficeSuggestWidget
-from offices.models import Office
 
 
 class IsNullValidator:
@@ -26,12 +24,11 @@ class FailuerReportForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, value in self.fields.items():
-            if key != 'offices':
-                value.widget.attrs['placeholder'] = value.help_text
-                if key.startswith('is') or key == 'date_time_confirmation' or key.startswith('select'):
-                    value.widget.attrs['class'] = 'form-select'
-                else:
-                    value.widget.attrs['class'] = 'form-control'
+            value.widget.attrs['placeholder'] = value.help_text
+            if key.startswith('is') or key == 'date_time_confirmation' or key.startswith('select'):
+                value.widget.attrs['class'] = 'form-select'
+            else:
+                value.widget.attrs['class'] = 'form-control'
 
         self.fields["failuer_date"].required = True
         self.fields["failuer_time"].required = True
@@ -39,13 +36,6 @@ class FailuerReportForm(forms.ModelForm):
         self.fields["failuer_place"].required = True
         self.fields["eq"].required = True
         self.fields["sammary"].required = True
-
-    def clean_offices(self):
-        offices = self.cleaned_data['offices']
-        if len(offices) == 0:
-            raise ValidationError(
-                code='offices', message='関係官署は配信先の判定に使用するため必須です')
-        return offices
 
     def clean_department(self):
         department = self.cleaned_data['department']
@@ -61,7 +51,6 @@ class FailuerReportForm(forms.ModelForm):
             'failuer_time',
             'date_time_confirmation',
             'failuer_place',
-            'offices',
             'eq',
             'department',
             'sammary',
@@ -128,9 +117,6 @@ class FailuerReportForm(forms.ModelForm):
             'date_time_confirmation': forms.widgets.Select(attrs={
                 "aria-describedby": "confirmationHelp",
             }),
-            'offices':  OfficeSuggestWidget(
-                attrs={'data-url': reverse_lazy('api_posts_get')
-                       }),
             'sammary': forms.Textarea(attrs={
                 "rows": "3",
             }),

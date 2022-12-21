@@ -13,24 +13,17 @@ from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
 from accounts.views import addIsStaff
 from addresses.models import Addresses
-from offices.models import OfficesGroup
 from rise_info.settings import EMAIL_HOST_USER
 
 import operator
 from functools import reduce
 
 
-def get_addresses(fail_rep, need: bool):
-    offices = fail_rep.offices.all()
-    grp_offices = OfficesGroup.object.filter(
-        reduce(operator.or_, (Q(Offices__id__icontains=i.id) for i in offices)))
-    q_offices = reduce(operator.or_, (
-        Q(offices__id__contains=i.id)for i in offices
+def get_addresses(fail_rep, grps):
+    user_grops = grps.all()
+    q_user_group = reduce(operator.or_, (
+        Q(groups__id__contains=i.id)for i in user_grops
     ))
-    q_offices_grp = reduce(operator.or_, (
-        Q(offices_groups__id__contains=i.id)for i in grp_offices
-    ))
-
     department = fail_rep.department.all()
     q_department = reduce(operator.or_, (
         Q(department__id__contains=i.id)for i in department
@@ -38,8 +31,7 @@ def get_addresses(fail_rep, need: bool):
 
     return Addresses.object.filter(
         q_department).filter(
-        q_offices | q_offices_grp).filter(
-        is_required_when_send_mail=need).distinct()
+        q_user_group).distinct()
 
 
 @ login_required
@@ -47,8 +39,8 @@ def sendmail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
-    send_required = get_addresses(info, True)
-    send_any = get_addresses(info, False)
+    send_required = get_addresses(info, request.user.groups)
+    send_any = None
     if info:
         context = {
             'info': info,

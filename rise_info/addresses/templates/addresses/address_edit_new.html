@@ -38,19 +38,7 @@
             {{form.mail}}
         </div>
     </div>
-    <div class="row mt-2 mb-0">
-        <div class="col-1">
-            <label for="id_offices" class="form-label">{{form.offices.label}}</label>
-        </div>
-        <div class="col-11 pr-2">
-            {{form.offices}}
-        </div>
-    </div>
-    <div id="confirmationHelp" class="row form-text">
-        <div class="col-12">
-            {{form.offices.help_text|safe}}
-        </div>
-    </div>
+    {% if auth %}
     <div class="row mt-2 mb-0">
         <div class="col-1">
             <label for="id_department" class="form-label">{{form.department.label}}</label>
@@ -59,22 +47,12 @@
             {{form.department}}
         </div>
     </div>
-    {% if auth %}
     <div class="row mt-2 mb-0">
         <div class="col-1">
-            <label for="id_offices_groups" class="form-label">{{form.offices_groups.label}}</label>
+            <label for="id_groups" class="form-label">{{form.groups.label}}</label>
         </div>
         <div class="col-11">
-            {{form.offices_groups}}
-        </div>
-    </div>
-    <div class="row mt-2 mb-0">
-        <div class="col-1">
-            <label for="id_is_required_when_send_mail"
-                class="form-label">{{form.is_required_when_send_mail.label}}</label>
-        </div>
-        <div class="col-11">
-            {{form.is_required_when_send_mail}}
+            {{form.groups}}
         </div>
     </div>
     {% endif %}

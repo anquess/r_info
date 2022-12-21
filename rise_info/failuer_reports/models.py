@@ -1,7 +1,6 @@
 from django.db import models
 
 from rise_info.baseModels import CommonInfo, BaseAttachment
-from offices.models import Office
 from eqs.models import DepartmentForEq
 
 
@@ -38,12 +37,6 @@ class FailuerReport(CommonInfo):
         null=False, blank=True, max_length=128,
         help_text="必須"
     )
-    offices = models.ManyToManyField(
-        Office,
-        verbose_name='関係官署',
-        blank=True,
-        help_text='関係官署と関係装置分類から配信先を自動判定(必須)',
-    )
     eq = models.CharField(
         verbose_name="障害装置", null=False,
         blank=True, max_length=128,
@@ -71,7 +64,6 @@ class FailuerReport(CommonInfo):
     operatinal_impact = models.CharField(
         verbose_name='運用への影響', default="",
         null=False, blank=True, max_length=128
-
     )
     is_flight_impact = models.CharField(
         verbose_name='運航への影響有無', max_length=16,
