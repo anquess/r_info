@@ -23,8 +23,3 @@ class AddresseModelTest(TestCase):
         self.assertEqual(expected, actual)
         actual = Addresses.object.get_or_none(pk=expected.pk + 1)
         self.assertEqual(None, actual)
-        try:
-            expected.offices.set(self.params['offices'])
-            expected.offices_groups.set(self.params['offices_groups'])
-        except:
-            self.fail('manytomany Error')
