@@ -9,7 +9,7 @@ import sys
 
 from .forms import UploadFileForm
 from .models import Office, offices_csv_import
-from accounts.views import isInTmcGroup, addTmcAuth
+from accounts.views import isInTmcGroup, addIsStaff
 from histories.models import getLastUpdateAt
 
 
@@ -46,7 +46,7 @@ def file_upload(request):
             offices = Office.objects.all()
             form = UploadFileForm()
             last_update_at = getLastUpdateAt('office')
-        context = addTmcAuth({'form': form, 'offices': offices,
+        context = addIsStaff({'form': form, 'offices': offices,
                              'last_update_at': last_update_at, }, request.user)
         return render(request, 'offices/upload.html', context)
     else:

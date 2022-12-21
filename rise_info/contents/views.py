@@ -32,14 +32,14 @@ def content_updown(request, content_id, order):
 def content_detail(request, content_id):
     info = Contents.objects.get_or_none(pk=content_id)
     files = AttachmentFile.objects.filter(info=info)
-    from accounts.views import addTmcAuth
+    from accounts.views import addIsStaff
     if info:
         context = {
             'info': info,
             'files': files,
             'is_content': True,
         }
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         return render(request, 'contents/content_detail.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Contentsはありません。")
@@ -48,7 +48,7 @@ def content_detail(request, content_id):
 
 @login_required
 def content_edit(request, content_id):
-    from accounts.views import addTmcAuth, isInTmcGroup
+    from accounts.views import addIsStaff, isInTmcGroup
     if isInTmcGroup(request.user):
         info = Contents.objects.get_or_none(pk=content_id)
         if info:
@@ -58,7 +58,7 @@ def content_edit(request, content_id):
             if (request.method == "POST" and form.is_valid()):
                 if (request.FILES or None) is not None:
                     if not formset.is_valid():
-                        context = addTmcAuth({
+                        context = addIsStaff({
                             'form': form,
                             'formset': formset,
                         }, request.user)
@@ -70,7 +70,7 @@ def content_edit(request, content_id):
                 formset.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('menu_list')
-            context = addTmcAuth({
+            context = addIsStaff({
                 'form': form,
                 'formset': formset,
             },
@@ -100,10 +100,10 @@ def content_del(request, content_id):
 
 @login_required
 def content_new(request):
-    from accounts.views import addTmcAuth, isInTmcGroup
+    from accounts.views import addIsStaff, isInTmcGroup
     if isInTmcGroup(request.user):
         form = ContentsForm(request.POST or None)
-        context = addTmcAuth({'form': form}, request.user)
+        context = addIsStaff({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)
@@ -120,7 +120,7 @@ def content_new(request):
                 menu = Menu.objects.get(id=menu_id)
                 form = ContentsForm(request.POST or None,
                                     initial={'menu': menu, })
-                context = addTmcAuth({'form': form}, request.user)
+                context = addIsStaff({'form': form}, request.user)
 
             context['menu_id'] = menu
             context['formset'] = FileFormSet()
@@ -169,10 +169,10 @@ def menu_updown(request, menu_id, order):
 
 @login_required
 def menu_list(request):
-    from accounts.views import addTmcAuth, isInTmcGroup
+    from accounts.views import addIsStaff, isInTmcGroup
     if isInTmcGroup(request.user):
         context = {}
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         return render(request, 'contents/menu_list.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")

@@ -17,6 +17,12 @@ def addTmcAuth(context: dict, user) -> dict:
     return context
 
 
+def addIsStaff(context: dict, user) -> dict:
+    context['auth'] = user.is_staff
+    context = addMenus(context)
+    return context
+
+
 def isInTmcGroup(user) -> bool:
     try:
         tmcGroup = Group.objects.get(name="TMC")
@@ -41,7 +47,7 @@ def account_new(request):
             else:
                 messages.add_message(request, messages.WARNING, "値がおかしいです")
         else:
-            context = addTmcAuth({'form': UserAddForm()}, request.user)
+            context = addIsStaff({'form': UserAddForm()}, request.user)
             return render(request, "accounts/account_new.html", context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
@@ -65,7 +71,7 @@ def account_list(request):
     if isInTmcGroup(request.user):
         users = User.objects.all()
         context = {"users": users, }
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         return render(request, "accounts/account_list.html", context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では登録は許可されていません。")
@@ -98,7 +104,7 @@ def edit_user_mail_config(request):
                              "%sアカウントのメール設定が更新されました" % request.user)
         return redirect('top')
     else:
-        context = addTmcAuth(
+        context = addIsStaff(
             {
                 'form': form,
                 'pk': request.user,

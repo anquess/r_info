@@ -9,7 +9,7 @@ from django.db.models import Q
 from infos.models import Info, AttachmentFile, InfoComments, InfoTypeChoices
 from .exportInfo import makeInfoSheet
 from infos.forms import InfoForm, FileFormSet, InfoCommentsForm
-from accounts.views import isInTmcGroup, addTmcAuth
+from accounts.views import isInTmcGroup, addIsStaff
 from offices.models import Office
 
 from datetime import datetime
@@ -74,7 +74,7 @@ class InfoList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = addTmcAuth(context, self.request.user)
+        context = addIsStaff(context, self.request.user)
         context['offices'] = Office.objects.all()
         context['info_types'] = InfoTypeChoices.choices
         context['selelcted_info_type'] = self.request.GET.get('info_type')
@@ -115,7 +115,7 @@ def info_detail(request, info_id):
             'info': info,
             'files': files,
         }
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         return render(request, 'infos/detail.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Infoはありません。")
@@ -151,7 +151,7 @@ def info_edit(request, info_id):
             if (request.method == "POST" and form.is_valid()):
                 if (request.FILES or None) is not None:
                     if not formset.is_valid():
-                        context = addTmcAuth({
+                        context = addIsStaff({
                             'form': form,
                             'formset': formset,
                         }, request.user)
@@ -163,7 +163,7 @@ def info_edit(request, info_id):
                 formset.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('info_list')
-            context = addTmcAuth({
+            context = addIsStaff({
                 'form': form,
                 'formset': formset,
             },
@@ -178,7 +178,7 @@ def info_edit(request, info_id):
 def info_new(request):
     if isInTmcGroup(request.user):
         form = InfoForm(request.POST or None)
-        context = addTmcAuth({'form': form}, request.user)
+        context = addIsStaff({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)

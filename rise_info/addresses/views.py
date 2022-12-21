@@ -6,7 +6,7 @@ from django.db.models import Q
 
 from .models import Addresses
 from .forms import AddressesForm
-from accounts.views import addTmcAuth
+from accounts.views import addIsStaff
 
 
 class AddressList(ListView):
@@ -21,7 +21,7 @@ class AddressList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = addTmcAuth(context, self.request.user)
+        context = addIsStaff(context, self.request.user)
         context['selelcted_user'] = self.request.GET.get('created_by')
         return context
 
@@ -29,7 +29,7 @@ class AddressList(ListView):
 @ login_required
 def addresses_new(request):
     form = AddressesForm(request.POST or None)
-    context = addTmcAuth({'form': form, 'is_new': True}, request.user)
+    context = addIsStaff({'form': form, 'is_new': True}, request.user)
     if request.method == "POST" and form.is_valid():
         new_address = form.save(commit=False)
         new_address.save()
@@ -51,7 +51,7 @@ def addresses_edit(request, address_id):
                 messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('address_list')
             else:
-                context = addTmcAuth({'form': form, }, request.user)
+                context = addIsStaff({'form': form, }, request.user)
                 return render(request, "addresses/address_edit_new.html", context)
         else:
             messages.add_message(request, messages.WARNING,

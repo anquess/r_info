@@ -11,7 +11,7 @@ from django.views.generic import ListView
 from .models import FailuerReport, AttachmentFile, Circumstances
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
-from accounts.views import addTmcAuth
+from accounts.views import addIsStaff
 from addresses.models import Addresses
 from offices.models import OfficesGroup
 from rise_info.settings import EMAIL_HOST_USER
@@ -95,7 +95,7 @@ def sendmail(request, info_id):
 
                 return redirect('failuer_report_list')
         else:
-            context = addTmcAuth(context, request.user)
+            context = addIsStaff(context, request.user)
             return render(request, 'failuer_reports/mail_form.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Infoはありません。")
@@ -136,7 +136,7 @@ class FailuerReportList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = addTmcAuth(context, self.request.user)
+        context = addIsStaff(context, self.request.user)
         context['users'] = User.objects.all()
         context['selelcted_user'] = self.request.GET.get('created_by')
         return context
@@ -145,7 +145,7 @@ class FailuerReportList(ListView):
 @ login_required
 def failuer_report_new(request):
     form = FailuerReportForm(request.POST or None)
-    context = addTmcAuth({'form': form}, request.user)
+    context = addIsStaff({'form': form}, request.user)
     if request.method == "POST" and form.is_valid():
         info = form.save(commit=False)
         formset = FileFormSet(request.POST, request.FILES, instance=info)
@@ -184,7 +184,7 @@ def failuer_report_edit(request, info_id):
             if (request.method == "POST" and form.is_valid()):
                 if (request.FILES or None) is not None:
                     if not (formset.is_valid()):
-                        context = addTmcAuth({
+                        context = addIsStaff({
                             'form': form,
                             'formset': formset,
                             'formset2': formset2,
@@ -206,7 +206,7 @@ def failuer_report_edit(request, info_id):
                         return redirect('send_mail', info_id=info_id)
                     else:
                         return redirect('failuer_report_list')
-            context = addTmcAuth({
+            context = addIsStaff({
                 'form': form,
                 'formset': formset,
                 'formset2': formset2,
@@ -231,7 +231,7 @@ def failuer_report_detail(request, info_id):
             'files': files,
             'events': events,
         }
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         return render(request, 'failuer_reports/detail.html', context)
     else:
         messages.add_message(request, messages.WARNING, "該当Infoはありません。")

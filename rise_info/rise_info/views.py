@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from rise_info.settings import TOP_PAGE_LIST_NUM
-from accounts.views import addTmcAuth
+from accounts.views import addIsStaff
 from infos.models import Info
 from contents.models import Contents
 from tech_supports.models import TechSupports
@@ -15,7 +15,7 @@ from tech_supports.models import TechSupports
 @login_required
 def top(request):
     list_num = TOP_PAGE_LIST_NUM
-    context = addTmcAuth({}, request.user)
+    context = addIsStaff({}, request.user)
     # ip = request.META.get('REMOTE_ADDR') # django toolbar
     # context["IP"] = ip # django toolbar
     infos = Info.objects.filter(
@@ -33,5 +33,5 @@ def top(request):
 
 def handler404(request, exception):
     context = {"errmsg": exception}
-    context = addTmcAuth(context, request.user)
+    context = addIsStaff(context, request.user)
     return render(request, '404.html', context, status=404)

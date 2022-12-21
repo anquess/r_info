@@ -8,7 +8,7 @@ import sys
 
 from .forms import UploadFileForm
 from .models import Eqtype, eqtypes_csv_import
-from accounts.views import isInTmcGroup, addTmcAuth
+from accounts.views import isInTmcGroup, addIsStaff
 from histories.models import getLastUpdateAt
 
 
@@ -55,7 +55,7 @@ def file_upload(request):
             form = UploadFileForm()
             last_update_at = getLastUpdateAt('eqtype')
         try:
-            context = addTmcAuth(
+            context = addIsStaff(
                 {'form': form, 'eqtypes': eqtypes, 'last_update_at': last_update_at, }, request.user)
             return render(request, 'eqs/eqtypes/upload.html', context)
         except Exception as e:

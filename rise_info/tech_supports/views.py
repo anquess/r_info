@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from .models import TechSupports, AttachmentFile, TechSupportComments
 from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
-from accounts.views import isInTmcGroup, addTmcAuth
+from accounts.views import isInTmcGroup, addIsStaff
 from offices.models import Office
 
 
@@ -46,7 +46,7 @@ class TechSupportList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = addTmcAuth(context, self.request.user)
+        context = addIsStaff(context, self.request.user)
         context['offices'] = Office.objects.all()
         context['selelcted_office'] = self.request.GET.get('office')
         return context
@@ -62,7 +62,7 @@ def support_edit(request, info_id):
         if (request.method == "POST" and form.is_valid()):
             if (request.FILES or None) is not None:
                 if not formset.is_valid():
-                    context = addTmcAuth({
+                    context = addIsStaff({
                         'form': form,
                         'formset': formset,
                     }, request.user)
@@ -74,7 +74,7 @@ def support_edit(request, info_id):
             formset.save()
             messages.add_message(request, messages.INFO, '更新されました。')
             return redirect('support_list')
-        context = addTmcAuth({
+        context = addIsStaff({
             'form': form,
             'formset': formset,
         },
@@ -85,7 +85,7 @@ def support_edit(request, info_id):
 @login_required
 def support_new(request):
     form = TechSupportsForm(request.POST or None)
-    context = addTmcAuth({'form': form}, request.user)
+    context = addIsStaff({'form': form}, request.user)
     if request.method == "POST" and form.is_valid():
         info = form.save(commit=False)
         formset = FileFormSet(request.POST, request.FILES, instance=info)
@@ -110,7 +110,7 @@ def support_detail(request, info_id):
             'info': info,
             'files': files,
         }
-        context = addTmcAuth(context, request.user)
+        context = addIsStaff(context, request.user)
         context['is_support'] = True
         return render(request, 'tech_supports/detail.html', context)
     else:
