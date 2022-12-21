@@ -97,8 +97,10 @@ $(function () {
         rowElement.append(col7_Element);
         rowElement.append(col1_Element);
         $('div#event-area').append(rowElement);
-        currentEventCount += 1;
         totalManageElement.attr('value', currentEventCount);
+        $(document).ready(setMaxlength('#id_circumstances_set-' + currentEventCount + '-event'));
+        document.getElementById('id_circumstances_set-' + currentEventCount + '-event').setAttribute("maxlength", "256");
+        currentEventCount += 1;
 
     });
 });
