@@ -12,29 +12,8 @@
     <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
         {% csrf_token %}
         {% if send_required_list %}
-        <h4>必須送信先</h4>
+        <h4>送信先</h4>
         <table class="table">
-            <thead>
-                <tr>
-                    <th>登録官署</th>
-                    <th>役職</th>
-                    <th>氏名</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for send_required in send_required_list %}
-                <tr>
-                    <td>{{send_required.created_by}}</td>
-                    <td>{{send_required.position}}</td>
-                    <td>{{send_required.name}}</td>
-                </tr>
-                {% endfor%}
-            </tbody>
-        </table>
-        {%endif%}
-        {% if send_any_list %}
-        <h4>任意送信先</h4>
-        <table class="table mb-2">
             <thead>
                 <tr>
                     <th>登録官署</th>
@@ -48,6 +27,15 @@
                 </tr>
             </thead>
             <tbody>
+                {% for send_required in send_required_list %}
+                <tr>
+                    <td>{{send_required.created_by}}</td>
+                    <td>{{send_required.position}}</td>
+                    <td>{{send_required.name}}</td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_required.id}}"></td>
+                </tr>
+                {% endfor%}
                 {% for send_any in send_any_list %}
                 <tr>
                     <td>{{send_any.created_by}}</td>
@@ -55,11 +43,12 @@
                     <td>{{send_any.name}}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_any.id}}"></td>
-
                 </tr>
                 {% endfor%}
             </tbody>
         </table>
+        <p>※本省・局・TMCにて送信先を事前登録澄</p>
+
         {% endif %}
         <div class="row">
             <div class="row mb-2">
@@ -91,8 +80,8 @@
             </div>
 
             <div class="col-1">
-                <button id="send" type="submit" class="btn btn-secondary"
-                    onclick='return confirm("メール送信をして、よろしいですか？");'>
+                <button id="send" type="submit" class="btn btn-secondary" onclick='return confirm("メール送信をして、よろしいですか？");'
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="メール送信">
                     {% bs_icon 'send' %}
                 </button>
             </div>

@@ -40,7 +40,7 @@ def sendmail(request, info_id):
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     send_required = get_addresses(info, request.user.groups)
-    send_any = None
+    send_any = Addresses.object.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
@@ -66,8 +66,6 @@ def sendmail(request, info_id):
             dist_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
-            for dist_required in send_required:
-                dist_list.append(dist_required.mail)
             for is_send in is_send_list:
                 dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
             try:
