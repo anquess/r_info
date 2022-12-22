@@ -114,6 +114,9 @@ class FailuerReportForm(forms.ModelForm):
                 "aria-describedby": "confirmationHelp",
             }),
             'sammary': forms.Textarea(attrs={
+                "data-bs-toggle": "tooltip",
+                "data-bs-placement": "bottom",
+                "title": "何がどうなったか簡潔に\n例：LOC が●●ALM発生により停止。",
                 "rows": "3",
             }),
             'recovery_date': forms.DateInput(attrs={
@@ -124,14 +127,30 @@ class FailuerReportForm(forms.ModelForm):
             }),
             'recovery_propects': forms.Textarea(attrs={
                 "rows": "3",
+                "data-bs-toggle": "tooltip",
+                "data-bs-placement": "bottom",
+                "title": "分かる範囲で予定等を記載\n例：保守員の派遣を調整中"
             }),
             'is_flight_impact': forms.widgets.Select(),
             'notam': forms.Textarea(attrs={
                 "rows": "3",
             }),
+            'flight_impact': forms.TextInput(attrs={
+                "data-bs-toggle": "tooltip",
+                "data-bs-placement": "bottom",
+                "title": "現時点で判明している事柄を記載\n例：確認中"
+            }),
             'is_press': forms.widgets.Select(),
             'press_contents': forms.Textarea(attrs={
                 "rows": "3",
+                "data-bs-toggle": "tooltip",
+                "data-bs-placement": "bottom",
+                "title": "有の場合はその概要\n\
+施設障害時の取材対応やプレス発表時における現地官署の対応については、以下を基本とする。\n\
+①基本的に、発生事案については、全ての事項を本省管技課で対応\n\
+②官署への取材等が行われる場合を想定し、関係官署の広報担当者に答弁ラインを連絡するとともに、\n\
+　当該官署における広報対応の体制について確認（答弁は当該官署の広報担当にて実施。）\n\
+③現地官署での取材内容は、本省管制技術課危機管理担当に逐次報告"
             }),
             "content": forms.Textarea(attrs={
                 "rows": "3",
