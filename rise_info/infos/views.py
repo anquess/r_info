@@ -9,7 +9,7 @@ from django.db.models import Q
 from infos.models import Info, AttachmentFile, InfoComments, InfoTypeChoices
 from .exportInfo import makeInfoSheet
 from infos.forms import InfoForm, FileFormSet, InfoCommentsForm
-from accounts.views import isInTmcGroup, addIsStaff
+from accounts.views import addIsStaff
 from offices.models import Office
 
 from datetime import datetime
@@ -124,7 +124,7 @@ def info_detail(request, info_id):
 
 @login_required
 def info_del(request, info_id):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         info = Info.objects.get_or_none(pk=info_id)
         if info:
             title = info.title
@@ -142,7 +142,7 @@ def info_del(request, info_id):
 
 @login_required
 def info_edit(request, info_id):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         info = Info.objects.get_or_none(pk=info_id)
         if info:
             form = InfoForm(request.POST or None, instance=info)
@@ -176,7 +176,7 @@ def info_edit(request, info_id):
 
 @login_required
 def info_new(request):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         form = InfoForm(request.POST or None)
         context = addIsStaff({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():

@@ -8,14 +8,14 @@ import sys
 
 from .forms import UploadFileForm
 from .models import Eqtype, eqtypes_csv_import
-from accounts.views import isInTmcGroup, addIsStaff
+from accounts.views import addIsStaff
 from histories.models import getLastUpdateAt
 
 
 @login_required
 def eqtype_del(request, slug):
     try:
-        if isInTmcGroup(request.user):
+        if request.user.is_staff:
             for eqtype in Eqtype.objects.filter(slug=slug):
                 eqtype.delete()
                 messages.add_message(request, messages.INFO,
@@ -41,7 +41,7 @@ def api_posts_get(request):
 
 @login_required
 def file_upload(request):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():

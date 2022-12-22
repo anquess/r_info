@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,27 +8,13 @@ from django.urls import reverse_lazy
 
 from .forms import MyPasswordChangeForm, UserAddForm, UserMailConfigForm
 from .models import User_mail_config
-from contents.views import addMenus
-
-
-def addTmcAuth(context: dict, user) -> dict:
-    context['auth'] = isInTmcGroup(user)
-    context = addMenus(context)
-    return context
 
 
 def addIsStaff(context: dict, user) -> dict:
+    from contents.views import addMenus
     context['auth'] = user.is_staff
     context = addMenus(context)
     return context
-
-
-def isInTmcGroup(user) -> bool:
-    try:
-        tmcGroup = Group.objects.get(name="TMC")
-    except:
-        tmcGroup = None
-    return tmcGroup in user.groups.all()
 
 
 @login_required
@@ -38,7 +24,7 @@ def is_login(request):
 
 @login_required
 def account_new(request):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         if request.method == 'POST':
             form = UserAddForm(request.POST)
             if form.is_valid():
@@ -68,7 +54,7 @@ class PasswordChangeDone(PasswordChangeDoneView):
 
 @login_required
 def account_list(request):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         users = User.objects.all()
         context = {"users": users, }
         context = addIsStaff(context, request.user)
@@ -80,7 +66,7 @@ def account_list(request):
 
 @login_required
 def account_delete(request, pk):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         user = get_object_or_404(User, pk=pk)
         user.is_active = not user.is_active
         user.save()

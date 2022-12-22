@@ -9,13 +9,13 @@ import sys
 
 from .forms import UploadFileForm
 from .models import Office, offices_csv_import
-from accounts.views import isInTmcGroup, addIsStaff
+from accounts.views import addIsStaff
 from histories.models import getLastUpdateAt
 
 
 @login_required
 def office_del(request, office_id):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         office = Office.objects.get_or_none(pk=office_id)
         if office:
             office.unyo_sts = not office.unyo_sts
@@ -32,7 +32,7 @@ def office_del(request, office_id):
 
 @login_required
 def file_upload(request):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():

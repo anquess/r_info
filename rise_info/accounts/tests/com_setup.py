@@ -7,9 +7,8 @@ def testTMCAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="test_user",
         password="top_secret_pass0001",
+        is_staff=True,
     )
-    group = Group.objects.create(name="TMC")
-    group.user_set.add(testCase.user)
 
 
 def testAcountCreate(testCase):
@@ -23,9 +22,8 @@ def rootAcountCreate(testCase):
     testCase.user = User.objects.create(
         username="root",
         password="root_secret_pass0001",
+        is_staff=True,
     )
-    group = Group.objects.create(name="TMC")
-    group.user_set.add(testCase.user)
 
 
 def login(testCase) -> None:

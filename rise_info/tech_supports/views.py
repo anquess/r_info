@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from .models import TechSupports, AttachmentFile, TechSupportComments
 from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
-from accounts.views import isInTmcGroup, addIsStaff
+from accounts.views import addIsStaff
 from offices.models import Office
 
 
@@ -120,7 +120,7 @@ def support_detail(request, info_id):
 
 @login_required
 def support_del(request, info_id):
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         info = TechSupports.objects.get_or_none(pk=info_id)
         if info:
             title = info.title

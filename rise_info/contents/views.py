@@ -5,10 +5,11 @@ from django.shortcuts import render, redirect
 from contents.models import ContentComments, Menu, Contents, AttachmentFile
 from contents.forms import ContentsForm, FileFormSet, MenuForm, ContentCommentsForm
 
+from accounts.views import addIsStaff
+
 
 def content_updown(request, content_id, order):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         menu = Contents.objects.get_or_none(pk=content_id).menu
         subject = None
         for content in Contents.objects.filter(menu=menu).order_by(order).all():
@@ -32,7 +33,6 @@ def content_updown(request, content_id, order):
 def content_detail(request, content_id):
     info = Contents.objects.get_or_none(pk=content_id)
     files = AttachmentFile.objects.filter(info=info)
-    from accounts.views import addIsStaff
     if info:
         context = {
             'info': info,
@@ -48,8 +48,7 @@ def content_detail(request, content_id):
 
 @login_required
 def content_edit(request, content_id):
-    from accounts.views import addIsStaff, isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         info = Contents.objects.get_or_none(pk=content_id)
         if info:
             form = ContentsForm(request.POST or None, instance=info)
@@ -83,8 +82,7 @@ def content_edit(request, content_id):
 
 @login_required
 def content_del(request, content_id):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         info = Contents.objects.get_or_none(pk=content_id)
         if info:
             title = info.title
@@ -100,8 +98,7 @@ def content_del(request, content_id):
 
 @login_required
 def content_new(request):
-    from accounts.views import addIsStaff, isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         form = ContentsForm(request.POST or None)
         context = addIsStaff({'form': form}, request.user)
         if request.method == "POST" and form.is_valid():
@@ -147,8 +144,7 @@ def addMenus(context: dict) -> dict:
 
 
 def menu_updown(request, menu_id, order):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         subject = None
         for menu in Menu.objects.order_by(order).all():
             if menu.id == menu_id:
@@ -169,8 +165,7 @@ def menu_updown(request, menu_id, order):
 
 @login_required
 def menu_list(request):
-    from accounts.views import addIsStaff, isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         context = {}
         context = addIsStaff(context, request.user)
         return render(request, 'contents/menu_list.html', context)
@@ -181,8 +176,7 @@ def menu_list(request):
 
 @login_required
 def menu_new(request):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         form = MenuForm(request.POST or None)
         if request.method == "POST" and form.is_valid():
             menu = form.save(commit=False)
@@ -197,8 +191,7 @@ def menu_new(request):
 
 @login_required
 def menu_edit(request, menu_id):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         menu = Menu.objects.get_or_none(pk=menu_id)
         if menu:
             form = MenuForm(request.POST or None, instance=menu)
@@ -213,8 +206,7 @@ def menu_edit(request, menu_id):
 
 @login_required
 def menu_del(request, menu_id):
-    from accounts.views import isInTmcGroup
-    if isInTmcGroup(request.user):
+    if request.user.is_staff:
         menu = Menu.objects.get_or_none(pk=menu_id)
         if menu:
             title = menu.menu_title
