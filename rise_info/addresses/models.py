@@ -4,8 +4,9 @@ from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
 
-from rise_info.baseModels import BaseManager
 from eqs.models import DepartmentForEq
+from infos.models import InfoTypeChoices
+from rise_info.baseModels import BaseManager
 
 # Create your models here.
 
@@ -22,6 +23,16 @@ class RoleInLocal(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InfoTypeRelationRole(models.Model):
+    info_type = models.CharField(
+        verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices,
+        default=InfoTypeChoices.TECHINICAL, null=False, blank=False
+    )
+    role = models.ForeignKey(
+        RoleInLocal,
+        verbose_name='現地担当名', related_name='info_type_relations', on_delete=models.CASCADE)
 
 
 class Addresses(models.Model):
