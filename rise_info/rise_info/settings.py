@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'pygments_renderer',
     'django_extensions',
     'rest_framework',
+    'mjml',
     #   'debug_toolbar', # Django tool_bar
 
     # APPS
@@ -217,3 +218,7 @@ EMAIL_TEST_USER = json_data["GMAIL"]["EMAIL_HOST_USER"]
 
 # bootstrap icons
 BS_ICONS_CACHE = os.path.join(STATIC_ROOT, 'icon_cache')
+
+# mjml
+MJML_BACKEND_MODE = "cmd"
+MJML_EXEC_CMD = "../node_modules/.bin/mjml"

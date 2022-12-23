@@ -11,3 +11,5 @@
 
 URL
 http://cab-rhp.midmlit.local/infos/{{info.id}}/
+
+{{mail_footer | linebreaksbr}}

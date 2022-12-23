@@ -27,7 +27,7 @@
             <tbody>
                 {% for send_any in send_list %}
                 <tr>
-                    <td>{{send_any.created_by}}</td>
+                    <td>{{send_any.created_by.first_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
@@ -135,7 +135,7 @@
 <div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
 <div class="card" style="width: 40rem;">
     <div class="card-body">
-        {% include "infos/mail.txt" %}
+        {% include "infos/mail.html" %}
     </div>
 </div>
 </div>

@@ -1,0 +1,94 @@
+{% load mjml %}
+
+{% mjml %}
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-text padding="0" />
+            <mj-class name="h1" font-size="18px" padding="0" />
+            <mj-class name="h2" font-size="16px" padding="0" />
+            <mj-divider border-width="4px" border-color="#F0F1F4" padding="0" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body background-color='#fff'>
+        {% if mail_header %}
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    {{ mail_header | linebreaksbr }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-divider />
+            </mj-column>
+        </mj-section>
+        {% endif %}
+        <mj-section>
+            <mj-column>
+                <mj-text mj-class="h1">
+                    【{{ info.get_info_type_display }}】{{info.title}}が登録されました
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-divider />
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column width="15%">
+                <mj-text mj-class="h2">
+                    概要
+                </mj-text>
+            </mj-column>
+            <mj-column width="85%">
+                <mj-text>
+                    {{ info.sammary | linebreaksbr }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column width="15%">
+                <mj-text mj-class="h2">
+                    装置型式
+                </mj-text>
+            </mj-column>
+            <mj-column width="85%">
+                {% for eqtype in info.eqtypes.all %}
+                <mj-text>
+                    {{ eqtype }}
+                </mj-text>
+                {% endfor %}
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column width="15%">
+                <mj-text mj-class="h2">
+                    URL
+                </mj-text>
+            </mj-column>
+            <mj-column width="85%">
+                <mj-text>
+                    http://cab-rhp.midmlit.local/infos/{{info.id}}/
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% if mail_footer %}
+        <mj-section>
+            <mj-column>
+                <mj-divider />
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    {{ mail_footer | linebreaksbr }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+    </mj-body>
+</mjml>
+{% endmjml %}
