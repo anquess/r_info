@@ -88,8 +88,8 @@ def sendmail(request, info_id):
             context = addIsStaff(context, request.user)
             return render(request, 'failuer_reports/mail_form.html', context)
     else:
-        messages.add_message(request, messages.WARNING, "該当Infoはありません。")
-        return redirect('info_list')
+        messages.add_message(request, messages.WARNING, "該当障害通報書はありません。")
+        return redirect('failuer_report_list')
 
 
 class FailuerReportList(ListView):
