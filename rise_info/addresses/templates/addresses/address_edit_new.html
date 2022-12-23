@@ -38,25 +38,57 @@
             {{form.mail}}
         </div>
     </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_mail" class="form-label">{{form.is_HTML_mail.label}}</label>
+        </div>
+        <div class="col-1">
+            {{form.is_HTML_mail}}
+        </div>
+        <div class="col-10 form-text">
+            {{form.is_HTML_mail.help_text}}
+        </div>
+    </div>
+    <div class="row mt-2 mb-0">
+        <div class="col-1">
+            <label for="id_role" class="form-label">{{form.role.label}}</label>
+        </div>
+        <div class="col-3">
+            {{form.role}}
+        </div>
+        <div class="col-8 form-text">
+            {% for help in role_help %}
+            {{ help }}</br>
+            {% endfor %}
+        </div>
+    </div>
     {% if auth %}
     <div class="row mt-2 mb-0">
         <div class="col-1">
             <label for="id_department" class="form-label">{{form.department.label}}</label>
         </div>
-        <div class="col-11">
+        <div class="col-3">
             {{form.department}}
         </div>
-    </div>
-    <div class="row mt-2 mb-0">
+        <div class="col-2 form-text">
+            {{form.department.help_text}}
+        </div>
         <div class="col-1">
             <label for="id_groups" class="form-label">{{form.groups.label}}</label>
         </div>
-        <div class="col-11">
+        <div class="col-3">
             {{form.groups}}
+        </div>
+        <div class="col-2 form-text">
+            {{form.groups.help_text}}
         </div>
     </div>
     {% endif %}
-    <div class="row">
+    <div class="row form-text">
+        ※Ctrlを押しながら選択すると複数選択可能
+    </div>
+
+    <div class="row mt-3">
         <div class="col-2">
             <button class="btn btn-primary mr-2" type="submit" value="post">
                 {% if is_new %}登録{% else %}更新{% endif %}
@@ -83,4 +115,10 @@
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
 <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+<script src="/static/infos/js/addMaxLength.js"></script>
+<script>
+    $(document).ready(setMaxlength('#id_name'));
+    $(document).ready(setMaxlength('#id_position'));
+    $(document).ready(setMaxlength('#id_mail'));
+</script>
 {% endblock %}

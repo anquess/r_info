@@ -6,9 +6,10 @@ from .models import Addresses
 class AddressesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for _, value in self.fields.items():
+        for key, value in self.fields.items():
             value.widget.attrs['placeholder'] = value.help_text
-            value.widget.attrs['class'] = 'form-control'
+            if key != 'is_HTML_mail':
+                value.widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = Addresses
@@ -16,6 +17,8 @@ class AddressesForm(forms.ModelForm):
             'name',
             'position',
             'mail',
+            'is_HTML_mail',
+            'role',
             'groups',
             'department',
         )
@@ -36,6 +39,11 @@ class AddressesForm(forms.ModelForm):
             'name': forms.TextInput(),
             'position': forms.TextInput(),
             'mail': forms.EmailInput(),
+            'is_HTML_mail': forms.CheckboxInput(),
+            'role': forms.SelectMultiple(attrs={
+                'class': 'form-select',
+                'mutiple': True,
+            }),
             'group': forms.SelectMultiple(attrs={
                 'class': 'form-select',
                 'mutiple': True,

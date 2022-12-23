@@ -6,9 +6,22 @@ from django_currentuser.middleware import (get_current_authenticated_user)
 
 from rise_info.baseModels import BaseManager
 from eqs.models import DepartmentForEq
-from offices.models import Office, OfficesGroup
 
 # Create your models here.
+
+
+class RoleInLocal(models.Model):
+    name = models.CharField(
+        verbose_name='現地担当名', null=False, max_length=16,
+        blank=False, help_text='例:信頼性担当者, APPS担当者'
+    )
+    helpTXT = models.TextField(
+        verbose_name='現地担当補足説明', null=True, blank=False, max_length=128,
+        help_text='例：信頼性担当者は本信頼性ホームページの配信先管理をお願いします。'
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class Addresses(models.Model):
@@ -18,15 +31,22 @@ class Addresses(models.Model):
     position = models.CharField(
         verbose_name='役職', null=False, blank=False, max_length=16)
     mail = models.EmailField(verbose_name='メールアドレス', null=False, blank=False)
+    is_HTML_mail = models.BooleanField(
+        verbose_name='HTML形式による送信可否', default=False,
+        help_text='テキスト形式が望ましい場合はチェックを外してください'
+    )
+    role = models.ManyToManyField(
+        RoleInLocal, verbose_name='現地担当名', null=True, blank=False,
+        related_name='addresses')
     groups = models.ManyToManyField(
         Group,
         verbose_name='障害通報書配信元官署グループ', related_name='addresses', blank=True,
-        help_text='障害通報書の配信元官署グループ(Ctrlにより複数選択可能)'
+        help_text='受け取りたい障害通報書の発行官署の選択'
     )
     department = models.ManyToManyField(
         DepartmentForEq,
         verbose_name='担当装置分類', related_name='addresses', blank=True,
-        help_text='障害通報で登録した官署のタグが1つでもあれば宛先として表示されます'
+        help_text='受け取りたい障害通報書の担当装置分類の選択'
     )
     created_by = CurrentUserField(
         verbose_name='登録者', on_update=True,
