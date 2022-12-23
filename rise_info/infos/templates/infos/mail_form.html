@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_icons %}
+{% block extraheader %}
+{% endblock %}
+{% block main %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="h2 py-2 my-2 border-bottom">メール送信フォーム</div>
+    </div>
+    <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
+        {% csrf_token %}
+        <h4>送信先</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>登録官署</th>
+                    <th>役職</th>
+                    <th>氏名</th>
+                    <th>
+                        配信&nbsp;
+                        <input id="checkAll" type="checkbox" name="lang" value="checkall"
+                            class="form-check-input">全て選択</label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for send_any in send_list %}
+                <tr>
+                    <td>{{send_any.created_by}}</td>
+                    <td>{{send_any.position}}</td>
+                    <td>{{send_any.name}}</td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_any.id}}"></td>
+                </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="row mb-2">
+                <div class="col-2">
+                    <label for="subject" class="form-label">メール件名</label>
+                </div>
+                <div class="col-9">
+                    <input type="text" class="form-control" id=" subject" name="subject" value='{{info.title}}'>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-2">
+                    <label for="header" class="form-label">ヘッダー</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="form-control" id="header" name="header" placeholder="メール本文の前に文章を入れたい場合は入力してください"
+                        value="{{mail_config.default_email_header}}"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-2">
+                    <label for="header" class="form-label">フッター</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="form-control" id="footer" name="header" placeholder="メール本文の後ろに文章を入れたい場合は入力してください"
+                        value="{{mail_config.default_email_footer}}"></textarea>
+                </div>
+            </div>
+
+            <div class="col-1">
+                <button id="send" type="submit" class="btn btn-secondary" onclick='return confirm("メール送信をして、よろしいですか？");'
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="メール送信">
+                    {% bs_icon 'send' %}
+                </button>
+            </div>
+    </form>
+</div>
+<script>
+    // 無効なフィールドがある場合にフォーム送信を無効にするスターターJavaScriptの例
+    (() => {
+        'use strict'
+
+        // Bootstrapカスタム検証スタイルを適用してすべてのフォームを取得
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // ループして帰順を防ぐ
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+
+    let checkAll = document.getElementById("checkAll");
+    //「全て選択」以外のチェックボックス
+    let el = document.getElementsByClassName("checks");
+    //全てのチェックボックスをON/OFFする
+    const funcCheckAll = (bool) => {
+        for (let i = 0; i < el.length; i++) {
+            el[i].checked = bool;
+        }
+    }
+
+    //「checks」のclassを持つ要素のチェック状態で「全て選択」のチェック状態をON/OFFする
+    const funcCheck = () => {
+        let count = 0;
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                count += 1;
+            }
+        }
+
+        if (el.length === count) {
+            checkAll.checked = true;
+        } else {
+            checkAll.checked = false;
+        }
+    };
+
+    //「全て選択」のチェックボックスをクリックした時
+    checkAll.addEventListener("click", () => {
+        funcCheckAll(checkAll.checked);
+    }, false);
+
+    //「全て選択」以外のチェックボックスをクリックした時
+    for (let i = 0; i < el.length; i++) {
+        el[i].addEventListener("click", funcCheck, false);
+    }
+</script>
+<br>
+<div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
+<div class="card" style="width: 40rem;">
+    <div class="card-body">
+        {% include "infos/mail.txt" %}
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block add_js %}
+{% endblock %}

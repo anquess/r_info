@@ -1,18 +1,25 @@
-from re import T
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import ListView
-from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
 from django.db.models import Q
+from django.shortcuts import render, redirect, HttpResponse
+from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView
 
-from infos.models import Info, AttachmentFile, InfoComments, InfoTypeChoices
 from .exportInfo import makeInfoSheet
-from infos.forms import InfoForm, FileFormSet, InfoCommentsForm
-from accounts.views import addIsStaff
+from .models import Info, AttachmentFile, InfoComments, InfoTypeChoices
+from .forms import InfoForm, FileFormSet, InfoCommentsForm
+from accounts.views import addIsStaff, User_mail_config
+from addresses.models import Addresses, RoleInLocal
 from offices.models import Office
+from rise_info.settings import EMAIL_HOST_USER
 
 from datetime import datetime
+from re import T
+from functools import reduce
+import operator
 import openpyxl
 import pytz
 
@@ -195,4 +202,54 @@ def info_new(request):
         return render(request, "infos/new.html", context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        return redirect('info_list')
+
+
+@login_required
+def sendmail(request, info_id):
+    info = Info.objects.get_or_none(pk=info_id)
+    user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
+    roles = RoleInLocal.objects.filter(
+        info_type_relations__info_type=info.info_type)
+    q_role = reduce(operator.or_, (Q(role__id__contains=i.id)for i in roles))
+    send_list = Addresses.object.filter(q_role)
+    if info:
+        context = {
+            'info': info,
+            'send_list': send_list,
+            'mail_config': user_mail_config,
+        }
+        if request.method == 'POST':
+            if user_mail_config.email_address:
+                sendmail_adr = user_mail_config.email_address
+            else:
+                sendmail_adr = EMAIL_HOST_USER
+            subject = request.POST.get("subject")
+            context['mail_header'] = request.POST.get("header")
+            context['mail_footer'] = request.POST.get("footer")
+            dist_list = []
+            is_send_list = request.POST.getlist('is_send_list[]')
+            msg_plain = render_to_string('infos/mail.txt', context)
+            for is_send in is_send_list:
+                dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
+            try:
+                send_mail(
+                    subject,
+                    msg_plain,
+                    sendmail_adr,
+                    dist_list,
+                    fail_silently=False,
+                )
+                messages.add_message(request, messages.INFO, '送信されました。')
+                return redirect('info_list')
+            except Exception as e:
+                messages.add_message(
+                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+
+                return redirect('info_list')
+        else:
+            context = addIsStaff(context, request.user)
+            return render(request, 'infos/mail_form.html', context)
+    else:
+        messages.add_message(request, messages.WARNING, "該当Infoはありません。")
         return redirect('info_list')

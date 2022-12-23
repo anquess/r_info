@@ -10,5 +10,6 @@ urlpatterns = [
     path("<int:info_id>/comment/", views.add_comment, name="info_comment"),
     path("<int:info_id>/comment_del/<int:comment_id>/",
          views.del_comment, name="info_del_comment"),
+    path("<int:info_id>/send/", views.sendmail, name='info_send'),
     path("export/", views.exportInfo, name='exportInfo'),
 ]
