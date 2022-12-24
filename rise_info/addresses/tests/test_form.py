@@ -22,6 +22,7 @@ def make_mock_right_param(testCase: TestCase):
         'name': text_len_16,
         'position': text_len_16,
         'mail': text_mail_addr,
+        'is_HTML_mail': True,
     }
 
 
@@ -32,6 +33,7 @@ def make_mock_wrong_param(testCase: TestCase):
         'name': text_len_17,
         'position': text_len_17,
         'mail': wrong_text_mail_addr,
+        'is_HTML_mail': False,
     }
 
 
@@ -44,6 +46,8 @@ class AddressesFormTests(TestCase):
     def test_valid_true(self):
         address = Addresses()
         form = AddressesForm(self.params, instance=address)
+        form.is_valid()
+        print(form.errors)
         self.assertTrue(form.is_valid())
 
     def test_valid_when_param_in_None(self):

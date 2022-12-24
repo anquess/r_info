@@ -15,6 +15,7 @@ def addMockAddress(testCase) -> None:
         'name': testCase.params['name'],
         'position': testCase.params['position'],
         'mail': testCase.params['mail'],
+        'is_HTML_mail': testCase.params['is_HTML_mail'],
     }
     testCase.response = testCase.client.post(
         "/addresses/new/", data)

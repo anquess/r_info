@@ -47,7 +47,7 @@ class Addresses(models.Model):
         help_text='テキスト形式が望ましい場合はチェックを外してください'
     )
     role = models.ManyToManyField(
-        RoleInLocal, verbose_name='現地担当名', null=True, blank=False,
+        RoleInLocal, verbose_name='現地担当名', null=True, blank=True,
         related_name='addresses')
     groups = models.ManyToManyField(
         Group,
