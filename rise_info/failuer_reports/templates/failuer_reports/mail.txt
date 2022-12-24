@@ -10,6 +10,9 @@
 3.障害概要
 {{ info.sammary | linebreaksbr }}
 
+4.障害概要
+{{ info.cause | linebreaksbr }}
+
 5.復旧の見通し
 {{ info.recovery_propects | linebreaksbr }}
 {%info.recovery_date%}

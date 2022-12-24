@@ -54,6 +54,7 @@ class FailuerReportForm(forms.ModelForm):
             'eq',
             'department',
             'sammary',
+            'cause',
             'recovery_date',
             'recovery_time',
             'recovery_propects',
@@ -82,8 +83,12 @@ class FailuerReportForm(forms.ModelForm):
                 'max_length': '障害装置は32文字以内です。',
             },
             'sammary': {
-                'required': '障害状況は必須です',
-                'max_length': '障害状況は512文字以内です。'
+                'required': '障害概要は必須です',
+                'max_length': '障害概要は512文字以内です。'
+            },
+            'cause': {
+                'required': '障害原因は必須です',
+                'max_length': '障害原因は1024文字以内です。'
             },
             'recovery_propects': {
                 'required': '復旧の見通しは必須です',
@@ -116,7 +121,13 @@ class FailuerReportForm(forms.ModelForm):
             'sammary': forms.Textarea(attrs={
                 "data-bs-toggle": "tooltip",
                 "data-bs-placement": "bottom",
-                "title": "何がどうなったか簡潔に\n例：LOC が●●ALM発生により停止。",
+                "title": "必須項目\n何がどうなったか簡潔に\n例:LOC が●●ALM発生により停止",
+                "rows": "3",
+            }),
+            'cause': forms.Textarea(attrs={
+                "data-bs-toggle": "tooltip",
+                "data-bs-placement": "bottom",
+                "title": "必須項目\n現時点で判明している事柄を記載\n例:詳細確認中",
                 "rows": "3",
             }),
             'recovery_date': forms.DateInput(attrs={
@@ -129,7 +140,7 @@ class FailuerReportForm(forms.ModelForm):
                 "rows": "3",
                 "data-bs-toggle": "tooltip",
                 "data-bs-placement": "bottom",
-                "title": "分かる範囲で予定等を記載\n例：保守員の派遣を調整中"
+                "title": "必須項目\n分かる範囲で予定等を記載\n例:保守員の派遣を調整中"
             }),
             'is_flight_impact': forms.widgets.Select(),
             'notam': forms.Textarea(attrs={
@@ -138,7 +149,7 @@ class FailuerReportForm(forms.ModelForm):
             'flight_impact': forms.TextInput(attrs={
                 "data-bs-toggle": "tooltip",
                 "data-bs-placement": "bottom",
-                "title": "現時点で判明している事柄を記載\n例：確認中"
+                "title": "現時点で判明している事柄を記載\n例:確認中"
             }),
             'is_press': forms.widgets.Select(),
             'press_contents': forms.Textarea(attrs={

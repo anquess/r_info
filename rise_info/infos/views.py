@@ -212,11 +212,15 @@ def sendmail(request, info_id):
     roles = RoleInLocal.objects.filter(
         info_type_relations__info_type=info.info_type)
     q_role = reduce(operator.or_, (Q(role__id__contains=i.id)for i in roles))
-    send_list = Addresses.object.filter(q_role)
+    is_HTML = Q(is_HTML_mail=True)
+    is_Text = Q(is_HTML_mail=False)
+    send_HTML_list = Addresses.object.filter(q_role).filter(is_HTML)
+    send_Text_list = Addresses.object.filter(q_role).filter(is_Text)
     if info:
         context = {
             'info': info,
-            'send_list': send_list,
+            'send_HTML_list': send_HTML_list,
+            'send_Text_list': send_Text_list,
             'mail_config': user_mail_config,
         }
         if request.method == 'POST':
@@ -227,19 +231,35 @@ def sendmail(request, info_id):
             subject = request.POST.get("subject")
             context['mail_header'] = request.POST.get("header")
             context['mail_footer'] = request.POST.get("footer")
-            dist_list = []
-            is_send_list = request.POST.getlist('is_send_list[]')
+            dist_HTML_list = []
+            dist_Text_list = []
+            is_send_HTML_list = request.POST.getlist('is_send_HTML_list[]')
+            is_send_Text_list = request.POST.getlist('is_send_Text_list[]')
             msg_plain = render_to_string('infos/mail.txt', context)
-            for is_send in is_send_list:
-                dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
+            msg_HTML = render_to_string('infos/mail.html', context)
+            for is_send in is_send_HTML_list:
+                dist_HTML_list.append(
+                    Addresses.object.get_or_none(pk=is_send).mail)
+            for is_send in is_send_Text_list:
+                dist_Text_list.append(
+                    Addresses.object.get_or_none(pk=is_send).mail)
             try:
                 send_mail(
                     subject,
                     msg_plain,
                     sendmail_adr,
-                    dist_list,
+                    dist_HTML_list,
+                    html_message=msg_HTML,
                     fail_silently=False,
                 )
+                send_mail(
+                    subject,
+                    msg_plain,
+                    sendmail_adr,
+                    dist_Text_list,
+                    fail_silently=False,
+                )
+
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('info_list')
             except Exception as e:

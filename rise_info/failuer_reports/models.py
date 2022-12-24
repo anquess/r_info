@@ -47,8 +47,12 @@ class FailuerReport(CommonInfo):
         help_text='関係官署と関係装置分類から配信先を自動判定(必須)',
     )
     sammary = models.TextField(
-        verbose_name='障害状況', default="確認中", null=False, blank=True,
-        max_length=1024, help_text="必須"
+        verbose_name='障害概要', default="確認中", null=False, blank=True,
+        max_length=1024, help_text="必須項目\n何がどうなったか簡潔に\n例:LOC が●●ALM発生により停止"
+    )
+    cause = models.TextField(
+        verbose_name='障害原因', default="確認中", null=False, blank=True,
+        max_length=1024, help_text="必須項目\n現時点で判明している事柄を記載\n例:詳細確認中"
     )
     recovery_date = models.DateField(
         verbose_name='復旧日', null=True, blank=True,
@@ -61,7 +65,7 @@ class FailuerReport(CommonInfo):
     recovery_propects = models.TextField(
         verbose_name='復旧の見通し', default="確認中",
         null=False, blank=True, max_length=1024,
-        help_text="必須"
+        help_text="必須項目\n分かる範囲で予定等を記載\n例:保守員の派遣を調整中"
     )
     is_flight_impact = models.CharField(
         verbose_name='運航への影響有無', max_length=16,

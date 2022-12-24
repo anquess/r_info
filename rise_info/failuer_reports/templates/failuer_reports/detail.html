@@ -43,9 +43,13 @@
         {% endfor %}
     </div>
 </div>
-<div class="h5 pt-2 mt-2">障害状況</div>
+<div class="h5 pt-2 mt-2">障害概要</div>
 <div class="pb-2 mb-2 border-bottom">
     {{ info.sammary | linebreaksbr }}
+</div>
+<div class="h5 pt-2 mt-2">障害原因</div>
+<div class="pb-2 mb-2 border-bottom">
+    {{ info.cause | linebreaksbr }}
 </div>
 <div class="h5 pt-2 mt-2">復旧の見通し</div>
 <div class="pb-2 mb-2 border-bottom">

@@ -17,6 +17,7 @@
                     <th>登録官署</th>
                     <th>役職</th>
                     <th>氏名</th>
+                    <th>形式</th>
                     <th>
                         配信&nbsp;
                         <input id="checkAll" type="checkbox" name="lang" value="checkall"
@@ -25,13 +26,24 @@
                 </tr>
             </thead>
             <tbody>
-                {% for send_any in send_list %}
+                {% for send_any in send_HTML_list %}
                 <tr>
                     <td>{{send_any.created_by.first_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
-                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
-                            value="{{send_any.id}}"></td>
+                    <td>HTML形式</td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_HTML_list"
+                            name="is_send_HTML_list[]" value="{{send_any.id}}"></td>
+                </tr>
+                {% endfor%}
+                {% for send_any in send_Text_list %}
+                <tr>
+                    <td>{{send_any.created_by.first_name}}</td>
+                    <td>{{send_any.position}}</td>
+                    <td>{{send_any.name}}</td>
+                    <td>テキスト形式</td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_Text_list"
+                            name="is_send_Text_list[]" value="{{send_any.id}}"></td>
                 </tr>
                 {% endfor%}
             </tbody>

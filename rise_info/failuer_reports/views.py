@@ -19,7 +19,7 @@ import operator
 from functools import reduce
 
 
-def get_addresses(fail_rep, grps):
+def get_addresses(fail_rep, is_HMTL: bool, grps):
     user_grops = grps.all()
     q_user_group = reduce(operator.or_, (
         Q(groups__id__contains=i.id)for i in user_grops
@@ -28,10 +28,12 @@ def get_addresses(fail_rep, grps):
     q_department = reduce(operator.or_, (
         Q(department__id__contains=i.id)for i in department
     ))
+    q_is_HTML = Q(is_HTML_mail=is_HMTL)
 
     return Addresses.object.filter(
         q_department).filter(
-        q_user_group).distinct()
+        q_user_group).filter(
+        q_is_HTML).distinct()
 
 
 @ login_required
@@ -39,14 +41,21 @@ def sendmail(request, info_id):
     info = FailuerReport.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
-    send_required = get_addresses(info, request.user.groups)
-    send_any = Addresses.object.filter(created_by=request.user)
+
+    send_HTML_required = get_addresses(info, True, request.user.groups)
+    send_Text_required = get_addresses(info, False, request.user.groups)
+    send_HTML_any = Addresses.object.filter(
+        created_by=request.user).filter(Q(is_HTML_mail=True))
+    send_Text_any = Addresses.object.filter(
+        created_by=request.user).filter(Q(is_HTML_mail=False))
     if info:
         context = {
             'info': info,
             'events': events,
-            'send_required_list': send_required,
-            'send_any_list': send_any,
+            'send_HTML_required_list': send_HTML_required,
+            'send_Text_required_list': send_Text_required,
+            'send_HTML_any_list': send_HTML_any,
+            'send_Text_any_list': send_Text_any,
             'mail_config': user_mail_config,
         }
         if request.method == "POST":
@@ -62,19 +71,32 @@ def sendmail(request, info_id):
             if request.POST.get("header"):
                 context['mail_header'] = request.POST.get("header")
                 context['mail_footer'] = request.POST.get("footer")
-            is_send_list = request.POST.getlist('is_send_list[]')
-            dist_list = []
+            is_send_HTML_list = request.POST.getlist('is_send_HTML_list[]')
+            is_send_Text_list = request.POST.getlist('is_send_Text_list[]')
+            dist_HTML_list = []
+            dist_Text_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
-            for is_send in is_send_list:
-                dist_list.append(Addresses.object.get_or_none(pk=is_send).mail)
+            for is_send in is_send_HTML_list:
+                dist_HTML_list.append(
+                    Addresses.object.get_or_none(pk=is_send).mail)
+            for is_send in is_send_Text_list:
+                dist_Text_list.append(
+                    Addresses.object.get_or_none(pk=is_send).mail)
             try:
                 send_mail(
                     subject,
                     msg_plain,
                     email1,
-                    dist_list,
+                    dist_HTML_list,
                     html_message=msg_html,
+                    fail_silently=False,
+                )
+                send_mail(
+                    subject,
+                    msg_plain,
+                    email1,
+                    dist_Text_list,
                     fail_silently=False,
                 )
                 messages.add_message(request, messages.INFO, '送信されました。')

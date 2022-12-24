@@ -93,6 +93,18 @@
         <mj-section>
             <mj-column width="20%">
                 <mj-text mj-class="h2">
+                    4.障害原因
+                </mj-text>
+            </mj-column>
+            <mj-column width="80%">
+                <mj-text>
+                    {{ info.cause | linebreaksbr }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column width="20%">
+                <mj-text mj-class="h2">
                     5.復旧の見通し
                 </mj-text>
             </mj-column>
@@ -173,7 +185,7 @@
             </mj-column>
         </mj-section>
         <mj-section>
-            <mj-column>
+            <mj-column padding="0">
                 <mj-table padding="0">
                     <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0;">
                         <th style="padding: 0 20px 0 0;" width="70">日時</th>
