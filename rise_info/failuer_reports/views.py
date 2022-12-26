@@ -8,15 +8,17 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView
 
-from .models import FailuerReport, AttachmentFile, Circumstances
+from .models import FailuerReport, AttachmentFile, Circumstances  # , SendedFailuerReport
 from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
 from accounts.views import addIsStaff
 from addresses.models import Addresses
 from rise_info.settings import EMAIL_HOST_USER
 
-import operator
+from datetime import datetime as dt
 from functools import reduce
+import operator
+import pytz
 
 
 def get_addresses(fail_rep, is_HMTL: bool, grps):
@@ -48,6 +50,7 @@ def sendmail(request, info_id):
         created_by=request.user).filter(Q(is_HTML_mail=True))
     send_Text_any = Addresses.object.filter(
         created_by=request.user).filter(Q(is_HTML_mail=False))
+
     if info:
         context = {
             'info': info,
@@ -57,6 +60,7 @@ def sendmail(request, info_id):
             'send_HTML_any_list': send_HTML_any,
             'send_Text_any_list': send_Text_any,
             'mail_config': user_mail_config,
+
         }
         if request.method == "POST":
             if user_mail_config.email_address:
@@ -99,6 +103,7 @@ def sendmail(request, info_id):
                     dist_Text_list,
                     fail_silently=False,
                 )
+
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('failuer_report_list')
             except Exception as e:

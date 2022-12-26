@@ -1,7 +1,9 @@
 from django.db import models
+from django_currentuser.db.models import CurrentUserField
 
-from rise_info.baseModels import CommonInfo, BaseAttachment
+from addresses.models import Addresses
 from eqs.models import DepartmentForEq
+from rise_info.baseModels import CommonInfo, BaseAttachment
 
 
 class ConfirmationTypeChoices(models.TextChoices):
@@ -125,3 +127,16 @@ class Circumstances(models.Model):
 
     class Meta:
         db_table = 'circumstance'
+
+
+class FailuerReportList(FailuerReport):
+    send_repo = models.OneToOneField(
+        FailuerReport, on_delete=models.DO_NOTHING,
+        related_name='sended', verbose_name='送信ログ', null=True, blank=True
+    )
+    dest_list = models.ManyToManyField(
+        Addresses, related_name='failuer_repo_list', null=True, blank=True
+    )
+
+    class Meta:
+        db_table = 'failuer_repo_list'
