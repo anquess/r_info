@@ -11,7 +11,6 @@
     </div>
     <form method="post" action name="mail_send_form" class="row g-3 needs-validation" novalidate>
         {% csrf_token %}
-        {% if send_required_list %}
         <h4>送信先</h4>
         <table class="table">
             <thead>
@@ -32,8 +31,8 @@
                     <td>{{send_required.created_by}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
-                    <td><input class="form-check-input checks" type="checkbox" id="is_send_HTML_list"
-                            name="is_send_HTML_list[]" value="{{send_required.id}}"></td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_required.id}}"></td>
                 </tr>
                 {% endfor%}
                 {% for send_required in send_Text_required_list %}
@@ -41,8 +40,8 @@
                     <td>{{send_required.created_by}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
-                    <td><input class="form-check-input checks" type="checkbox" id="is_send_Text_list"
-                            name="is_send_Text_list[]" value="{{send_required.id}}"></td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_required.id}}"></td>
                 </tr>
                 {% endfor%}
                 {% for send_any in send_HTML_any_list %}
@@ -50,8 +49,8 @@
                     <td>{{send_any.created_by}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
-                    <td><input class="form-check-input checks" type="checkbox" id="is_send_HTML_list"
-                            name="is_send_HTML_list[]" value="{{send_any.id}}"></td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_any.id}}"></td>
                 </tr>
                 {% endfor%}
                 {% for send_any in send_Text_any_list %}
@@ -59,15 +58,14 @@
                     <td>{{send_any.created_by}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
-                    <td><input class="form-check-input checks" type="checkbox" id="is_send_Text_list"
-                            name="is_send_Text_list[]" value="{{send_any.id}}"></td>
+                    <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
+                            value="{{send_any.id}}"></td>
                 </tr>
                 {% endfor%}
             </tbody>
         </table>
         <p>※本省・局・TMCにて送信先を事前登録澄</p>
 
-        {% endif %}
         <div class="row">
             <div class="row mb-2">
                 <div class="col-2">
@@ -102,7 +100,12 @@
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="メール送信">
                     {% bs_icon 'send' %}
                 </button>
+                <a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="編集">
+                    {% bs_icon 'pencil-square' %}
+                </a>
             </div>
+
     </form>
 </div>
 <script>

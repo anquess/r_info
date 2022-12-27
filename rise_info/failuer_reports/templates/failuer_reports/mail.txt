@@ -15,7 +15,7 @@
 
 5.復旧の見通し
 {{ info.recovery_propects | linebreaksbr }}
-{%info.recovery_date%}
+{% if info.recovery_date %}
   復旧日時
     {{info.recovery_date}} {{info.recovery_time}}
 {%endif%}

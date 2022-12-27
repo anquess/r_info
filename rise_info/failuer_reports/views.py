@@ -75,32 +75,31 @@ def sendmail(request, info_id):
             if request.POST.get("header"):
                 context['mail_header'] = request.POST.get("header")
                 context['mail_footer'] = request.POST.get("footer")
-            is_send_HTML_list = request.POST.getlist('is_send_HTML_list[]')
-            is_send_Text_list = request.POST.getlist('is_send_Text_list[]')
+            is_send_list = request.POST.getlist('is_send_list[]')
             dist_HTML_list = []
             dist_Text_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
-            for is_send in is_send_HTML_list:
-                dist_HTML_list.append(
-                    Addresses.object.get_or_none(pk=is_send).mail)
-            for is_send in is_send_Text_list:
-                dist_Text_list.append(
-                    Addresses.object.get_or_none(pk=is_send).mail)
+            for is_send in is_send_list:
+                adr = Addresses.object.get_or_none(pk=is_send)
+                if adr.is_HTML_mail:
+                    dist_HTML_list.append(adr.mail)
+                else:
+                    dist_HTML_list.append(adr.mail)
             try:
                 send_mail(
-                    subject,
-                    msg_plain,
-                    email1,
-                    dist_HTML_list,
+                    subject=subject,
+                    message=msg_plain,
+                    from_email=email1,
+                    recipient_list=dist_HTML_list,
                     html_message=msg_html,
                     fail_silently=False,
                 )
                 send_mail(
-                    subject,
-                    msg_plain,
-                    email1,
-                    dist_Text_list,
+                    subject=subject,
+                    message=msg_plain,
+                    from_email=email1,
+                    recipient_list=dist_Text_list,
                     fail_silently=False,
                 )
 
@@ -108,7 +107,7 @@ def sendmail(request, info_id):
                 return redirect('failuer_report_list')
             except Exception as e:
                 messages.add_message(
-                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e) + '\n' + str(is_send_list))
 
                 return redirect('failuer_report_list')
         else:

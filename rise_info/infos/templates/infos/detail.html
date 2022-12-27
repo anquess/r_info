@@ -39,16 +39,21 @@
 
 
 {% block btn %}
-<th><a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a></th>
+<a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a>
 {% if auth %}
-<th><a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
-        title="編集">
-        {% bs_icon 'pencil-square' %}
-    </a></th>
-<th><a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
-        data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
-        {% bs_icon 'trash' %}
-    </a></th>
+<a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+    title="編集">
+    {% bs_icon 'pencil-square' %}
+</a>
+<a class="btn btn-primary" href="{% url 'info_send' info.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+    title="メール送信画面へ">
+    {% bs_icon 'send' %}
+</a>
+
+<a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
+    data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+    {% bs_icon 'trash' %}
+</a>
 {% endif %}
 
 {% include "infos/comment_add_modal.html" %}

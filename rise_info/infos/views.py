@@ -169,7 +169,10 @@ def info_edit(request, info_id):
                 form.save()
                 formset.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('info_list')
+                if request.POST.get("sendMailFLG"):
+                    return redirect('info_send', info_id=info.pk)
+                else:
+                    return redirect('info_list')
             context = addIsStaff({
                 'form': form,
                 'formset': formset,
@@ -194,7 +197,10 @@ def info_new(request):
                 formset.save()
                 form.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('info_list')
+                if request.POST.get("sendMailFLG"):
+                    return redirect('info_send', info_id=info.pk)
+                else:
+                    return redirect('info_list')
             else:
                 context['formset'] = formset
         else:

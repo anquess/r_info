@@ -1,5 +1,5 @@
 {% extends "baseInfoNewOrEdit.html" %}
-
+{% load bootstrap_icons %}
 {% block title %}
 <h1>信頼性情報の更新</h1>
 {% endblock %}
@@ -11,11 +11,26 @@
 
 {% block btn %}
 <button class="btn btn-primary" type="submit" value="post">変更</button>
+<button class="btn btn-primary" onclick='addSendMailFLG()' data-bs-toggle="tooltip" data-bs-placement="bottom"
+    title="メール送信画面へ">
+    {% bs_icon 'send' %}
+</button>
 {% endblock %}
 
 {% block add_js2 %}
 <script src="/static/infos/js/addAttachmentButton.js"></script>
 <script>
+    <!-- メール送信フラグ追加 -->
+    function addSendMailFLG() {
+        var sendMailFLG = document.createElement('input');
+        sendMailFLG.type = "hidden";
+        sendMailFLG.name = "sendMailFLG";
+        sendMailFLG.value = false;
+        console.log(sendMailFLG);
+        document.forms[0].appendChild(sendMailFLG);
+        console.log(document.forms[0])
+    }
+
     $(document).ready(setMaxlength('#id_managerID'));
     $(document).ready(setMaxlength('#id_sammary'));
 </script>

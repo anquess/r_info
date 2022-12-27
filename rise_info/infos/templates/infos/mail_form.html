@@ -82,6 +82,10 @@
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="メール送信">
                     {% bs_icon 'send' %}
                 </button>
+                <a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="編集">
+                    {% bs_icon 'pencil-square' %}
+                </a>
             </div>
     </form>
 </div>
