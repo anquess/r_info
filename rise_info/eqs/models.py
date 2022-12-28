@@ -55,15 +55,34 @@ class DepartmentForEq(models.Model):
         return self.name
 
 
+class EQ_class(models.Model):
+    object = BaseManager()
+    id = models.CharField(verbose_name='装置分類', max_length=16,
+                          primary_key=True, editable=False)
+    department = models.ManyToManyField(DepartmentForEq,
+                                        verbose_name="装置担当部署", related_name="eq_class",
+                                        null=True, blank=True)
+    memo = models.TextField(
+        verbose_name='備考', max_length=256, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.id
+
+    class Meta:
+        db_table = 'eqclass'
+
+
 class Eqtype(models.Model):
     objects = BaseManager()
     id = models.CharField(verbose_name='装置型式',
                           primary_key=True, editable=False, max_length=24)
     slug = models.SlugField(verbose_name='装置型式(URL)',
-                            unique=True, null=False, editable=False, max_length=24)
+                            unique=True, null=False, editable=False,
+                            max_length=24)
+    eq_class = models.ForeignKey(
+        EQ_class, verbose_name='装置分類', null=True, blank=True,
+        related_name='eqtype', on_delete=models.CASCADE)
     create_at = models.DateTimeField(verbose_name='登録日時')
-    department = models.ManyToManyField(
-        DepartmentForEq, verbose_name="装置担当部署", related_name="EqType")
 
     def __str__(self):
         return self.id
