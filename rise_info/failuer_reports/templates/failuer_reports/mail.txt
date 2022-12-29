@@ -28,8 +28,9 @@
 
 経緯
 {%for event in events%}
-    {%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}
-        {{event.event|linebreaksbr}}
+{%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}
+{{event.event|linebreaksbr}}
+
 {%endfor%}
 
 備考

@@ -168,11 +168,19 @@
 </script>
 <br>
 <div class="h3 py-2 my-2 border-bottom">メールレビュー</div>
-<div class="card" style="width: 40rem;">
-    <div class="card-body">
-        {% include "failuer_reports/mail.html" %}
+<div class="row">
+    <div class="col-6 mx-2 card" style="width: 40rem;">
+        <div class="card-title">HTML形式</div>
+        <div class="card-body">
+            {% include "failuer_reports/mail.html" %}
+        </div>
     </div>
-</div>
+    <div class="col-6 mx-2 card" style="width: 40rem;">
+        <div class="card-title">テキスト形式</div>
+        <div class="card-body">
+            {% include "failuer_reports/mail_txt.html" %}
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block add_js %}

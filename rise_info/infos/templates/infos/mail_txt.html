@@ -1,0 +1,15 @@
+{{mail_header | linebreaksbr}}<br>
+【{{ info.get_info_type_display }}】{{info.title}}が登録<br>
+<br>
+概要<br>
+{{ info.sammary | linebreaksbr }}<br>
+<br>
+装置型式<br>
+{% for eqtype in info.eqtypes.all %}
+{{ eqtype }}<br>
+{% endfor %}
+<br>
+URL<br>
+http://cab-rhp.midmlit.local/infos/{{info.id}}/<br>
+<br>
+{{mail_footer | linebreaksbr}}
