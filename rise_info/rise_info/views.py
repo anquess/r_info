@@ -16,8 +16,6 @@ from tech_supports.models import TechSupports
 def top(request):
     list_num = TOP_PAGE_LIST_NUM
     context = addIsStaff({}, request.user)
-    # ip = request.META.get('REMOTE_ADDR') # django toolbar
-    # context["IP"] = ip # django toolbar
     infos = Info.objects.filter(
         Q(select_register='under_renewal') |
         Q(select_register='register'),

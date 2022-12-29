@@ -14,7 +14,7 @@ from .forms import InfoForm, FileFormSet, InfoCommentsForm
 from accounts.views import addIsStaff, User_mail_config
 from addresses.models import Addresses, RoleInLocal
 from offices.models import Office
-from rise_info.settings import EMAIL_HOST_USER
+from rise_info.settings import EMAIL_HOST_USER, DEBUG
 
 from datetime import datetime
 from re import T
@@ -250,22 +250,22 @@ def sendmail(request, info_id):
                 dist_Text_list.append(
                     Addresses.object.get_or_none(pk=is_send).mail)
             try:
-                send_mail(
-                    subject,
-                    msg_plain,
-                    sendmail_adr,
-                    dist_HTML_list,
-                    html_message=msg_HTML,
-                    fail_silently=False,
-                )
-                send_mail(
-                    subject,
-                    msg_plain,
-                    sendmail_adr,
-                    dist_Text_list,
-                    fail_silently=False,
-                )
-
+                if not DEBUG:
+                    send_mail(
+                        subject,
+                        msg_plain,
+                        sendmail_adr,
+                        dist_HTML_list,
+                        html_message=msg_HTML,
+                        fail_silently=False,
+                    )
+                    send_mail(
+                        subject,
+                        msg_plain,
+                        sendmail_adr,
+                        dist_Text_list,
+                        fail_silently=False,
+                    )
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('info_list')
             except Exception as e:
