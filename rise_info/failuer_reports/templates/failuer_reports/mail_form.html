@@ -72,7 +72,7 @@
                     <label for="subject" class="form-label">メール件名</label>
                 </div>
                 <div class="col-9">
-                    <input type="text" class="form-control" id=" subject" name="subject"
+                    <input type="text" class="form-control" id="subject" name="subject" maxlength="256"
                         value='【障害通報】{{info.title}} _第xx報'>
                 </div>
             </div>
@@ -82,16 +82,16 @@
                 </div>
                 <div class="col-9">
                     <textarea class="form-control" id="header" name="header" placeholder="メール本文の前に文章を入れたい場合は入力してください"
-                        value="{{mail_config.default_email_header}}"></textarea>
+                        maxlength="512" value="{{mail_config.default_email_header}}"></textarea>
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col-2">
-                    <label for="header" class="form-label">フッター</label>
+                    <label for="footer" class="form-label">フッター</label>
                 </div>
                 <div class="col-9">
-                    <textarea class="form-control" id="footer" name="header" placeholder="メール本文の後ろに文章を入れたい場合は入力してください"
-                        value="{{mail_config.default_email_footer}}"></textarea>
+                    <textarea class="form-control" id="footer" name="footer" placeholder="メール本文の後ろに文章を入れたい場合は入力してください"
+                        maxlength="512" value="{{mail_config.default_email_footer}}"></textarea>
                 </div>
             </div>
 
@@ -108,7 +108,24 @@
 
     </form>
 </div>
+<link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
+<script src="/static/jquery/jquery-3.6.0.min.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+<script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
+<script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
 <script>
+    function setMaxlength(id) {
+        $(id).maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
+    $(document).ready(setMaxlength('#subject'));
+    $(document).ready(setMaxlength('#header'));
+    $(document).ready(setMaxlength('#footer'));
+
     // 無効なフィールドがある場合にフォーム送信を無効にするスターターJavaScriptの例
     (() => {
         'use strict'

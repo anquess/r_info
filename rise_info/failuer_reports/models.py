@@ -80,9 +80,9 @@ class FailuerReport(CommonInfo):
         default=IsConfirmChoices.CHECKING_NOW,
         null=False, blank=False
     )
-    flight_impact = models.CharField(
+    flight_impact = models.TextField(
         verbose_name='運航への影響', default="",
-        null=False, blank=True, max_length=128
+        null=False, blank=True, max_length=512
     )
     notam = models.CharField(
         verbose_name="ノータム",
@@ -115,26 +115,6 @@ class FailuerReport(CommonInfo):
     )
 
     def save(self, *args, **kwargs):
-        if 'temp_info' in kwargs:
-            self.title = kwargs['temp_info'].title
-            self.content = kwargs['temp_info'].content
-            self.created_by = kwargs['temp_info'].created_by
-            self.created_at = kwargs['temp_info'].created_at
-            self.updated_at = kwargs['temp_info'].updated_at
-            self.updated_by = kwargs['temp_info'].updated_by
-            self.failuer_date = kwargs['temp_info'].failuer_date
-            self.failuer_time = kwargs['temp_info'].failuer_time
-            self.date_time_confirmation = kwargs['temp_info'].date_time_confirmation
-            self.failuer_place = kwargs['temp_info'].failuer_place
-            self.eq = kwargs['temp_info'].eq
-            self.sammary = kwargs['temp_info'].sammary
-            self.recovery_date = kwargs['temp_info'].recovery_date
-            self.recovery_time = kwargs['temp_info'].recovery_time
-            self.recovery_propects = kwargs['temp_info'].recovery_propects
-            self.is_flight_impact = kwargs['temp_info'].is_flight_impact
-            self.flight_impact = kwargs['temp_info'].flight_impact
-            self.is_press = kwargs['temp_info'].is_press
-            self.press_contents = kwargs['temp_info'].press_contents
         super(FailuerReport, self).save(self, *args, **kwargs)
 
     class Meta:
@@ -167,6 +147,12 @@ class FailuerReportRelation(FailuerReport):
     dest_list = models.ManyToManyField(
         Addresses, related_name='failuer_repo_list', null=True, blank=True
     )
+    mail_title = models.CharField(
+        verbose_name='メール送信件名', max_length=256, null=True, blank=True)
+    mail_header = models.TextField(
+        verbose_name='メールヘッダー', max_length=512, null=True, blank=True)
+    mail_footer = models.TextField(
+        verbose_name='メールフッター', max_length=512, null=True, blank=True)
 
     class Meta:
         db_table = 'failuer_repo_list'

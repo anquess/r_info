@@ -146,7 +146,8 @@ class FailuerReportRelationForm(forms.ModelForm):
             'notam': forms.Textarea(attrs={
                 "rows": "3",
             }),
-            'flight_impact': forms.TextInput(attrs={
+            'flight_impact': forms.Textarea(attrs={
+                "rows": "3",
                 "data-bs-toggle": "tooltip",
                 "data-bs-placement": "bottom",
                 "title": "現時点で判明している事柄を記載\n例:確認中"
@@ -165,6 +166,9 @@ class FailuerReportRelationForm(forms.ModelForm):
             }),
             "content": forms.Textarea(attrs={
                 "rows": "3",
+            }),
+            "select_register": forms.widgets.Select(attrs={
+                "types": "hidden",
             })
         }}
 

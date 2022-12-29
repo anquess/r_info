@@ -1,7 +1,36 @@
 {% extends "baseDetail.html" %}
 {% load bootstrap_icons %}
 {% block sammary %}
+{% if relation_info.mail_title %}
+<h4>メール送信件名</h4>
+<p>{{relation_info.mail_title}}</p>
+{%endif%}
+{%if dest_list%}
+<h4>送信先</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>登録官署</th>
+            <th>役職</th>
+            <th>氏名</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dest in dest_list %}
+        <tr>
+            <td>{{dest.created_by}}</td>
+            <td>{{dest.position}}</td>
+            <td>{{dest.name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{%endif%}
+{{relation_info.mail_header | linebreaksbr}}
+
+
 <div class="h5 pt-2 mt-2">障害発生日時</div>
+
 <div class="row">
     <div class="col-2">
         {{info.failuer_date}}
@@ -97,7 +126,9 @@
     </div>
     {%endfor%}
 </div>
-
+{% if relation_info.mail_footer %}
+{{relation_info.mail_footer | linebreaksbr}}
+{%endif%}
 {% endblock %}
 
 {% block btn %}
@@ -118,4 +149,5 @@
         {% bs_icon 'trash' %}
     </a></th>
 {% endif %}
+
 {% endblock %}

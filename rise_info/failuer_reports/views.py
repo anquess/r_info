@@ -13,7 +13,7 @@ from .forms import FailuerReportRelationForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
 from accounts.views import addIsStaff
 from addresses.models import Addresses
-from rise_info.settings import EMAIL_HOST_USER
+from rise_info.settings import EMAIL_HOST_USER, DEBUG
 
 from datetime import datetime as dt
 from functools import reduce
@@ -89,38 +89,63 @@ def sendmail(request, info_id):
                 else:
                     dist_HTML_list.append(adr.mail)
             try:
-                send_mail(
-                    subject=subject,
-                    message=msg_plain,
-                    from_email=email1,
-                    recipient_list=dist_HTML_list,
-                    html_message=msg_html,
-                    fail_silently=False,
-                )
-                send_mail(
-                    subject=subject,
-                    message=msg_plain,
-                    from_email=email1,
-                    recipient_list=dist_Text_list,
-                    fail_silently=False,
-                )
-                if info.send_repo:
-                    info.send_repo.save(temp_info=info)
-                else:
-                    send_repo = info.failuerreport_ptr
-                    send_repo.id = None
-                    send_repo.select_register = RegisterStatusChoices.SENDED
-                    send_repo.save()
-                    info.send_repo = send_repo
-                info.dist_list = dist_list
-                info.save()
-                messages.add_message(request, messages.INFO, '送信されました。')
-                return redirect('failuer_report_list')
+                if not DEBUG:
+                    send_mail(
+                        subject=subject,
+                        message=msg_plain,
+                        from_email=email1,
+                        recipient_list=dist_HTML_list,
+                        html_message=msg_html,
+                        fail_silently=False,
+                    )
+                    send_mail(
+                        subject=subject,
+                        message=msg_plain,
+                        from_email=email1,
+                        recipient_list=dist_Text_list,
+                        fail_silently=False,
+                    )
             except Exception as e:
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e) + '\n' + str(is_send_list))
 
-                return redirect('failuer_report_list')
+            if info.send_repo:
+                info.send_repo.title = info.title
+                info.send_repo.content = info.content
+                info.send_repo.created_by = info.created_by
+                info.send_repo.created_at = info.created_at
+                info.send_repo.updated_at = info.updated_at
+                info.send_repo.updated_by = info.updated_by
+                info.send_repo.failuer_date = info.failuer_date
+                info.send_repo.failuer_time = info.failuer_time
+                info.send_repo.date_time_confirmation = info.date_time_confirmation
+                info.send_repo.failuer_place = info.failuer_place
+                info.send_repo.eq = info.eq
+                info.send_repo.sammary = info.sammary
+                info.send_repo.recovery_date = info.recovery_date
+                info.send_repo.recovery_time = info.recovery_time
+                info.send_repo.recovery_propects = info.recovery_propects
+                info.send_repo.is_flight_impact = info.is_flight_impact
+                info.send_repo.flight_impact = info.flight_impact
+                info.send_repo.is_press = info.is_press
+                info.send_repo.press_contents = info.press_contents
+                info.send_repo.save()
+            else:
+                send_repo = info.failuerreport_ptr
+                send_repo.id = None
+                send_repo.select_register = RegisterStatusChoices.SENDED
+                send_repo.save()
+                info.send_repo = send_repo
+            info.dest_list.all().delete()
+            for adr in dist_list:
+                info.dest_list.add(adr)
+            info.mail_title = subject
+            info.mail_header = context['mail_header']
+            info.mail_footer = context['mail_footer']
+            info.save()
+            messages.add_message(request, messages.INFO, '送信されました。')
+            return redirect('failuer_report_list')
+
         else:
             context = addIsStaff(context, request.user)
             return render(request, 'failuer_reports/mail_form.html', context)
@@ -251,7 +276,12 @@ def failuer_report_edit(request, info_id):
 
 @ login_required
 def failuer_report_detail(request, info_id):
-    info = FailuerReportRelation.objects.get_or_none(pk=info_id)
+    relation_info = FailuerReportRelation.objects.get_or_none(pk=info_id)
+    dest_list = relation_info.dest_list.all()
+    if request.user == relation_info.created_by:
+        info = relation_info
+    else:
+        info = relation_info.send_repo
     files = AttachmentFile.objects.filter(info=info)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     if info:
@@ -259,6 +289,8 @@ def failuer_report_detail(request, info_id):
             'info': info,
             'files': files,
             'events': events,
+            'relation_info': relation_info,
+            'dest_list': dest_list,
         }
         context = addIsStaff(context, request.user)
         return render(request, 'failuer_reports/detail.html', context)
