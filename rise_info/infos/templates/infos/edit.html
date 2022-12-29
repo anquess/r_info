@@ -9,7 +9,21 @@
 {% include "base_info_add_new_sammary.html" %}
 {% endblock %}
 
+{% block register %}
+<div class="row mt-2">
+    <div class="col-1">
+        <label for="id_select_register" class="form-label">{{form.select_register.label}}</label>
+    </div>
+    <div class="col-2">
+        {{form.select_register}}
+    </div>
+    <div class="col-8">
+        {{form.disclosure_date}}
+    </div>
+</div>
+{% endblock %}
 {% block btn %}
+
 <button class="btn btn-primary" type="submit" value="post">変更</button>
 <button class="btn btn-primary" onclick='addSendMailFLG()' data-bs-toggle="tooltip" data-bs-placement="bottom"
     title="メール送信画面へ">

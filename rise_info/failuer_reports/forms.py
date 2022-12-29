@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
 
 
-from .models import FailuerReport, AttachmentFile, Circumstances
+from .models import FailuerReport, FailuerReportRelation, AttachmentFile, Circumstances
 from rise_info.baseForms import MetaCommonInfo
 
 
@@ -20,7 +20,7 @@ class IsNullValidator:
             )
 
 
-class FailuerReportForm(forms.ModelForm):
+class FailuerReportRelationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, value in self.fields.items():
@@ -45,7 +45,7 @@ class FailuerReportForm(forms.ModelForm):
         return department
 
     class Meta(MetaCommonInfo):
-        model = FailuerReport
+        model = FailuerReportRelation
         fields = MetaCommonInfo.fields + (
             'failuer_date',
             'failuer_time',
@@ -198,10 +198,10 @@ class CircumstancesForm(forms.ModelForm):
 
 
 FileFormSet = forms.inlineformset_factory(
-    FailuerReport, AttachmentFile, fields='__all__', extra=1,
+    FailuerReportRelation, AttachmentFile, fields='__all__', extra=1,
 )
 CircumstancesFormSet = forms.inlineformset_factory(
-    FailuerReport, Circumstances, fields='__all__', extra=1,
+    FailuerReportRelation, Circumstances, fields='__all__', extra=1,
     form=CircumstancesForm,
     widgets={
         'date': forms.DateInput(attrs={

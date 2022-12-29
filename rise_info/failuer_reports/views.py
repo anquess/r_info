@@ -8,8 +8,8 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView
 
-from .models import FailuerReport, AttachmentFile, Circumstances  # , SendedFailuerReport
-from .forms import FailuerReportForm, FileFormSet, CircumstancesFormSet
+from .models import FailuerReport, FailuerReportRelation, AttachmentFile, Circumstances, RegisterStatusChoices
+from .forms import FailuerReportRelationForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
 from accounts.views import addIsStaff
 from addresses.models import Addresses
@@ -40,7 +40,7 @@ def get_addresses(fail_rep, is_HMTL: bool, grps):
 
 @ login_required
 def sendmail(request, info_id):
-    info = FailuerReport.objects.get_or_none(pk=info_id)
+    info = FailuerReportRelation.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
 
@@ -78,10 +78,12 @@ def sendmail(request, info_id):
             is_send_list = request.POST.getlist('is_send_list[]')
             dist_HTML_list = []
             dist_Text_list = []
+            dist_list = []
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
             for is_send in is_send_list:
                 adr = Addresses.object.get_or_none(pk=is_send)
+                dist_list.append(adr)
                 if adr.is_HTML_mail:
                     dist_HTML_list.append(adr.mail)
                 else:
@@ -102,7 +104,16 @@ def sendmail(request, info_id):
                     recipient_list=dist_Text_list,
                     fail_silently=False,
                 )
-
+                if info.send_repo:
+                    info.send_repo.save(temp_info=info)
+                else:
+                    send_repo = info.failuerreport_ptr
+                    send_repo.id = None
+                    send_repo.select_register = RegisterStatusChoices.SENDED
+                    send_repo.save()
+                    info.send_repo = send_repo
+                info.dist_list = dist_list
+                info.save()
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('failuer_report_list')
             except Exception as e:
@@ -118,8 +129,8 @@ def sendmail(request, info_id):
         return redirect('failuer_report_list')
 
 
-class FailuerReportList(ListView):
-    model = FailuerReport
+class FailuerReportRelationList(ListView):
+    model = FailuerReportRelation
     template_name = 'failuer_reports/list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
@@ -127,7 +138,7 @@ class FailuerReportList(ListView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(FailuerReportList, self).dispatch(request, *args, **kwargs)
+        return super(FailuerReportRelationList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
         is_all = self.request.GET.get('is_all')
@@ -135,7 +146,9 @@ class FailuerReportList(ListView):
             queryset = super().get_queryset(**kwargs).filter(
                 Q(created_by__username__contains=self.request.user))
         else:
-            queryset = super().get_queryset(**kwargs)
+            queryset = super().get_queryset(**kwargs).filter(
+                Q(created_by__username__contains=self.request.user) |
+                Q(send_repo__isnull=False))
         q_created_by = self.request.GET.get('created_by')
         q_keyword = self.request.GET.get('keyword')
         if q_created_by is not None:
@@ -160,7 +173,7 @@ class FailuerReportList(ListView):
 
 @ login_required
 def failuer_report_new(request):
-    form = FailuerReportForm(request.POST or None)
+    form = FailuerReportRelationForm(request.POST or None)
     context = addIsStaff({'form': form}, request.user)
     if request.method == "POST" and form.is_valid():
         info = form.save(commit=False)
@@ -188,10 +201,10 @@ def failuer_report_new(request):
 
 @ login_required
 def failuer_report_edit(request, info_id):
-    info = FailuerReport.objects.get_or_none(pk=info_id)
+    info = FailuerReportRelation.objects.get_or_none(pk=info_id)
     if info:
         if info.created_by == request.user:
-            form = FailuerReportForm(
+            form = FailuerReportRelationForm(
                 request.POST or None, files=request.FILES or None, instance=info)
             formset = FileFormSet(request.POST or None,
                                   files=request.FILES or None, instance=info)
@@ -238,7 +251,7 @@ def failuer_report_edit(request, info_id):
 
 @ login_required
 def failuer_report_detail(request, info_id):
-    info = FailuerReport.objects.get_or_none(pk=info_id)
+    info = FailuerReportRelation.objects.get_or_none(pk=info_id)
     files = AttachmentFile.objects.filter(info=info)
     events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
     if info:
@@ -256,7 +269,7 @@ def failuer_report_detail(request, info_id):
 
 @ login_required
 def failuer_report_del(request, info_id):
-    info = FailuerReport.objects.get_or_none(pk=info_id)
+    info = FailuerReportRelation.objects.get_or_none(pk=info_id)
     if info:
         if info.created_by == request.user:
             title = info.title

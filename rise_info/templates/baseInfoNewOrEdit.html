@@ -32,28 +32,17 @@
         <script src="/static/simplemde/simplemde.min.js"></script>
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
-    <div class="row mt-2">
-        <div class="col-1">
-            <label for="id_select_register" class="form-label">{{form.select_register.label}}</label>
-        </div>
-        <div class="col-2">
-            {{form.select_register}}
-        </div>
-        <div class="col-9">
-            <link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
-            <script src="/static/jquery/jquery-3.6.0.min.js"></script>
-            <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
-            {{form.disclosure_date}}
-        </div>
-    </div>
+    {% blcok register %}{% endblock %}
     {% block btn %}{% endblock %}
 </form>
 {% endblock %}
 
 {% block add_js %}
+<link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
+<script src="/static/jquery/jquery-3.6.0.min.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script>
     $(function () {
         $("input").on("keydown", function (e) {

@@ -18,6 +18,11 @@ class IsConfirmChoices(models.TextChoices):
     CHECKING_NOW = 'checking_now', '確認中'
 
 
+class RegisterStatusChoices(models.TextChoices):
+    TEMP = 'temporaty', '一時保存'
+    SENDED = 'sended', '送信済み'
+
+
 class FailuerReport(CommonInfo):
     failuer_date = models.DateField(
         verbose_name='障害発生日', null=True, blank=True,
@@ -103,8 +108,33 @@ class FailuerReport(CommonInfo):
     content = models.TextField(
         verbose_name='備考', default="", null=False, blank=True, max_length=4096
     )
+    select_register = models.CharField(
+        verbose_name='登録状態', max_length=16,
+        choices=RegisterStatusChoices.choices,
+        default=RegisterStatusChoices.TEMP, null=False, blank=False
+    )
 
     def save(self, *args, **kwargs):
+        if 'temp_info' in kwargs:
+            self.title = kwargs['temp_info'].title
+            self.content = kwargs['temp_info'].content
+            self.created_by = kwargs['temp_info'].created_by
+            self.created_at = kwargs['temp_info'].created_at
+            self.updated_at = kwargs['temp_info'].updated_at
+            self.updated_by = kwargs['temp_info'].updated_by
+            self.failuer_date = kwargs['temp_info'].failuer_date
+            self.failuer_time = kwargs['temp_info'].failuer_time
+            self.date_time_confirmation = kwargs['temp_info'].date_time_confirmation
+            self.failuer_place = kwargs['temp_info'].failuer_place
+            self.eq = kwargs['temp_info'].eq
+            self.sammary = kwargs['temp_info'].sammary
+            self.recovery_date = kwargs['temp_info'].recovery_date
+            self.recovery_time = kwargs['temp_info'].recovery_time
+            self.recovery_propects = kwargs['temp_info'].recovery_propects
+            self.is_flight_impact = kwargs['temp_info'].is_flight_impact
+            self.flight_impact = kwargs['temp_info'].flight_impact
+            self.is_press = kwargs['temp_info'].is_press
+            self.press_contents = kwargs['temp_info'].press_contents
         super(FailuerReport, self).save(self, *args, **kwargs)
 
     class Meta:
@@ -129,7 +159,7 @@ class Circumstances(models.Model):
         db_table = 'circumstance'
 
 
-class FailuerReportList(FailuerReport):
+class FailuerReportRelation(FailuerReport):
     send_repo = models.OneToOneField(
         FailuerReport, on_delete=models.DO_NOTHING,
         related_name='sended', verbose_name='送信ログ', null=True, blank=True
