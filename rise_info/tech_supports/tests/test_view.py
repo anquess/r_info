@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 
 
-from ..views import TechSupportList, support_del, support_detail, support_edit, support_new
-from ..models import TechSupports, TechSupportComments
+from ..views import support_edit
+from ..models import TechSupports
 from ..tests.test_form import make_mock_right_param
 from accounts.tests.com_setup import login
 
@@ -32,7 +32,7 @@ class TechSupportsListTest(TestCase):
 
     def test_techSupport_list_return_200_and_expected_title(self) -> None:
         response = self.client.get("/tech_support/")
-        self.assertContains(response, "技術支援一覧", status_code=200)
+        self.assertContains(response, "官署発信情報一覧", status_code=200)
 
     def test_addresse_list_uses_expected_template(self) -> None:
         response = self.client.get("/tech_support/")
@@ -46,8 +46,9 @@ class CreateAddressTest(TestCase):
 
     def test_render_creation_form(self):
         response = self.client.get("/tech_support/new/")
-        self.assertContains(response, "技術支援の登録", status_code=200)
-        self.assertTemplateUsed(response, "tech_supports/new.html")
+        self.assertContains(response, "官署発信情報の登録", status_code=200)
+        self.assertTemplateUsed(
+            response, "tech_supports/techSupportNewOrEdit.html")
 
     def test_create_info(self):
         login(self)
@@ -81,7 +82,7 @@ class EditSupportTest(TestCase):
 
     def test_should_use_expected_template(self):
         self.assertTemplateUsed(
-            self.response, "tech_supports/edit.html")
+            self.response, "tech_supports/techSupportNewOrEdit.html")
 
 
 class EditSupportsTest(TestCase):
@@ -96,19 +97,18 @@ class SupportDelTest(TestCase):
         addMockTechSupport(self)
 
     def test_support_del_count(self):
-        try:
-            support = TechSupports.objects.get_or_none(
-                title=self.params['title'])
-        except:
-            self.fail('あるはずのmockが見つからない')
-        response = self.client.get(
-            "/tech_support/" + str(support.pk) + "/del/")
-        self.assertRedirects(response, reverse('support_list'), status_code=302,
-                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
-        try:
-            support = TechSupports.objects.get_or_none(
-                title=self.params['title'])
-        except:
-            return None
+        support = TechSupports.objects.get_or_none(
+            title=self.params['title'])
         if support:
-            self.fail('ないはずのmockが見つかった')
+            response = self.client.get(
+                "/tech_support/" + str(support.pk) + "/del/")
+            self.assertRedirects(
+                response, reverse('support_list'), status_code=302,
+                target_status_code=200, msg_prefix='',
+                fetch_redirect_response=True)
+        else:
+            self.fail('あるはずのmockが見つからない')
+
+        support = TechSupports.objects.get_or_none(
+            title=self.params['title'])
+        self.assertIsNone(support)
