@@ -17,10 +17,8 @@ from addresses.models import Addresses
 from rise_info.choices import RegisterStatusChoicesFailuer
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
 
-from datetime import datetime as dt
 from functools import reduce
 import operator
-import pytz
 
 
 def get_addresses(fail_rep, is_HMTL: bool, grps):
@@ -114,7 +112,8 @@ def sendmail(request, info_id):
                     )
             except Exception as e:
                 messages.add_message(
-                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e) + '\n' + str(is_send_list))
+                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) +
+                    '\n' + str(e) + '\n' + str(is_send_list))
 
             if info.send_repo:
                 info.send_repo.title = info.title
@@ -125,7 +124,8 @@ def sendmail(request, info_id):
                 info.send_repo.updated_by = info.updated_by
                 info.send_repo.failuer_date = info.failuer_date
                 info.send_repo.failuer_time = info.failuer_time
-                info.send_repo.date_time_confirmation = info.date_time_confirmation
+                info.send_repo.date_time_confirmation = \
+                    info.date_time_confirmation
                 info.send_repo.failuer_place = info.failuer_place
                 info.send_repo.eq = info.eq
                 info.send_repo.notam = info.notam
@@ -241,7 +241,10 @@ def failuer_report_new(request):
     else:
         context['formset'] = FileFormSet()
         context['formset2'] = CircumstancesFormSet()
-    return render(request, "failuer_reports/new.html", context)
+    return render(
+        request,
+        "failuer_reports/failuerReportsNewOrEdit.html",
+        context)
 
 
 @ login_required
@@ -250,7 +253,8 @@ def failuer_report_edit(request, info_id):
     if info:
         if info.created_by == request.user:
             form = FailuerReportRelationForm(
-                request.POST or None, files=request.FILES or None, instance=info)
+                request.POST or None, files=request.FILES or None,
+                instance=info)
             formset = FileFormSet(request.POST or None,
                                   files=request.FILES or None, instance=info)
             formset2 = CircumstancesFormSet(
@@ -269,7 +273,10 @@ def failuer_report_edit(request, info_id):
                         for ele in formset2:
                             messages.add_message(
                                 request, messages.WARNING, str(ele))
-                        return render(request, 'failuer_reports/edit.html', context)
+                        return render(
+                            request,
+                            'failuer_reports/failuerReportsNewOrEdit.html',
+                            context)
                 if formset2.is_valid():
                     info = form.save(commit=False)
                     formset.save()
@@ -286,7 +293,10 @@ def failuer_report_edit(request, info_id):
                 'formset2': formset2,
             },
                 request.user)
-            return render(request, 'failuer_reports/edit.html', context)
+            return render(
+                request,
+                'failuer_reports/failuerReportsNewOrEdit.html',
+                context)
         else:
             messages.add_message(request, messages.WARNING, '他官署の情報は変更できません')
     else:
