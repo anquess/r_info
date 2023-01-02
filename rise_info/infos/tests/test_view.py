@@ -83,7 +83,8 @@ class EditInfoTest(TestCase):
         detail_and_edit_common_setUp(self, True)
 
     def test_should_use_expected_template(self):
-        self.assertTemplateUsed(self.response, "infos/edit.html")
+        self.assertTemplateUsed(
+            self.response, "infos/infoNewOrEdit.html")
 
 
 class DetailInfoTest(TestCase):

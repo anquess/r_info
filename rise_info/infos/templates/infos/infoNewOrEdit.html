@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load bootstrap_icons %}
+{% block extraheader %}
+<link rel="stylesheet" href="/static/simplemde/simplemde.min.css">
+<link rel="stylesheet" href="/static/fontawesome/css/fontawesome.min.css">
+<script src="/static/infos/js/clickCheck.js"></script>
+
+{% endblock %}
+{% block main %}
+{%if info_id%}
+<h1>信頼性情報の更新</h1>
+{%else%}
+<h1>信頼性情報の登録</h1>
+{%endif%}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.media}}
+    <div class="row mt-1">
+        <label for="id_title" class="form-label">{{ form.title.label }}</label>
+    </div>
+    <div class="row mt-1">
+        {{ form.title }}
+    </div>
+    {% include "baseAddAttachment.html" %}
+    {% include "infos/baseInfoAddNewSammary.html" %}
+    <div class="row mt-1">
+        <div class="col-2">
+            <label for="id_content" class="form-label">
+                {{form.content.label}}
+            </label>
+        </div>
+        <div class="col-2">
+            <label for="id_is_rich_text" class="form-label">{{form.is_rich_text.label}}</label>
+            {{form.is_rich_text}}
+        </div>
+        {{form.content}}
+        <script src="/static/simplemde/simplemde.min.js"></script>
+        <script src="/static/infos/js/addSimpleMDE.js"></script>
+    </div>
+    <div class="row mt-2">
+        <div class="col-1">
+            <label for="id_select_register" class="form-label">{{form.select_register.label}}</label>
+        </div>
+        <div class="col-2">
+            {{form.select_register}}
+        </div>
+        <div class="col-8">
+            {{form.disclosure_date}}
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" value="post">
+        {%if info_id%}
+        更新
+        {%else%}
+        登録
+        {%endif%}
+    </button>
+    <button class="btn btn-primary" onclick='addSendMailFLG()' data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="メール送信画面へ">
+        {% bs_icon 'send' %}
+    </button>
+
+</form>
+{% endblock %}
+
+{% block add_js %}
+<link rel="stylesheet" href="/static/jquery/ui/css/jquery-ui.min.css">
+<script src="/static/jquery/jquery-3.6.0.min.js"></script>
+<script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
+<script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
+<script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="/static/infos/js/addAttachmentButton.js"></script>
+<script>
+    <!-- メール送信フラグ追加 -->
+    function addSendMailFLG() {
+        var sendMailFLG = document.createElement('input');
+        sendMailFLG.type = "hidden";
+        sendMailFLG.name = "sendMailFLG";
+        sendMailFLG.value = false;
+        document.forms[0].appendChild(sendMailFLG);
+    }
+</script>
+<script>
+    <!-- エンターによる送信不可(誤送信対策) -->
+    $(function () {
+        $("input").on("keydown", function (e) {
+            if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    });
+</script>
+<script>
+    <!-- maxlength設定用 -->
+    function setMaxlength(id) {
+        $(id).maxlength({
+            alwaysShow: true,
+            warningClass: "label label-success",
+            limitReachedClass: "label label-danger"
+        });
+    }
+    $(document).ready(setMaxlength('#id_title'));
+    $(document).ready(setMaxlength('#id_content'));
+    $(document).ready(setMaxlength('#id_managerID'));
+    $(document).ready(setMaxlength('#id_sammary'));
+</script>
+{% endblock %}

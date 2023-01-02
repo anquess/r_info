@@ -147,38 +147,46 @@ def info_del(request, info_id):
         return redirect('info_list')
 
 
-@login_required
-def info_edit(request, info_id):
+def info_update(request, info_id=None):
     if request.user.is_staff:
-        info = Info.objects.get_or_none(pk=info_id)
-        if info:
+        if info_id:
+            info = Info.objects.get_or_none(pk=info_id)
             form = InfoForm(request.POST or None, instance=info)
             formset = FileFormSet(request.POST or None,
                                   files=request.FILES or None, instance=info)
-            if (request.method == "POST" and form.is_valid()):
-                if (request.FILES or None) is not None:
-                    if not formset.is_valid():
-                        context = addIsStaff({
-                            'form': form,
-                            'formset': formset,
-                        }, request.user)
-                        for ele in formset:
-                            messages.add_message(
-                                request, messages.WARNING, str(ele))
-                        return render(request, 'infos/edit.html', context)
-                form.save()
-                formset.save()
+        else:
+            form = InfoForm(request.POST or None)
+            context = addIsStaff({'form': form}, request.user)
+            if request.method == "POST" and form.is_valid():
+                info = form.save(commit=False)
+                formset = FileFormSet(
+                    request.POST, request.FILES, instance=info)
+            else:
+                formset = FileFormSet()
+        context = addIsStaff({
+            'form': form,
+            'formset': formset,
+            'info_id': info_id,
+        }, request.user)
+        if request.method == "POST" and form.is_valid():
+            if (request.FILES or None) is not None:
+                if not formset.is_valid():
+                    for ele in formset:
+                        messages.add_message(
+                            request, messages.WARNING, str(ele))
+                    return render(request, 'infos/infoNewOrEdit.html', context)
+            form.save()
+            formset.save()
+            if info_id:
                 messages.add_message(request, messages.INFO, '更新されました。')
-                if request.POST.get("sendMailFLG"):
-                    return redirect('info_send', info_id=info.pk)
-                else:
-                    return redirect('info_list')
-            context = addIsStaff({
-                'form': form,
-                'formset': formset,
-            },
-                request.user)
-            return render(request, 'infos/edit.html', context)
+            else:
+                messages.add_message(request, messages.INFO, '登録されました。')
+            if request.POST.get("sendMailFLG"):
+                return redirect('info_send', info_id=info.pk)
+            else:
+                return redirect('info_list')
+        else:
+            return render(request, 'infos/infoNewOrEdit.html', context)
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('info_list')
@@ -186,29 +194,12 @@ def info_edit(request, info_id):
 
 @login_required
 def info_new(request):
-    if request.user.is_staff:
-        form = InfoForm(request.POST or None)
-        context = addIsStaff({'form': form}, request.user)
-        if request.method == "POST" and form.is_valid():
-            info = form.save(commit=False)
-            formset = FileFormSet(request.POST, request.FILES, instance=info)
-            if formset.is_valid():
-                info.save()
-                formset.save()
-                form.save()
-                messages.add_message(request, messages.INFO, '更新されました。')
-                if request.POST.get("sendMailFLG"):
-                    return redirect('info_send', info_id=info.pk)
-                else:
-                    return redirect('info_list')
-            else:
-                context['formset'] = formset
-        else:
-            context['formset'] = FileFormSet()
-        return render(request, "infos/new.html", context)
-    else:
-        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('info_list')
+    return info_update(request=request)
+
+
+@login_required
+def info_edit(request, info_id):
+    return info_update(request=request, info_id=info_id)
 
 
 @login_required
