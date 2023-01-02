@@ -8,11 +8,13 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView
 
-from .models import FailuerReport, FailuerReportRelation, AttachmentFile, Circumstances, RegisterStatusChoices
+from .models import FailuerReport, FailuerReportRelation, AttachmentFile, \
+    Circumstances
 from .forms import FailuerReportRelationForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
 from accounts.views import addIsStaff
 from addresses.models import Addresses
+from rise_info.choices import RegisterStatusChoicesFailuer
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
 
 from datetime import datetime as dt
@@ -141,7 +143,7 @@ def sendmail(request, info_id):
                 send_repo = info.failuerreport_ptr
                 send_repo.id = None
                 send_repo.pk = None
-                send_repo.select_register = RegisterStatusChoices.SENDED
+                send_repo.select_register = RegisterStatusChoicesFailuer.SENDED
                 send_repo.save()
                 info.send_repo = send_repo
             info.dest_list.all().delete()

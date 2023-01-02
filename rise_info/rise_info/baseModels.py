@@ -2,6 +2,8 @@ from django.db import models
 from django_currentuser.db.models import CurrentUserField
 from django_currentuser.middleware import (get_current_authenticated_user)
 
+from .choices import RegisterStatusChoices
+
 from datetime import datetime as dt
 import os
 import shutil
@@ -22,12 +24,6 @@ def getSysupdtime(row) -> dt:
         sysupdtime = dt.strptime(str_sysupdtime, '%Y/%m/%d %H:%M:%S')
     sysupdtime = sysupdtime.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
     return sysupdtime
-
-
-class RegisterStatusChoices(models.TextChoices):
-    NOT_REGISTERED = 'not_registered', '未登録'
-    UNDER_RENEWAL = 'under_renewal', '更新中'
-    REGISTER = 'register', '登録済'
 
 
 class BaseManager(models.Manager):

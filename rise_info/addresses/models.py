@@ -5,9 +5,8 @@ from django_currentuser.middleware import (get_current_authenticated_user)
 
 
 from eqs.models import DepartmentForEq
-from infos.models import InfoTypeChoices
 from rise_info.baseModels import BaseManager
-
+from rise_info.choices import InfoTypeChoices
 # Create your models here.
 
 

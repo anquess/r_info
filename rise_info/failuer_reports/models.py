@@ -4,23 +4,8 @@ from django_currentuser.db.models import CurrentUserField
 from addresses.models import Addresses
 from eqs.models import DepartmentForEq
 from rise_info.baseModels import CommonInfo, BaseAttachment
-
-
-class ConfirmationTypeChoices(models.TextChoices):
-    UNNECESSASY = 'unnecessary', '確認不要'
-    CONFIRMED = 'confirmed', '確認済'
-    CHECKING_NOW = 'checking_now', '確認中'
-
-
-class IsConfirmChoices(models.TextChoices):
-    NONE = 'none', '無'
-    YES = 'yes', '有'
-    CHECKING_NOW = 'checking_now', '確認中'
-
-
-class RegisterStatusChoices(models.TextChoices):
-    TEMP = 'temporaty', '一時保存'
-    SENDED = 'sended', '送信済み'
+from rise_info.choices import ConfirmationTypeChoices, IsConfirmChoices, \
+    RegisterStatusChoicesFailuer
 
 
 class FailuerReport(CommonInfo):
@@ -110,8 +95,8 @@ class FailuerReport(CommonInfo):
     )
     select_register = models.CharField(
         verbose_name='登録状態', max_length=16,
-        choices=RegisterStatusChoices.choices,
-        default=RegisterStatusChoices.TEMP, null=False, blank=False
+        choices=RegisterStatusChoicesFailuer.choices,
+        default=RegisterStatusChoicesFailuer.TEMP, null=False, blank=False
     )
 
     def save(self, *args, **kwargs):
