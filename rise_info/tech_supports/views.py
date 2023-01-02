@@ -23,23 +23,25 @@ class TechSupportList(ListView):
         return super(TechSupportList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
-        queryset = super().get_queryset(**kwargs)
-        q_keyword = self.request.GET.get('keyword')
-        q_eqtype = self.request.GET.get('eqtype')
-        q_office = self.request.GET.get('office')
+        q_default = Q(select_register__in=['register', 'doing', 'done']) | \
+            Q(created_by__username__contains=self.request.user)
+        queryset = super().get_queryset(**kwargs).filter(q_default)
+        key_keyword = self.request.GET.get('keyword')
+        key_eqtype = self.request.GET.get('eqtype')
+        key_office = self.request.GET.get('office')
 
-        if q_eqtype is not None:
-            if len(q_eqtype) > 0:
+        if key_eqtype is not None:
+            if len(key_eqtype) > 0:
                 queryset = queryset.filter(
-                    Q(eqtypes__id__icontains=q_eqtype)).distinct()
-        if q_office is not None and q_office != "":
+                    Q(eqtypes__id__icontains=key_eqtype)).distinct()
+        if key_office is not None and key_office != "":
             queryset = queryset.filter(
-                Q(created_by__username=q_office)).distinct()
-        if q_keyword is not None:
+                Q(created_by__username=key_office)).distinct()
+        if key_keyword is not None:
             queryset = queryset.filter(
-                Q(title__contains=q_keyword) |
-                Q(inquiry__contains=q_keyword) |
-                Q(content__contains=q_keyword)
+                Q(title__contains=key_keyword) |
+                Q(inquiry__contains=key_keyword) |
+                Q(content__contains=key_keyword)
             ).distinct()
 
         return queryset.order_by('-updated_at')
@@ -52,53 +54,59 @@ class TechSupportList(ListView):
         return context
 
 
+def get_form_context(request, info_id=None):
+    if info_id:
+        info = TechSupports.objects.get_or_none(pk=info_id)
+        if info:
+            form = TechSupportsForm(request.POST or None, instance=info)
+            formset = FileFormSet(request.POST or None,
+                                  files=request.FILES or None, instance=info)
+        else:
+            return None
+    else:
+        form = TechSupportsForm(request.POST or None)
+        if (request.method == "POST" and form.is_valid()):
+            info = form.save(commit=False)
+            formset = FileFormSet(request.POST, request.FILES, instance=info)
+        else:
+            formset = FileFormSet()
+    return addIsStaff(
+        {'form': form, 'formset': formset, 'info_id': info_id},
+        request.user)
+
+
+def support_update(request, info_id=None):
+    context = get_form_context(request=request, info_id=info_id)
+    if context:
+        if (request.method == "POST" and context['form'].is_valid()):
+            if context['formset'].is_valid():
+                context['form'].save()
+                context['formset'].save()
+                messages.add_message(request, messages.INFO, '更新されました。')
+                return redirect('support_list')
+            else:
+                for ele in context['formset']:
+                    messages.add_message(
+                        request, messages.WARNING, str(ele))
+                return render(request,
+                              'tech_supports/techSupportNewOrEdit.html',
+                              context)
+        return render(request,
+                      'tech_supports/techSupportNewOrEdit.html',
+                      context)
+    else:
+        messages.add_message(request, messages.ERROR, '当該官署発信情報はありません')
+        return redirect('support_list')
+
+
 @login_required
 def support_edit(request, info_id):
-    info = TechSupports.objects.get_or_none(pk=info_id)
-    if info:
-        form = TechSupportsForm(request.POST or None, instance=info)
-        formset = FileFormSet(request.POST or None,
-                              files=request.FILES or None, instance=info)
-        if (request.method == "POST" and form.is_valid()):
-            if (request.FILES or None) is not None:
-                if not formset.is_valid():
-                    context = addIsStaff({
-                        'form': form,
-                        'formset': formset,
-                    }, request.user)
-                    for ele in formset:
-                        messages.add_message(
-                            request, messages.WARNING, str(ele))
-                    return render(request, 'tech_supports/edit.html', context)
-            form.save()
-            formset.save()
-            messages.add_message(request, messages.INFO, '更新されました。')
-            return redirect('support_list')
-        context = addIsStaff({
-            'form': form,
-            'formset': formset,
-        },
-            request.user)
-        return render(request, 'tech_supports/edit.html', context)
+    return support_update(request=request, info_id=info_id)
 
 
 @login_required
 def support_new(request):
-    form = TechSupportsForm(request.POST or None)
-    context = addIsStaff({'form': form}, request.user)
-    if request.method == "POST" and form.is_valid():
-        info = form.save(commit=False)
-        formset = FileFormSet(request.POST, request.FILES, instance=info)
-        if formset.is_valid():
-            info.save()
-            formset.save()
-            messages.add_message(request, messages.INFO, '追加されました。')
-            return redirect('support_list')
-        else:
-            context['formset'] = formset
-    else:
-        context['formset'] = FileFormSet()
-    return render(request, "tech_supports/new.html", context)
+    return support_update(request=request)
 
 
 @login_required

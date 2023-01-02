@@ -2,9 +2,6 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from rise_info.settings import TOP_PAGE_LIST_NUM
 from accounts.views import addIsStaff
 from infos.models import Info
@@ -21,7 +18,9 @@ def top(request):
         Q(select_register='register'),
     ).order_by('-updated_at')[:10]
     contents = Contents.objects.order_by('-updated_at')[:10]
-    tech_supports = TechSupports.objects.order_by('-updated_at')[:10]
+    tech_supports = TechSupports.objects.filter(
+        Q(select_register__in=['register', 'doing', 'done'])
+    ).order_by('-updated_at')[:10]
     context['list_num'] = list_num
     context['infos'] = infos
     context['contents'] = contents
