@@ -2,11 +2,11 @@ from django.test import TestCase
 from django.urls import resolve, reverse
 from django.core.files.base import File
 
-from ..models import FailuerReport, AttachmentFile
+from ..models import FailuerReport, AttachmentFile, FailuerReportRelation
 from ..views import failuer_report_edit
+from .test_form import getCollectParams
 from accounts.tests.com_setup import loginTestAccount
 from eqs.models import DepartmentForEq
-from offices.tests.test_model import make_mock_office
 
 import shutil
 import os
@@ -14,41 +14,23 @@ from datetime import datetime
 
 
 def addMockFailuereReports(testCase) -> None:
-    now_date = datetime.now()
-    mock_department = DepartmentForEq.objects.create(id="TEST", name='モック')
-    testCase.parms = {
-        'offices': [make_mock_office().id],
-        'department': [mock_department.id],
-    }
-    data = {
-        'title': 'タイトル',
-        'failuer_date': now_date.strftime('%Y-%m-%d'),
-        'failuer_time': now_date.strftime('%H:%M'),
-        'date_time_confirmation': 'confirmed',
-        'failuer_place': 'xx空港',
-        'offices': testCase.parms['offices'],
-        'department': testCase.parms['department'],
-        'eq': 'xx装置',
-        'recovery_propects': 'aa',
-        'sammary': '概要',
-        'operatinal_impact': 'operatinal_impact_test',
-        'flight_impact': 'flight_impact_test',
-        'is_press': 'none',
-        'is_operatinal_impact': 'none',
-        'is_flight_impact': 'none',
-        'select_register': 'register',
-        'circumstances_set-TOTAL_FORMS': 1,
-        'circumstances_set-INITIAL_FORMS': 0,
-        'attachmentfile_set-TOTAL_FORMS': 1,
-        'attachmentfile_set-INITIAL_FORMS': 0,
-    }
-    testCase.response = testCase.client.post("/failuer_reports/new/", data)
+    testCase.params = getCollectParams()
+    testCase.params['attachmentfile_set-TOTAL_FORMS'] = 0
+    testCase.params['attachmentfile_set-INITIAL_FORMS'] = 0
+    testCase.params['circumstances_set-TOTAL_FORMS'] = 0
+    testCase.params['circumstances_set-INITIAL_FORMS'] = 0
+    testCase.response = testCase.client.post(
+        "/failuer_reports/new/", testCase.params)
 
 
 def detail_and_edit_common_setUp(testCase, isEdit: bool):
     loginTestAccount(testCase)
     addMockFailuereReports(testCase)
-    info = FailuerReport.objects.get_or_none(title="タイトル")
+    testCase.assertRedirects(
+        testCase.response, reverse('failuer_report_list'), status_code=302,
+        target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+    info = FailuerReportRelation.objects.get_or_none(
+        title=testCase.params['title'])
     if info:
         if isEdit:
             testCase.response = testCase.client.get(
@@ -83,8 +65,13 @@ class CreateFailureReportTest(TestCase):
 
     def test_create_failuer_report(self):
         addMockFailuereReports(self)
-        info = FailuerReport.objects.get_or_none(title='タイトル')
-        self.assertEqual('概要', info.sammary)
+        info = FailuerReportRelation.objects.get_or_none(
+            title=self.params['title'])
+        if info:
+            self.assertEqual(self.params['sammary'],
+                             info.failuerreport_ptr.sammary)
+        else:
+            self.fail('障害通報が登録されていない')
 
 
 class FailuerReportsDetailTest(TestCase):
@@ -95,7 +82,8 @@ class FailuerReportsDetailTest(TestCase):
         self.assertTemplateUsed(self.response, "failuer_reports/detail.html")
 
     def test_detail_page_returns_200_and_expected_heading(self):
-        self.assertContains(self.response, "タイトル", status_code=200)
+        self.assertContains(
+            self.response, self.params['title'], status_code=200)
 
 
 class EditFailuerReportsTest(TestCase):
@@ -118,17 +106,19 @@ class InfoDelTest(TestCase):
         addMockFailuereReports(self)
 
     def test_info_del_count(self):
-        try:
-            info = FailuerReport.objects.get_or_none(title='タイトル')
-        except:
+        info = FailuerReportRelation.objects.get_or_none(
+            title=self.params['title'])
+        if info:
+            response = self.client.get(
+                "/failuer_reports/" + str(info.pk) + "/del/")
+            self.assertRedirects(response, reverse('failuer_report_list'), status_code=302,
+                                 target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        else:
             self.fail('あるはずのmockInfoが見つからない')
-        response = self.client.get(
-            "/failuer_reports/" + str(info.pk) + "/del/")
-        self.assertRedirects(response, reverse('failuer_report_list'), status_code=302,
-                             target_status_code=200, msg_prefix='', fetch_redirect_response=True)
 
         try:
-            info = FailuerReport.objects.get_or_none(title='タイトル')
+            info = FailuerReport.objects.get_or_none(
+                title=self.params['title'])
         except:
             return None
         if info:
@@ -141,9 +131,9 @@ class AddReportAttachmentFileTest(TestCase):
         addMockFailuereReports(self)
         shutil.copy('uploads/sorry.jpg', 'abc.jpg')
         shutil.copy('uploads/user.png', 'abc.png')
-        try:
-            self.info = FailuerReport.objects.get_or_none(title='タイトル')
-        except:
+        self.info = FailuerReport.objects.get_or_none(
+            title=self.params['title'])
+        if not self.info:
             self.fail('あるはずのmockReportsが見つからない')
         if not os.path.isfile("abc.jpg"):
             self.fail('mockReportAttachmentFilesファイル(abc.jpg)が見つからない')

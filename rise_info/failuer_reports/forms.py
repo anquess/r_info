@@ -76,15 +76,15 @@ class FailuerReportRelationForm(forms.ModelForm):
             },
             'failuer_place': {
                 'required': '障害発生場所は必須です',
-                'max_length': '障害発生場所は32文字以内です。',
+                'max_length': '障害発生場所は128文字以内です。',
             },
             'eq': {
                 'required': '障害装置は必須です',
-                'max_length': '障害装置は32文字以内です。',
+                'max_length': '障害装置は128文字以内です。',
             },
             'sammary': {
                 'required': '障害概要は必須です',
-                'max_length': '障害概要は512文字以内です。'
+                'max_length': '障害概要は1024文字以内です。'
             },
             'cause': {
                 'required': '障害原因は必須です',

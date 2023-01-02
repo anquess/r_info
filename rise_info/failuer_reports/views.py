@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView
 
-from .models import FailuerReport, FailuerReportRelation, AttachmentFile, \
+from .models import FailuerReportRelation, AttachmentFile, \
     Circumstances
 from .forms import FailuerReportRelationForm, FileFormSet, CircumstancesFormSet
 from accounts.models import User_mail_config
@@ -212,8 +212,18 @@ def failuer_report_new(request):
     context = addIsStaff({'form': form}, request.user)
     if request.method == "POST" and form.is_valid():
         info = form.save(commit=False)
-        formset = FileFormSet(request.POST, request.FILES, instance=info)
-        formset2 = CircumstancesFormSet(request.POST, instance=info)
+        formset = FileFormSet(request.POST, request.FILES,
+                              instance=info or None)
+        formset2 = CircumstancesFormSet(request.POST, instance=info or None)
+        if not formset.is_valid():
+            for k in formset.errors:
+                print(k, formset.errors[k][0])
+            print(formset.non_form_errors())
+        if not formset2.is_valid():
+            for k in formset2.errors:
+                print(k, formset2.errors[k][0])
+            print(formset2.non_form_errors())
+
         if formset.is_valid() and formset2.is_valid():
             info.created_by = request.user
             info.save()
