@@ -7,8 +7,10 @@
             <mj-section padding="10px" />
             <mj-text padding="0" />
             <mj-class name="h1" font-size="16px" padding="0" />
+            <mj-class name="h1_change" font-size="16px" color="red" padding="0" />
             <mj-class name="h2" font-size="14px" padding="0" />
             <mj-divider border-width="2px" border-color="#F0F1F4" padding="0" />
+            <mj-class name="change" color="red" padding="0" />
         </mj-attributes>
     </mj-head>
     <mj-body background-color='#fff'>
@@ -26,11 +28,22 @@
             </mj-column>
         </mj-section>
         {% endif %}
+        {%if info.send_repo%}
         <mj-section>
             <mj-column>
-                <mj-text mj-class="h1">
-                    【障害通報通報123】{{info.title}}
+                <mj-text>
+                    朱書き・朱マーキングが前回送信時({{info.send_repo.updated_at}})からの変更箇所
                 </mj-text>
+            </mj-column>
+        </mj-section>
+        {%endif%}
+        <mj-section>
+            <mj-column>
+                {%if info.title == info.send_repo.title%}
+                <mj-text mj-class="h1">【障害通報通報】{{info.title}}</mj-text>
+                {%else%}
+                <mj-text mj-class="h1_change">【障害通報通報】{{info.title}}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -40,30 +53,34 @@
         </mj-section>
         <mj-section>
             <mj-column width="20%">
-                <mj-text mj-class="h2">
-                    1.障害発生日時
-                </mj-text>
+                <mj-text mj-class="h2">1.障害発生日時</mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{info.failuer_date}}&emsp;
-                    {%if info.date_time_confirmation == "checking_now" %}
-                    概ね&emsp;
-                    {%endif%}
-                    {{info.failuer_time}}
-                </mj-text>
+                {%if info.failuer_date == info.send_repo.failuer_date%}
+                <mj-text>{{info.failuer_date}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.failuer_date}}</mj-text>
+                {%endif%}
+                {%if info.date_time_confirmation == "checking_now" %}
+                <mj-text>概ね</mj-text>
+                {%endif%}
+                {%if info.failuer_time == info.send_repo.failuer_time%}
+                <mj-text>{{info.failuer_time}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.failuer_time}}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
             <mj-column width="20%">
-                <mj-text mj-class="h2">
-                    2.障害発生場所
-                </mj-text>
+                <mj-text mj-class="h2">2.障害発生場所</mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{info.failuer_place}}
-                </mj-text>
+                {%if info.failuer_place == info.send_repo.failuer_place%}
+                <mj-text>{{info.failuer_place}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.failuer_place}}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -73,9 +90,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{info.eq}}
-                </mj-text>
+                {%if info.eq == info.send_repo.eq%}
+                <mj-text>{{info.eq}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.eq}}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -85,9 +104,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.sammary | linebreaksbr }}
-                </mj-text>
+                {%if info.sammary == info.send_repo.sammary%}
+                <mj-text>{{ info.sammary | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.sammary | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -97,9 +118,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.cause | linebreaksbr }}
-                </mj-text>
+                {%if info.cause == info.send_repo.cause%}
+                <mj-text>{{ info.cause | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.cause | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -109,9 +132,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.recovery_propects | linebreaksbr }}
-                </mj-text>
+                {%if info.recovery_propects == info.send_repo.recovery_propects%}
+                <mj-text>{{ info.recovery_propects | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.recovery_propects | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         {% if info.recovery_time %}
@@ -122,9 +147,16 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{info.recovery_date}}&emsp;{{info.recovery_time}}
-                </mj-text>
+                {%if info.recovery_date == info.send_repo.recovery_date%}
+                <mj-text>{{info.recovery_date}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.recovery_date}}</mj-text>
+                {%endif%}
+                {%if info.recovery_time == info.send_repo.recovery_time%}
+                <mj-text>{{info.recovery_time}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.recovery_time}}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         {% endif %}
@@ -135,12 +167,16 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.get_is_flight_impact_display }}
-                </mj-text>
-                <mj-text>
-                    {{ info.flight_impact }}
-                </mj-text>
+                {%if info.get_is_flight_impact_display == info.send_repo.get_is_flight_impact_display%}
+                <mj-text>{{info.get_is_flight_impact_display}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.get_is_flight_impact_display}}</mj-text>
+                {%endif%}
+                {%if info.flight_impact == info.send_repo.flight_impact%}
+                <mj-text>{{ info.flight_impact | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.flight_impact | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         {% if info.notam %}
@@ -151,9 +187,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.notam | linebreaksbr }}
-                </mj-text>
+                {%if info.notam == info.send_repo.notam%}
+                <mj-text>{{ info.notam | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.notam | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         {% endif %}
@@ -164,12 +202,16 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.get_is_press_display }}
-                </mj-text>
-                <mj-text>
-                    {{ info.press_contents | linebreaksbr }}
-                </mj-text>
+                {%if info.get_is_press_display == info.send_repo.get_is_press_display%}
+                <mj-text>{{info.get_is_press_display}}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{info.get_is_press_display}}</mj-text>
+                {%endif%}
+                {%if info.press_contents == info.send_repo.press_contents%}
+                <mj-text>{{ info.press_contents | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.press_contents | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         <mj-section>
@@ -192,7 +234,9 @@
                         <th style="padding: 0 20px 0 0;">事象</th>
                     </tr>
                     {%for event in events%}
-                    <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0;">
+                    {% if event.updated_at > info.send_repo.updated_at %}
+                    <tr
+                        style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0; background-color: lightcoral;">
                         <td style="padding: 0 20px 0 0;" valign="top">
                             {{event.date|date:"m/d"}}<br />
                             {{event.time}}
@@ -201,6 +245,17 @@
                             {{event.event|linebreaksbr}}
                         </td>
                     </tr>
+                    {%else%}
+                    <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0;">
+                        <td style="padding: 0 20px 0 0; " valign="top">
+                            {{event.date|date:"m/d"}}<br />
+                            {{event.time}}
+                        </td>
+                        <td style="padding: 0 20px 0 0;" valign="top">
+                            {{event.event|linebreaksbr}}
+                        </td>
+                    </tr>
+                    {%endif%}
                     {% endfor %}
                 </mj-table>
             </mj-column>
@@ -212,9 +267,11 @@
                 </mj-text>
             </mj-column>
             <mj-column width="80%">
-                <mj-text>
-                    {{ info.content | linebreaksbr }}
-                </mj-text>
+                {%if info.content == info.send_repo.content%}
+                <mj-text>{{ info.content | linebreaksbr }}</mj-text>
+                {%else%}
+                <mj-text mj-class="change">{{ info.content | linebreaksbr }}</mj-text>
+                {%endif%}
             </mj-column>
         </mj-section>
         {% if mail_footer %}

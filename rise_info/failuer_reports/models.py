@@ -84,7 +84,7 @@ class FailuerReport(CommonInfo):
         verbose_name='運航への影響', default="",
         null=False, blank=True, max_length=512
     )
-    notam = models.CharField(
+    notam = models.TextField(
         verbose_name="ノータム",
         null=False, blank=True, max_length=512,
         help_text="ノータム発行があれば記載"
@@ -134,6 +134,8 @@ class Circumstances(models.Model):
     date = models.DateField(verbose_name='日付', null=True, blank=True)
     time = models.TimeField(verbose_name='時間', null=True, blank=True)
     event = models.TextField(verbose_name='事案', max_length=256)
+    updated_at = models.DateTimeField(
+        verbose_name='更新日', auto_now=True, null=False, blank=False)
 
     class Meta:
         db_table = 'circumstance'

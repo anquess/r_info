@@ -99,7 +99,6 @@ class FailuerReportRelationForm(forms.ModelForm):
             },
             'notam': {
                 'max_length': 'ノータムは512文字以内です',
-                'rows': 3,
             },
             'press_contents': {
                 'max_length': '取材の内容は1024文字以内です',

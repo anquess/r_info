@@ -60,7 +60,6 @@ def sendmail(request, info_id):
             'send_HTML_any_list': send_HTML_any,
             'send_Text_any_list': send_Text_any,
             'mail_config': user_mail_config,
-
         }
         if request.method == "POST":
             if user_mail_config.email_address:
@@ -74,7 +73,13 @@ def sendmail(request, info_id):
                 subject = "【障害通報】" + str(info.title)
             if request.POST.get("header"):
                 context['mail_header'] = request.POST.get("header")
+            else:
+                context['mail_header'] = None
+            if request.POST.get("footer"):
                 context['mail_footer'] = request.POST.get("footer")
+            else:
+                context['mail_footer'] = None
+
             is_send_list = request.POST.getlist('is_send_list[]')
             dist_HTML_list = []
             dist_Text_list = []
@@ -121,6 +126,8 @@ def sendmail(request, info_id):
                 info.send_repo.date_time_confirmation = info.date_time_confirmation
                 info.send_repo.failuer_place = info.failuer_place
                 info.send_repo.eq = info.eq
+                info.send_repo.notam = info.notam
+                info.send_repo.cause = info.cause
                 info.send_repo.sammary = info.sammary
                 info.send_repo.recovery_date = info.recovery_date
                 info.send_repo.recovery_time = info.recovery_time
@@ -133,6 +140,7 @@ def sendmail(request, info_id):
             else:
                 send_repo = info.failuerreport_ptr
                 send_repo.id = None
+                send_repo.pk = None
                 send_repo.select_register = RegisterStatusChoices.SENDED
                 send_repo.save()
                 info.send_repo = send_repo

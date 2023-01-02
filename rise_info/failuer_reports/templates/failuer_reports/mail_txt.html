@@ -1,37 +1,50 @@
-{{mail_header | linebreaksbr}}<br>
-【障害通報通報】{{info.title}}<br>
-<br>
-1.障害発生日時<br>
-{{info.failuer_date}} {%if info.date_time_confirmation == "checking_now" %}概ね{%endif%} {{info.failuer_time}}<br>
-<br>
-2.障害発生場所<br>
-{{info.failuer_place}}<br>
-<br>
-3.障害概要<br>
-{{ info.sammary | linebreaksbr }}<br>
-<br>
-4.障害概要<br>
-{{ info.cause | linebreaksbr }}<br>
-<br>
-5.復旧の見通し<br>
-{{ info.recovery_propects | linebreaksbr }}<br>
-{% if info.recovery_date %}
-復旧日時<br>
-{{info.recovery_date}} {{info.recovery_time}}<br>
+{{mail_header | linebreaksbr}}<br />
+
+{%if info.send_repo%}
+※がついている箇所は前回送信時({{info.send_repo.updated_at}})からの変更箇所<br /><br />
 {%endif%}
-<br>
-6.運航への影響:{% if info.is_flight_impact %}あり{% else %}なし{% endif %}<br>
-{{ info.flight_impact }}<br>
-<br>
-7.取材の有無：{{ info.get_is_press_display }}<br>
-{{ info.press_contents | linebreaksbr }}<br>
-<br>
-経緯<br>
+【障害通報通報】{{info.title}}{%if info.title != info.send_repo.title%}※{%endif%}<br />
+<br />
+1.障害発生日時<br />
+{{info.failuer_date}}{%if info.failuer_date != info.send_repo.failuer_date%}※{%endif%}
+{%if info.date_time_confirmation == "checking_now" %}概ね{%endif%} {{info.failuer_time}}
+{%if info.failuer_time != info.send_repo.failuer_time%}※{%endif%}<br />
+<br />
+<br />
+2.障害発生場所<br />
+{{info.failuer_place}}{%if info.failuer_place != info.send_repo.failuer_place%}※{%endif%}<br />
+<br />
+3.障害概要<br />
+{{ info.sammary | linebreaksbr }}{%if info.sammary != info.send_repo.sammary%}※{%endif%}<br />
+<br />
+4.障害原因<br />
+{{ info.cause | linebreaksbr }}{%if info.cause != info.send_repo.cause%}※{%endif%}<br />
+<br />
+5.復旧の見通し<br />
+{{ info.recovery_propects | linebreaksbr }}
+{%if info.recovery_propects != info.send_repo.recovery_propects%}※{%endif%}<br />
+{% if info.recovery_date %}
+復旧日時<br />
+{{info.recovery_date}}{%if info.recovery_date != info.send_repo.recovery_date%}※{%endif%} {{info.recovery_time}}
+{%if info.recovery_time != info.send_repo.recovery_time%}※{%endif%}<br />
+{%endif%}
+<br />
+6.運航への影響:{% if info.is_flight_impact %}あり{% else %}なし{% endif %}
+{%if info.is_flight_impact != info.send_repo.is_flight_impact%}※{%endif%}<br />
+{{ info.flight_impact | linebreaksbr }}{%if info.flight_impact != info.send_repo.flight_impact%}※{%endif%}<br />
+<br />
+7.取材の有無：{{ info.get_is_press_display }}
+{%if info.get_is_press_display != info.send_repo.get_is_press_display%}※{%endif%}<br />
+{{ info.press_contents | linebreaksbr }}{%if info.press_contents != info.send_repo.press_contents%}※{%endif%}<br />
+
+経緯<br />
 {%for event in events%}
-{%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}<br>
-{{event.event|linebreaksbr}}<br><br>
+{%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}
+{% if event.updated_at > info.send_repo.updated_at %}※{%endif%}<br />
+{{event.event|linebreaksbr}}<br />
+<br />
 {%endfor%}
-<br>
-備考<br>
-{{ info.content | linebreaksbr }}<br>
-{{mail_footer | linebreaksbr}}<br>
+<br />
+備考<br />
+{{ info.content | linebreaksbr }}{%if info.content != info.send_repo.content%}※{%endif%}<br />
+{{mail_footer | linebreaksbr}}<br />
