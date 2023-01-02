@@ -1,30 +1,23 @@
-from django.db import models, connection
-from django.core.files import File
-from django.contrib.auth import get_user_model
+from django.db import models
 
-from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
+from addresses.models import Addresses
 from eqs.models import Eqtype
 from offices.models import Office
+from rise_info.baseModels import CommonInfo, BaseAttachment, BaseCommnets
+from rise_info.choices import InfoTypeChoices
 
 from datetime import date
 
 
-class InfoTypeChoices(models.TextChoices):
-    TECHINICAL = 'technical', '技術情報'
-    FAILURE_CASE = 'failure_case', '障害情報'
-    SAFETY = 'safety', '安全情報事例'
-    EVENT = 'event', 'イベント情報'
-    MANUAL = 'manual', '完成図書差替'
-    APPS = 'apps', 'APPS'
-
-
 class Info(CommonInfo):
-    info_type = models.CharField(verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices,
-                                 default=InfoTypeChoices.TECHINICAL, null=False, blank=False)
+    info_type = models.CharField(
+        verbose_name='情報種別', max_length=16, choices=InfoTypeChoices.choices,
+        default=InfoTypeChoices.TECHINICAL, null=False, blank=False)
     is_rich_text = models.BooleanField(
         verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
     managerID = models.CharField(
-        verbose_name='管理番号', default="TMC-解析-", null=False, blank=False, max_length=32)
+        verbose_name='管理番号', default="TMC-解析-",
+        null=False, blank=False, max_length=32)
     sammary = models.TextField(
         verbose_name='概要', default="", null=False, blank=True, max_length=512)
     is_add_eqtypes = models.BooleanField(verbose_name='装置型式特定', default=True)
@@ -33,6 +26,9 @@ class Info(CommonInfo):
     offices = models.ManyToManyField(Office, verbose_name='官署', blank=True)
     disclosure_date = models.DateField(
         verbose_name='公開日', default=date.today())
+    addresses = models.ManyToManyField(
+        Addresses, verbose_name='受信アドレス', null=True, blank=True,
+        related_name='infos')
 
     def save(self, *args, **kwargs):
         super(Info, self).save(self, *args, **kwargs)
