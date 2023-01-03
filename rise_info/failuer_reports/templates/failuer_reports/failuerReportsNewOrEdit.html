@@ -7,7 +7,11 @@
 
 {% endblock %}
 {% block main %}
-{% block title %}{% endblock %}
+{%if info_id%}
+<h1>障害通報の更新</h1>
+{%else%}
+<h1>障害通報の登録</h1>
+{%endif%}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.media}}
@@ -34,7 +38,13 @@
         <script src="/static/simplemde/simplemde.min.js"></script>
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
-    {% block btn %}{% endblock %}
+    <button class="btn btn-primary" type="submit" value="post">
+        {%if info_id%}
+        更新
+        {%else%}
+        登録
+        {%endif%}
+    </button>
     <button class="btn btn-primary" onclick='addSendMailFLG()' data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="メール送信">
         {% bs_icon 'send' %}
