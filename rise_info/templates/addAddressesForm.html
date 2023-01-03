@@ -1,0 +1,69 @@
+<div class="row mt-2">
+    <h4>コメント追加時の配信先</h4>
+</div>
+<div class="row border-bottom border-secondary">
+    <div class="col-2 h5">登録官署</div>
+    <div class="col-3 h5">役職</div>
+    <div class="col-2 h5">氏名</div>
+    <div class="col-3 h5">アドレス</div>
+    <div class="col-2">
+        <div class="row">
+            <div class="h5 col-auto">配信有無</div>
+            <div class="col-auto">
+                <input class="form-check-input" id="checkAll" type="checkbox" name="lang" value="checkall">全て選択</label>
+            </div>
+        </div>
+    </div>
+</div>
+{%for address in addresses%}
+<div class="row border-bottom border-secondary">
+    <div class="col-2">{{address.created_by.last_name}}</div>
+    <div class="col-3">{{address.position}}</div>
+    <div class="col-2">{{address.name}}</div>
+    <div class="col-3">{{address.mail}}</div>
+    <div class="col-2">
+        <div class="form-check">
+            <input class="form-check-input checks" type="checkbox" value="{{address.id}}" id="add_addresses"
+                name="add_addresses[]" {%if info in address.infos.all%} checked {%endif%}>
+        </div>
+    </div>
+</div>
+<script>
+    let checkAll = document.getElementById("checkAll");
+    //「全て選択」以外のチェックボックス
+    let el = document.getElementsByClassName("checks");
+    //全てのチェックボックスをON/OFFする
+    const funcCheckAll = (bool) => {
+        for (let i = 0; i < el.length; i++) {
+            el[i].checked = bool;
+        }
+    }
+
+    //「checks」のclassを持つ要素のチェック状態で「全て選択」のチェック状態をON/OFFする
+    const funcCheck = () => {
+        let count = 0;
+        for (let i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                count += 1;
+            }
+        }
+
+        if (el.length === count) {
+            checkAll.checked = true;
+        } else {
+            checkAll.checked = false;
+        }
+    };
+
+    //「全て選択」のチェックボックスをクリックした時
+    checkAll.addEventListener("click", () => {
+        funcCheckAll(checkAll.checked);
+    }, false);
+
+    //「全て選択」以外のチェックボックスをクリックした時
+    for (let i = 0; i < el.length; i++) {
+        el[i].addEventListener("click", funcCheck, false);
+    }
+
+</script>
+{%endfor%}

@@ -95,6 +95,28 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
+
+        context = {
+            'info': comment.info,
+            'comment': comment,
+            'url': 'info',
+        }
+        dest_list = []
+        for adr in comment.info.addresses.all():
+            dest_list.append(adr.mail)
+
+            try:
+                if not DEBUG:
+                    send_mail(
+                        str(comment.info) + 'にコメントが追加されました',
+                        render_to_string('mail_comment_add.txt', context),
+                        EMAIL_HOST_USER, dest_list, fail_silently=False,)
+                messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
+                return redirect('info_list')
+            except Exception as e:
+                messages.add_message(
+                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+
         messages.add_message(request, messages.INFO, '更新されました。')
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')
@@ -113,20 +135,39 @@ def del_comment(request, info_id, comment_id):
         return redirect('/infos/' + str(info_id) + '/')
 
 
+def add_addresses(request, info):
+    add_addresses = request.POST.getlist('add_addresses[]')
+    for address in info.addresses.all():
+        if address.created_by == request.user \
+                and not(address in add_addresses):
+            info.addresses.remove(address)
+    for address in add_addresses:
+        info.addresses.add(address)
+    info.save()
+
+
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
-    files = AttachmentFile.objects.filter(info=info)
-    if info:
-        context = {
-            'info': info,
-            'files': files,
-        }
-        context = addIsStaff(context, request.user)
-        return render(request, 'infos/detail.html', context)
-    else:
-        messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+    if request.method == "POST":
+        add_addresses(request=request, info=info)
+        messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('info_list')
+    else:
+        files = AttachmentFile.objects.filter(info=info)
+        addresses = Addresses.object.filter(
+            created_by=request.user)
+        if info:
+            context = {
+                'info': info,
+                'files': files,
+                'addresses': addresses,
+            }
+            context = addIsStaff(context, request.user)
+            return render(request, 'infos/detail.html', context)
+        else:
+            messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+            return redirect('info_list')
 
 
 @login_required
@@ -162,11 +203,16 @@ def info_update(request, info_id=None):
                 formset = FileFormSet(
                     request.POST, request.FILES, instance=info)
             else:
+                info = None
                 formset = FileFormSet()
+        addresses = Addresses.object.filter(
+            created_by=request.user)
         context = addIsStaff({
             'form': form,
             'formset': formset,
+            'info': info,
             'info_id': info_id,
+            'addresses': addresses,
         }, request.user)
         if request.method == "POST" and form.is_valid():
             if (request.FILES or None) is not None:
@@ -177,6 +223,14 @@ def info_update(request, info_id=None):
                     return render(request, 'infos/infoNewOrEdit.html', context)
             form.save()
             formset.save()
+            add_addresses = request.POST.getlist('add_addresses[]')
+            for address in info.addresses.all():
+                if address.created_by == request.user \
+                        and not(address in add_addresses):
+                    info.addresses.remove(address)
+            for address in add_addresses:
+                info.addresses.add(address)
+            info.save()
             if info_id:
                 messages.add_message(request, messages.INFO, '更新されました。')
             else:

@@ -35,9 +35,18 @@
 {% for comment in info.infoComment.all|dictsortreversed:"created_at"%}
 {% include "../baseComment.html" %}
 {% endfor %}
+<div class="pt-2">
+    <form method="post" action name="add_addresses_form" class="row g-3 needs-validation" novalidate>
+        {% csrf_token %}
+        {% include "addAddressesForm.html" %}
+        <div class="row">
+            <div class="col-2 offset-10">
+                <button id="send" type="submit" class="btn btn-secondary">アドレス変更</button>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
-
-
 {% block btn %}
 <a class="btn btn-primary" href="{% url 'info_list' %}">戻る</a>
 {% if auth %}

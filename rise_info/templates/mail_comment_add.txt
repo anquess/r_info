@@ -1,0 +1,8 @@
+【{{info.get_info_type_display}}】{{info.title}}にコメントが追加されました。
+
+追加コメント
+{{comment.comment_txt | linebreaksbr}}
+
+コメント官署：{{comment.created_by.last_name}}
+
+URL:http://cab-rhp.midmlit.local/{{url}}/{{info.id}}
