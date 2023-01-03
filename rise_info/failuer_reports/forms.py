@@ -166,8 +166,9 @@ class FailuerReportRelationForm(forms.ModelForm):
             "content": forms.Textarea(attrs={
                 "rows": "3",
             }),
-            "select_register": forms.widgets.Select(attrs={
-                "types": "hidden",
+            "select_register": forms.TextInput(attrs={
+                "type": "hidden",
+                "value": "temporaty",
             })
         }}
 
