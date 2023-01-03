@@ -4,7 +4,18 @@ from django.template.loader import render_to_string
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
 
 
-def addCommentSendMail(comment, url, request):
+def add_addresses(request, info):
+    add_addresses = request.POST.getlist('add_addresses[]')
+    for address in info.addresses.all():
+        if address.created_by == request.user \
+                and not(address in add_addresses):
+            info.addresses.remove(address)
+    for address in add_addresses:
+        info.addresses.add(address)
+    info.save()
+
+
+def addCommentSendMail(comment, url):
     context = {
         'info': comment.info,
         'comment': comment,

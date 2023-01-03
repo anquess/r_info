@@ -15,7 +15,7 @@ from accounts.views import addIsStaff, User_mail_config
 from addresses.models import Addresses, RoleInLocal
 from offices.models import Office
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
-from rise_info.commonSend import addCommentSendMail
+from rise_info.commonSend import addCommentSendMail, add_addresses
 
 from datetime import datetime
 from re import T
@@ -96,7 +96,7 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
-        e = addCommentSendMail(comment, 'info', request)
+        e = addCommentSendMail(comment, 'info')
         if e:
             messages.add_message(
                 request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
@@ -122,17 +122,6 @@ def del_comment(request, info_id, comment_id):
         return redirect('/infos/' + str(info_id) + '/')
 
 
-def add_addresses(request, info):
-    add_addresses = request.POST.getlist('add_addresses[]')
-    for address in info.addresses.all():
-        if address.created_by == request.user \
-                and not(address in add_addresses):
-            info.addresses.remove(address)
-    for address in add_addresses:
-        info.addresses.add(address)
-    info.save()
-
-
 @login_required
 def info_detail(request, info_id):
     info = Info.objects.get_or_none(pk=info_id)
@@ -140,21 +129,19 @@ def info_detail(request, info_id):
         add_addresses(request=request, info=info)
         messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('info_list')
+    files = AttachmentFile.objects.filter(info=info)
+    addresses = Addresses.object.filter(created_by=request.user)
+    if info:
+        context = {
+            'info': info,
+            'files': files,
+            'addresses': addresses,
+        }
+        context = addIsStaff(context, request.user)
+        return render(request, 'infos/detail.html', context)
     else:
-        files = AttachmentFile.objects.filter(info=info)
-        addresses = Addresses.object.filter(
-            created_by=request.user)
-        if info:
-            context = {
-                'info': info,
-                'files': files,
-                'addresses': addresses,
-            }
-            context = addIsStaff(context, request.user)
-            return render(request, 'infos/detail.html', context)
-        else:
-            messages.add_message(request, messages.WARNING, "該当Infoはありません。")
-            return redirect('info_list')
+        messages.add_message(request, messages.WARNING, "該当TMC発信情報はありません。")
+        return redirect('info_list')
 
 
 @login_required
@@ -195,12 +182,10 @@ def info_update(request, info_id=None):
         addresses = Addresses.object.filter(
             created_by=request.user)
         context = addIsStaff({
-            'form': form,
-            'formset': formset,
-            'info': info,
-            'info_id': info_id,
-            'addresses': addresses,
-        }, request.user)
+            'form': form, 'formset': formset,
+            'info': info, 'info_id': info_id,
+            'addresses': addresses, },
+            request.user)
         if request.method == "POST" and form.is_valid():
             if (request.FILES or None) is not None:
                 if not formset.is_valid():

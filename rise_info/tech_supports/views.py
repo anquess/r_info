@@ -8,7 +8,9 @@ from django.db.models import Q
 from .models import TechSupports, AttachmentFile, TechSupportComments
 from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
 from accounts.views import addIsStaff
+from addresses.models import Addresses
 from offices.models import Office
+from rise_info.commonSend import addCommentSendMail, add_addresses
 
 
 class TechSupportList(ListView):
@@ -70,8 +72,10 @@ def get_form_context(request, info_id=None):
             formset = FileFormSet(request.POST, request.FILES, instance=info)
         else:
             formset = FileFormSet()
-    return addIsStaff(
-        {'form': form, 'formset': formset, 'info_id': info_id},
+    addresses = Addresses.object.filter(created_by=request.user)
+    return addIsStaff({
+        'form': form, 'formset': formset, 'info': info, 'info_id': info_id,
+        'addresses': addresses, 'tech_supo': True, },
         request.user)
 
 
@@ -80,8 +84,16 @@ def support_update(request, info_id=None):
     if context:
         if (request.method == "POST" and context['form'].is_valid()):
             if context['formset'].is_valid():
-                context['form'].save()
+                info = context['form'].save()
                 context['formset'].save()
+                add_addresses = request.POST.getlist('add_addresses[]')
+                for address in info.addresses.all():
+                    if address.created_by == request.user \
+                            and not(address in add_addresses):
+                        info.addresses.remove(address)
+                for address in add_addresses:
+                    info.addresses.add(address)
+                info.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
                 return redirect('support_list')
             else:
@@ -112,17 +124,24 @@ def support_new(request):
 @login_required
 def support_detail(request, info_id):
     info = TechSupports.objects.get_or_none(pk=info_id)
+    if request.method == "POST":
+        add_addresses(request=request, info=info)
+        messages.add_message(request, messages.INFO, "配信先を変更しました")
+        return redirect('support_list')
     files = AttachmentFile.objects.filter(info=info)
+    addresses = Addresses.object.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
             'files': files,
+            'addresses': addresses,
+            'tech_supo': True,
         }
         context = addIsStaff(context, request.user)
         context['is_support'] = True
         return render(request, 'tech_supports/detail.html', context)
     else:
-        messages.add_message(request, messages.WARNING, "該当業務支援情報はありません。")
+        messages.add_message(request, messages.WARNING, "該当官署発信情報はありません。")
         return redirect('support_list')
 
 
@@ -150,6 +169,14 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
+        e = addCommentSendMail(comment, 'tech_support')
+        if e:
+            messages.add_message(
+                request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+        else:
+            messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
+            return redirect('support_list')
+
         messages.add_message(request, messages.INFO, '更新されました。')
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')

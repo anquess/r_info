@@ -24,7 +24,8 @@
     <div class="col-2">
         <div class="form-check">
             <input class="form-check-input checks" type="checkbox" value="{{address.id}}" id="add_addresses"
-                name="add_addresses[]" {%if info in address.infos.all%} checked {%endif%}>
+                name="add_addresses[]" {%if tech_supo%} {%if info in address.tech_support.all%} checked
+                {%endif%}{%else%} {%if info in address.infos.all%} checked {%endif%} {%endif%}>
         </div>
     </div>
 </div>

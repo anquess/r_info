@@ -1,5 +1,6 @@
 from django.db import models
 
+from addresses.models import Addresses
 from eqs.models import Eqtype
 from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
 from rise_info.choices import RegisterStatusChoicesSupo, InfoTypeChoicesSupo
@@ -20,6 +21,9 @@ class TechSupports(CommonInfo):
         choices=RegisterStatusChoicesSupo.choices,
         default=RegisterStatusChoicesSupo.NOT_REGISTERED, null=False, blank=False
     )
+    addresses = models.ManyToManyField(
+        Addresses, verbose_name='受信アドレス', null=True, blank=True,
+        related_name='tech_support')
 
     def save(self, *args, **kwargs):
         super(TechSupports, self).save(self, *args, **kwargs)
