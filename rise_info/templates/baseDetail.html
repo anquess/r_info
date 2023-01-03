@@ -39,9 +39,9 @@
 <div class="pb-2 mb-2 border-bottom">
     <div class="row">
         <div class="col-3">作成日時:{{ info.created_at }}</div>
-        <div class="col-3">作成者:{{ info.created_by }}</div>
+        <div class="col-3">作成者:{{ info.created_by.last_name }}</div>
         <div class="col-3">投稿日時:{{ info.updated_at }}</div>
-        <div class="col-3">投稿者:{{ info.updated_by }}</div>
+        <div class="col-3">投稿者:{{ info.updated_by.last_name }}</div>
     </div>
 </div>
 {% block btn %}{% endblock %}

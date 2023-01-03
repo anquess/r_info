@@ -11,7 +11,7 @@
         </div>
         <div class="row">
             <div class="col-5"></div>
-            <div class="col-3">投稿者：{{ comment.created_by }}</div>
+            <div class="col-3">投稿者：{{ comment.created_by.last_name }}</div>
             <div class="col-3">投稿日時{{ comment.created_at }}</div>
             {% if user == comment.created_by %}
             <div class="col-1">
