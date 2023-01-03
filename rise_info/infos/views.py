@@ -15,6 +15,7 @@ from accounts.views import addIsStaff, User_mail_config
 from addresses.models import Addresses, RoleInLocal
 from offices.models import Office
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
+from rise_info.commonSend import addCommentSendMail
 
 from datetime import datetime
 from re import T
@@ -95,27 +96,13 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
-
-        context = {
-            'info': comment.info,
-            'comment': comment,
-            'url': 'info',
-        }
-        dest_list = []
-        for adr in comment.info.addresses.all():
-            dest_list.append(adr.mail)
-
-            try:
-                if not DEBUG:
-                    send_mail(
-                        str(comment.info) + 'にコメントが追加されました',
-                        render_to_string('mail_comment_add.txt', context),
-                        EMAIL_HOST_USER, dest_list, fail_silently=False,)
-                messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
-                return redirect('info_list')
-            except Exception as e:
-                messages.add_message(
-                    request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+        e = addCommentSendMail(comment, 'info', request)
+        if e:
+            messages.add_message(
+                request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+        else:
+            messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
+            return redirect('info_list')
 
         messages.add_message(request, messages.INFO, '更新されました。')
     else:
