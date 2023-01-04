@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
 from .models import TechSupports, AttachmentFile, TechSupportComments
@@ -52,6 +53,13 @@ class TechSupportsForm(forms.ModelForm):
                     value.widget.attrs['class'] = 'form-select'
                 else:
                     value.widget.attrs['class'] = 'form-control'
+
+    def clean_eqtypes(self):
+        eqtypes = self.cleaned_data['eqtypes']
+        if len(eqtypes) == 0:
+            raise ValidationError(
+                code='eqtypes', message='装置型式は必須です')
+        return eqtypes
 
     class Meta(MetaCommonInfo):
         model = TechSupports
