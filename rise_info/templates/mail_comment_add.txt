@@ -5,4 +5,4 @@
 
 コメント官署：{{comment.created_by.last_name}}
 
-URL:http://cab-rhp.midmlit.local/{{url}}/{{info.id}}
+URL:http://cab-rhp.midmlit.local/{{url}}/{{info.id}}/
