@@ -8,7 +8,7 @@ class AddressesForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for key, value in self.fields.items():
             value.widget.attrs['placeholder'] = value.help_text
-            if key != 'is_HTML_mail':
+            if not key.startswith('is_'):
                 value.widget.attrs['class'] = 'form-control'
 
     class Meta:
@@ -21,6 +21,7 @@ class AddressesForm(forms.ModelForm):
             'role',
             'groups',
             'department',
+            'is_receive_info_from_offices',
         )
         error_messages = {
             'name': {
@@ -52,4 +53,5 @@ class AddressesForm(forms.ModelForm):
                 'class': 'form-select',
                 'mutiple': True,
             }),
+            'is_receive_info_from_offices': forms.CheckboxInput(),
         }

@@ -63,7 +63,8 @@ class Addresses(models.Model):
         related_name='%(app_label)s_%(class)s_create', null=False, blank=False
     )
     is_receive_info_from_offices = models.BooleanField(
-        verbose_name='官署発信情報の受信可否', default=False
+        verbose_name='官署発信情報の受信可否', default=False,
+        help_text='技術支援情報等を受け取りたい場合は☑する'
     )
 
     def __str__(self):

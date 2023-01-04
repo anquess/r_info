@@ -87,6 +87,20 @@
     <div class="row form-text">
         ※Ctrlを押しながら選択すると複数選択可能
     </div>
+    {% if auth %}
+    <div class="row mt-2 mb-0">
+        <div class="col-2">
+            <label for="id_is_receive_info_from_offices"
+                class="form-label">{{form.is_receive_info_from_offices.label}}</label>
+        </div>
+        <div class="col-1">
+            {{form.is_receive_info_from_offices}}
+        </div>
+        <div class="col-9 form-text">
+            {{form.is_receive_info_from_offices.help_text}}
+        </div>
+    </div>
+    {%endif%}
 
     <div class="row mt-3">
         <div class="col-2">
