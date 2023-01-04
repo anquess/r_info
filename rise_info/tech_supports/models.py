@@ -1,8 +1,8 @@
 from django.db import models
 
 from addresses.models import Addresses
-from eqs.models import Eqtype
-from rise_info.baseModels import CommonInfo, BaseAttachment, file_upload_path, BaseCommnets
+from eqs.models import Eqtype, DepartmentForEq
+from rise_info.baseModels import CommonInfo, BaseAttachment, BaseCommnets
 from rise_info.choices import RegisterStatusChoicesSupo, InfoTypeChoicesSupo
 # Create your models here.
 
@@ -15,7 +15,8 @@ class TechSupports(CommonInfo):
         verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
     inquiry = models.TextField(
         verbose_name='問い合わせ内容', default="", null=False, blank=True, max_length=2048)
-    eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
+    eqtypes = models.ManyToManyField(
+        Eqtype, verbose_name='装置型式', null=True, blank=True, related_name='tech_supo')
     select_register = models.CharField(
         verbose_name='登録状態', max_length=16,
         choices=RegisterStatusChoicesSupo.choices,
