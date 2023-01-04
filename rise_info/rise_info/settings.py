@@ -182,7 +182,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
-# ファイルア�?プロード用
+# ファイルアップロード用
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
 
@@ -197,18 +197,26 @@ MDEDITOR_CONFIGS = {
 }
 
 # Email
-EMAIL_HOST = json_data["KBN"]['EMAIL_HOST']
-EMAIL_PORT = json_data["KBN"]['EMAIL_PORT']
-#EMAIL_HOST_USER = json_data["O365"]["EMAIL_HOST_USER"]
-EMAIL_HOST_USER = json_data["KBN"]['EMAIL_HOST_USER']
-# SERVER_EMAIL = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = json_data["KBN"]["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = ''
-# EMAIL_HOST_PASSWORD = json_data["O365"]["EMAIL_HOST_PASSWORD"]
-EMAIL_USE_TLS = False
-EMAIL_TIMEOUT = 60
+if DEBUG:
+    EMAIL_HOST = json_data["O365"]['EMAIL_HOST']
+    EMAIL_PORT = json_data["O365"]['EMAIL_PORT']
+    EMAIL_HOST_USER = json_data["O365"]["EMAIL_HOST_USER"]
+    SERVER_EMAIL = EMAIL_HOST_USER
+    EMAIL_HOST_PASSWORD = json_data["O365"]["EMAIL_HOST_PASSWORD"]
+    EMAIL_USE_TLS = True
+    EMAIL_TIMEOUT = 60
+
+else:
+    EMAIL_HOST = json_data["KBN"]['EMAIL_HOST']
+    EMAIL_PORT = json_data["KBN"]['EMAIL_PORT']
+    EMAIL_HOST_USER = json_data["KBN"]['EMAIL_HOST_USER']
+    DEFAULT_FROM_EMAIL = json_data["KBN"]["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_USE_TLS = False
+    EMAIL_TIMEOUT = 60
 
 EMAIL_TEST_USER = json_data["GMAIL"]["EMAIL_HOST_USER"]
+
 
 # Django_toolbar
 #INTERNAL_IPS = ['192.168.1.18']
