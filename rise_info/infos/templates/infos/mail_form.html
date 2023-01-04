@@ -55,7 +55,8 @@
                     <label for="subject" class="form-label">メール件名</label>
                 </div>
                 <div class="col-9">
-                    <input type="text" class="form-control" id=" subject" name="subject" value='{{info.title}}'>
+                    <input type="text" class="form-control" id=" subject" name="subject"
+                        value='【{{info.get_info_type_display}}】{{info.title}}の登録'>
                 </div>
             </div>
             <div class="row mb-2">
