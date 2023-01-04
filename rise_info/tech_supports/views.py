@@ -10,7 +10,8 @@ from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
 from accounts.views import addIsStaff
 from addresses.models import Addresses
 from offices.models import Office
-from rise_info.commonSend import addCommentSendMail, add_addresses
+from rise_info.commonSend import addCommentSendMail, add_addresses,\
+    notifyRegistration
 
 
 class TechSupportList(ListView):
@@ -71,8 +72,9 @@ def get_form_context(request, info_id=None):
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)
         else:
+            info = None
             formset = FileFormSet()
-    addresses = Addresses.object.filter(created_by=request.user)
+    addresses = Addresses.objects.filter(created_by=request.user)
     return addIsStaff({
         'form': form, 'formset': formset, 'info': info, 'info_id': info_id,
         'addresses': addresses, 'tech_supo': True, },
@@ -95,6 +97,15 @@ def support_update(request, info_id=None):
                     info.addresses.add(address)
                 info.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
+                if info.select_register == 'register':
+                    notifyRegistration(info=info, request=request)
+                    # if e == 1:
+                    #    messages.add_message(request, messages.INFO, '通知しました。')
+                    #    messages.add_message(
+                    #        request, messages.INFO, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                    # else:
+                    #    messages.add_message(
+                    #        request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
                 return redirect('support_list')
             else:
                 for ele in context['formset']:
@@ -129,7 +140,7 @@ def support_detail(request, info_id):
         messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('support_list')
     files = AttachmentFile.objects.filter(info=info)
-    addresses = Addresses.object.filter(created_by=request.user)
+    addresses = Addresses.objects.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
@@ -169,15 +180,10 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
-        e = addCommentSendMail(comment, 'tech_support')
-        if e:
-            messages.add_message(
-                request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-        else:
-            messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
-            return redirect('support_list')
-
         messages.add_message(request, messages.INFO, '更新されました。')
+        if not addCommentSendMail(comment, 'tech_support', request=request):
+            messages.add_message(request, messages.ERROR, '送信されませんでした')
+        return redirect('support_list')
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')
     return redirect('/tech_support/' + str(info_id) + '/')

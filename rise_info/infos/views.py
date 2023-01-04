@@ -22,7 +22,6 @@ from re import T
 from functools import reduce
 import operator
 import openpyxl
-import pytz
 
 
 def exportInfo(request):
@@ -96,15 +95,10 @@ def add_comment(request, info_id):
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
-        e = addCommentSendMail(comment, 'info')
-        if e:
-            messages.add_message(
-                request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-        else:
-            messages.add_message(request, messages.INFO, 'コメント受信者に配信しました。')
-            return redirect('info_list')
-
         messages.add_message(request, messages.INFO, '更新されました。')
+        addCommentSendMail(comment, 'infos', request)
+        return redirect('info_list')
+
     else:
         messages.add_message(request, messages.INFO, '値がおかしいです。')
     return redirect('/infos/' + str(info_id) + '/')
@@ -130,7 +124,7 @@ def info_detail(request, info_id):
         messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('info_list')
     files = AttachmentFile.objects.filter(info=info)
-    addresses = Addresses.object.filter(created_by=request.user)
+    addresses = Addresses.objects.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
@@ -179,7 +173,7 @@ def info_update(request, info_id=None):
             else:
                 info = None
                 formset = FileFormSet()
-        addresses = Addresses.object.filter(
+        addresses = Addresses.objects.filter(
             created_by=request.user)
         context = addIsStaff({
             'form': form, 'formset': formset,
@@ -237,8 +231,8 @@ def sendmail(request, info_id):
     q_role = reduce(operator.or_, (Q(role__id__contains=i.id)for i in roles))
     is_HTML = Q(is_HTML_mail=True)
     is_Text = Q(is_HTML_mail=False)
-    send_HTML_list = Addresses.object.filter(q_role).filter(is_HTML)
-    send_Text_list = Addresses.object.filter(q_role).filter(is_Text)
+    send_HTML_list = Addresses.objects.filter(q_role).filter(is_HTML)
+    send_Text_list = Addresses.objects.filter(q_role).filter(is_Text)
     if info:
         context = {
             'info': info,
@@ -247,7 +241,7 @@ def sendmail(request, info_id):
             'mail_config': user_mail_config,
         }
         if request.method == 'POST':
-            if user_mail_config.email_address:
+            if user_mail_config.email_address and not DEBUG:
                 sendmail_adr = user_mail_config.email_address
             else:
                 sendmail_adr = EMAIL_HOST_USER
@@ -262,33 +256,31 @@ def sendmail(request, info_id):
             msg_HTML = render_to_string('infos/mail.html', context)
             for is_send in is_send_HTML_list:
                 dist_HTML_list.append(
-                    Addresses.object.get_or_none(pk=is_send).mail)
+                    Addresses.objects.get_or_none(pk=is_send).mail)
             for is_send in is_send_Text_list:
                 dist_Text_list.append(
-                    Addresses.object.get_or_none(pk=is_send).mail)
+                    Addresses.objects.get_or_none(pk=is_send).mail)
             try:
-                if not DEBUG:
-                    send_mail(
-                        subject,
-                        msg_plain,
-                        sendmail_adr,
-                        dist_HTML_list,
-                        html_message=msg_HTML,
-                        fail_silently=False,
-                    )
-                    send_mail(
-                        subject,
-                        msg_plain,
-                        sendmail_adr,
-                        dist_Text_list,
-                        fail_silently=False,
-                    )
+                send_mail(
+                    subject,
+                    msg_plain,
+                    sendmail_adr,
+                    dist_HTML_list,
+                    html_message=msg_HTML,
+                    fail_silently=False,
+                )
+                send_mail(
+                    subject,
+                    msg_plain,
+                    sendmail_adr,
+                    dist_Text_list,
+                    fail_silently=False,
+                )
                 messages.add_message(request, messages.INFO, '送信されました。')
                 return redirect('info_list')
             except Exception as e:
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-
                 return redirect('info_list')
         else:
             context = addIsStaff(context, request.user)
