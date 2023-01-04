@@ -64,17 +64,17 @@ def notifyRegistration(info, request):
         'info': info,
     }
     message = render_to_string('mail_techSupo_add.txt', context)
-    # try:
-    send_mail(
-        subject,
-        message,
-        EMAIL_HOST_USER,
-        recipient_list,
-        fail_silently=False,
-    )
-    #    messages.add_message(request, messages.INFO, '配信されました')
-    # except Exception as e:
-    #    messages.add_message(
-    #        request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-    #    return e
-    # return 1
+    try:
+        send_mail(
+            subject,
+            message,
+            EMAIL_HOST_USER,
+            recipient_list,
+            fail_silently=False,
+        )
+        messages.add_message(request, messages.INFO, '配信されました')
+    except Exception as e:
+        messages.add_message(
+            request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+        return e
+    return 1

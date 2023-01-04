@@ -98,14 +98,14 @@ def support_update(request, info_id=None):
                 info.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
                 if info.select_register == 'register':
-                    notifyRegistration(info=info, request=request)
-                    # if e == 1:
-                    #    messages.add_message(request, messages.INFO, '通知しました。')
-                    #    messages.add_message(
-                    #        request, messages.INFO, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-                    # else:
-                    #    messages.add_message(
-                    #        request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                    e = notifyRegistration(info=info, request=request)
+                    if e == 1:
+                        messages.add_message(request, messages.INFO, '通知しました。')
+                        messages.add_message(
+                            request, messages.INFO, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                    else:
+                        messages.add_message(
+                            request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
                 return redirect('support_list')
             else:
                 for ele in context['formset']:
