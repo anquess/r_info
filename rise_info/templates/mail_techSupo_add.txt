@@ -6,4 +6,4 @@
     {{eq}}
 {%endfor%}
 
-URL:http://cab-rhp.midmlit.local/tech_support/{{info.id}}
+URL:http://cab-rhp.midmlit.local/tech_support/{{info.id}}/
