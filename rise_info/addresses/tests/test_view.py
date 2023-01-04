@@ -45,18 +45,18 @@ class CreateAddressTest(TestCase):
     def test_create_info(self):
         login(self)
         addMockAddress(self)
-        address = Addresses.object.get_or_none(name=self.params['name'])
+        address = Addresses.objects.get_or_none(name=self.params['name'])
         if address:
             self.assertEqual(self.params['position'], address.position)
         else:
-            self.assertEqual(Addresses.object.all().count(), 1)
+            self.assertEqual(Addresses.objects.all().count(), 1)
             self.fail('addressが空')
 
 
 def edit_common_setUp(testCase, isEdit: bool):
     login(testCase)
     addMockAddress(testCase)
-    address = Addresses.object.get_or_none(name=testCase.params['name'])
+    address = Addresses.objects.get_or_none(name=testCase.params['name'])
     if address:
         if isEdit:
             testCase.response = testCase.client.get(
@@ -90,14 +90,14 @@ class AddresseDelTest(TestCase):
 
     def test_addresse_del_count(self):
         try:
-            address = Addresses.object.get_or_none(name=self.params['name'])
+            address = Addresses.objects.get_or_none(name=self.params['name'])
         except:
             self.fail('あるはずのmockAddressが見つからない')
         response = self.client.get("/addresses/" + str(address.pk) + "/del/")
         self.assertRedirects(response, reverse('address_list'), status_code=302,
                              target_status_code=200, msg_prefix='', fetch_redirect_response=True)
         try:
-            address = Addresses.object.get_or_none(name=self.params['name'])
+            address = Addresses.objects.get_or_none(name=self.params['name'])
         except:
             return None
         if address:

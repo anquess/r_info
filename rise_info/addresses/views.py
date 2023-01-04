@@ -44,7 +44,7 @@ def addresses_new(request):
 
 @ login_required
 def addresses_edit(request, address_id):
-    address = Addresses.object.get_or_none(pk=address_id)
+    address = Addresses.objects.get_or_none(pk=address_id)
     if address:
         if address.created_by == request.user:
             form = AddressesForm(request.POST or None, instance=address)
@@ -65,7 +65,7 @@ def addresses_edit(request, address_id):
 
 @ login_required
 def addresses_del(request, address_id):
-    address = Addresses.object.get_or_none(pk=address_id)
+    address = Addresses.objects.get_or_none(pk=address_id)
     if address:
         if address.created_by == request.user:
             positon = address.position

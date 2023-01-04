@@ -21,7 +21,7 @@ def randomname(length, charactors=string.ascii_letters + string.digits):
 
 
 def make_mock_offices_group():
-    grp = OfficesGroup.object.create(
+    grp = OfficesGroup.objects.create(
         group_name=randomname(32),
     )
     grp.save()

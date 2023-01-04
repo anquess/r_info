@@ -32,7 +32,7 @@ def get_addresses(fail_rep, is_HMTL: bool, grps):
     ))
     q_is_HTML = Q(is_HTML_mail=is_HMTL)
 
-    return Addresses.object.filter(
+    return Addresses.objects.filter(
         q_department).filter(
         q_user_group).filter(
         q_is_HTML).distinct()
@@ -46,9 +46,9 @@ def sendmail(request, info_id):
 
     send_HTML_required = get_addresses(info, True, request.user.groups)
     send_Text_required = get_addresses(info, False, request.user.groups)
-    send_HTML_any = Addresses.object.filter(
+    send_HTML_any = Addresses.objects.filter(
         created_by=request.user).filter(Q(is_HTML_mail=True))
-    send_Text_any = Addresses.object.filter(
+    send_Text_any = Addresses.objects.filter(
         created_by=request.user).filter(Q(is_HTML_mail=False))
 
     if info:
@@ -62,7 +62,7 @@ def sendmail(request, info_id):
             'mail_config': user_mail_config,
         }
         if request.method == "POST":
-            if user_mail_config.email_address:
+            if user_mail_config.email_address and not DEBUG:
                 email1 = user_mail_config.email_address
             else:
                 email1 = EMAIL_HOST_USER
@@ -87,29 +87,28 @@ def sendmail(request, info_id):
             msg_plain = render_to_string('failuer_reports/mail.txt', context)
             msg_html = render_to_string('failuer_reports/mail.html', context)
             for is_send in is_send_list:
-                adr = Addresses.object.get_or_none(pk=is_send)
+                adr = Addresses.objects.get_or_none(pk=is_send)
                 dist_list.append(adr)
                 if adr.is_HTML_mail:
                     dist_HTML_list.append(adr.mail)
                 else:
                     dist_HTML_list.append(adr.mail)
             try:
-                if not DEBUG:
-                    send_mail(
-                        subject=subject,
-                        message=msg_plain,
-                        from_email=email1,
-                        recipient_list=dist_HTML_list,
-                        html_message=msg_html,
-                        fail_silently=False,
-                    )
-                    send_mail(
-                        subject=subject,
-                        message=msg_plain,
-                        from_email=email1,
-                        recipient_list=dist_Text_list,
-                        fail_silently=False,
-                    )
+                send_mail(
+                    subject=subject,
+                    message=msg_plain,
+                    from_email=email1,
+                    recipient_list=dist_HTML_list,
+                    html_message=msg_html,
+                    fail_silently=False,
+                )
+                send_mail(
+                    subject=subject,
+                    message=msg_plain,
+                    from_email=email1,
+                    recipient_list=dist_Text_list,
+                    fail_silently=False,
+                )
             except Exception as e:
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) +

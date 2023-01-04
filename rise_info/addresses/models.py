@@ -35,7 +35,7 @@ class InfoTypeRelationRole(models.Model):
 
 
 class Addresses(models.Model):
-    object = BaseManager()
+    objects = BaseManager()
     name = models.CharField(verbose_name='氏名', null=False,
                             blank=False, max_length=16)
     position = models.CharField(
@@ -61,6 +61,9 @@ class Addresses(models.Model):
     created_by = CurrentUserField(
         verbose_name='登録者', on_update=True,
         related_name='%(app_label)s_%(class)s_create', null=False, blank=False
+    )
+    is_receive_info_from_offices = models.BooleanField(
+        verbose_name='官署発信情報の受信可否', default=False
     )
 
     def __str__(self):

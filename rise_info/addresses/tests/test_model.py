@@ -10,16 +10,16 @@ class AddresseModelTest(TestCase):
         return super().setUp()
 
     def test_is_empty(self) -> None:
-        addresses = Addresses.object.all()
+        addresses = Addresses.objects.all()
         self.assertEqual(addresses.count(), 0)
 
     def test_manager_get_or_none_is_get(self):
-        expected = Addresses.object.create(
+        expected = Addresses.objects.create(
             name=self.params['name'],
             position=self.params['position'],
             mail=self.params['mail'],
         )
-        actual = Addresses.object.get_or_none(pk=expected.pk)
+        actual = Addresses.objects.get_or_none(pk=expected.pk)
         self.assertEqual(expected, actual)
-        actual = Addresses.object.get_or_none(pk=expected.pk + 1)
+        actual = Addresses.objects.get_or_none(pk=expected.pk + 1)
         self.assertEqual(None, actual)

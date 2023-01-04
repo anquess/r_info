@@ -56,7 +56,7 @@ class DepartmentForEq(models.Model):
 
 
 class EQ_class(models.Model):
-    object = BaseManager()
+    objects = BaseManager()
     id = models.CharField(verbose_name='装置分類', max_length=16,
                           primary_key=True, editable=False)
     department = models.ManyToManyField(DepartmentForEq,

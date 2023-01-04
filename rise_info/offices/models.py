@@ -87,7 +87,7 @@ def offices_csv_import():
 
 
 class OfficesGroup(models.Model):
-    object = BaseManager()
+    objects = BaseManager()
     group_name = models.CharField(
         verbose_name='グループ名', null=False, blank=False, max_length=32)
 
