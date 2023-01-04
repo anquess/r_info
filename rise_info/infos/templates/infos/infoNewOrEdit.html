@@ -8,9 +8,9 @@
 {% endblock %}
 {% block main %}
 {%if info_id%}
-<h1>信頼性情報の更新</h1>
+<h1>TMC発信情報の更新</h1>
 {%else%}
-<h1>信頼性情報の登録</h1>
+<h1>TMC発信情報の登録</h1>
 {%endif%}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
