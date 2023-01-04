@@ -1,0 +1,9 @@
+【{{info.get_info_type_display}}】{{info.title}}が登録されました。
+
+登録官署：{{info.created_by.last_name}}
+
+装置型式：{%for eq in info.eqtypes.all%}
+    {{eq}}
+{%endfor%}
+
+URL:http://cab-rhp.midmlit.local/tech_support/{{info.id}}

@@ -1,4 +1,4 @@
-{{mail_header | linebreaksbr}}
+{{mail_header}}
 {%if info.send_repo%}※がついている箇所は前回送信時({{info.send_repo.updated_at}})からの変更箇所{%endif%}
 
 【障害通報通報】{{info.title}}{%if info.title != info.send_repo.title%}※{%endif%}
@@ -11,13 +11,13 @@
 {{info.failuer_place}}{%if info.failuer_place != info.send_repo.failuer_place%}※{%endif%}
 
 3.障害概要
-{{ info.sammary | linebreaksbr }}{%if info.sammary != info.send_repo.sammary%}※{%endif%}
+{{ info.sammary }}{%if info.sammary != info.send_repo.sammary%}※{%endif%}
 
 4.障害原因
-{{ info.cause | linebreaksbr }}{%if info.cause != info.send_repo.cause%}※{%endif%}
+{{ info.cause }}{%if info.cause != info.send_repo.cause%}※{%endif%}
 
 5.復旧の見通し
-{{ info.recovery_propects | linebreaksbr }}{%if info.recovery_propects != info.send_repo.recovery_propects%}※{%endif%}
+{{ info.recovery_propects }}{%if info.recovery_propects != info.send_repo.recovery_propects%}※{%endif%}
 {% if info.recovery_date %}
   復旧日時
     {{info.recovery_date}}{%if info.recovery_date != info.send_repo.recovery_date%}※{%endif%} {{info.recovery_time}}{%if info.recovery_time != info.send_repo.recovery_time%}※{%endif%}
@@ -27,15 +27,15 @@
     {{ info.flight_impact }}{%if info.flight_impact != info.send_repo.flight_impact%}※{%endif%}
 
 7.取材の有無：{{ info.get_is_press_display }}{%if info.get_is_press_display != info.send_repo.get_is_press_display%}※{%endif%}
-{{ info.press_contents | linebreaksbr }}{%if info.press_contents != info.send_repo.press_contents%}※{%endif%}
+{{ info.press_contents }}{%if info.press_contents != info.send_repo.press_contents%}※{%endif%}
 
 経緯
 {%for event in events%}
 {%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}{% if event.updated_at > info.send_repo.updated_at %}※{%endif%}
-{{event.event|linebreaksbr}}
+{{event.event}}
 
 {%endfor%}
 
 備考
-{{ info.content | linebreaksbr }}{%if info.content != info.send_repo.content%}※{%endif%}
-{{mail_footer | linebreaksbr}}
+{{ info.content }}{%if info.content != info.send_repo.content%}※{%endif%}
+{{mail_footer}}

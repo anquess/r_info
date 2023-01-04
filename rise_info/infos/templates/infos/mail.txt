@@ -1,8 +1,8 @@
-{{mail_header | linebreaksbr}}
+{{mail_header}}
 【{{ info.get_info_type_display }}】{{info.title}}が登録
 
 概要
-{{ info.sammary | linebreaksbr }}
+{{ info.sammary }}
 
 装置型式
 {% for eqtype in info.eqtypes.all %}
@@ -12,4 +12,4 @@
 URL
 http://cab-rhp.midmlit.local/infos/{{info.id}}/
 
-{{mail_footer | linebreaksbr}}
+{{mail_footer}}

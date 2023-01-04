@@ -1,7 +1,7 @@
 【{{info.get_info_type_display}}】{{info.title}}にコメントが追加されました。
 
 追加コメント
-{{comment.comment_txt | linebreaksbr}}
+{{comment.comment_txt}}
 
 コメント官署：{{comment.created_by.last_name}}
 
