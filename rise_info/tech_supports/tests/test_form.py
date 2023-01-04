@@ -31,7 +31,7 @@ def make_mock_right_param(testCase: TestCase):
         'is_rich_text': True,
         'inquiry': text_len_2048,
         'eqtypes': eq_types,
-        'select_register': 'register',
+        'select_register': 'not_registered',
         'info_type': 'support',
     }
 
@@ -78,8 +78,8 @@ class EqtypesFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['title'][0], 'タイトルは必須です')
         self.assertEqual(form.errors['select_register'][0], 'この項目は必須です。')
-        self.assertEqual(form.errors['info_type'][0], '情報種別は必須です')
-        self.assertEqual(len(form.errors), 3)
+        self.assertEqual(form.errors['eqtypes'][0], '装置型式は必須です')
+        self.assertEqual(len(form.errors), 4)
 
     def test_valid_when_too_long(self):
         techSupports = TechSupports()
@@ -88,7 +88,8 @@ class EqtypesFormTests(TestCase):
         self.assertEqual(form.errors['title'][0], 'タイトルは128文字以内です')
         self.assertEqual(form.errors['content'][0], '内容は4096文字以内です')
         self.assertEqual(form.errors['inquiry'][0], '概要は2048文字以内です')
-        self.assertEqual(len(form.errors), 3)
+        self.assertEqual(form.errors['eqtypes'][0], '装置型式は必須です')
+        self.assertEqual(len(form.errors), 4)
 
 
 class TechSupportCommentsFormTests(TestCase):

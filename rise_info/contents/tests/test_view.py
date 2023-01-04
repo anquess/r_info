@@ -67,7 +67,7 @@ class ContentsViewTest(TestCase):
     def test_contents_new_return_200_and_include_title(self):
         response = self.client.get(
             "/contents/new/?menu=" + str(self.menu_1.id))
-        self.assertContains(response, "信頼性HPの登録", status_code=200)
+        self.assertContains(response, "周知掲示板の登録", status_code=200)
 
     def test_contents_new_uses_expected_template(self):
         response = self.client.get(

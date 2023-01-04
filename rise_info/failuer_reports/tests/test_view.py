@@ -91,7 +91,8 @@ class EditFailuerReportsTest(TestCase):
         detail_and_edit_common_setUp(self, True)
 
     def test_should_use_expected_template(self):
-        self.assertTemplateUsed(self.response, "failuer_reports/edit.html")
+        self.assertTemplateUsed(
+            self.response, "failuer_reports/failuerReportsNewOrEdit.html")
 
 
 class DetailFailuerReportsTest(TestCase):

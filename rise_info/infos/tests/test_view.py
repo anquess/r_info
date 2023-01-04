@@ -32,7 +32,7 @@ class InfoListTest(TestCase):
 
     def test_info_list_return_200_and_expected_title(self) -> None:
         response = self.client.get("/infos/")
-        self.assertContains(response, "信頼性情報一覧", status_code=200)
+        self.assertContains(response, "TMC発信情報一覧", status_code=200)
 
     def test_info_list_uses_expected_template(self) -> None:
         response = self.client.get("/infos/")
@@ -45,7 +45,7 @@ class CreateInfoTest(TestCase):
 
     def test_render_creation_form(self):
         response = self.client.get("/infos/new/")
-        self.assertContains(response, "信頼性情報の登録", status_code=200)
+        self.assertContains(response, "TMC発信情報の登録", status_code=200)
 
     def test_create_info(self):
         addMockInfo(self)
