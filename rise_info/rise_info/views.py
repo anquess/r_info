@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from rise_info.settings import TOP_PAGE_LIST_NUM
 from accounts.views import addIsStaff
-from infos.models import Info
+from infos.models import InfoRelation
 from contents.models import Contents
 from tech_supports.models import TechSupports
 
@@ -13,9 +13,8 @@ from tech_supports.models import TechSupports
 def top(request):
     list_num = TOP_PAGE_LIST_NUM
     context = addIsStaff({}, request.user)
-    infos = Info.objects.filter(
-        Q(select_register='under_renewal') |
-        Q(select_register='register'),
+    infos = InfoRelation.objects.filter(
+        Q(send_info__isnull=False)
     ).order_by('-updated_at')[:10]
     contents = Contents.objects.order_by('-updated_at')[:10]
     tech_supports = TechSupports.objects.filter(

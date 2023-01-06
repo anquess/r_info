@@ -142,7 +142,8 @@ class FailuerReportRelation(FailuerReport):
         verbose_name='メールフッター', max_length=512, null=True, blank=True)
 
     def delete(self, *args, **kwargs):
-        self.send_repo.delete()
+        if self.send_repo:
+            self.send_repo.delete()
         return super().delete(*args, **kwargs)
 
     class Meta:

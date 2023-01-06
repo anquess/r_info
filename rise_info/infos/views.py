@@ -9,11 +9,12 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from .exportInfo import makeInfoSheet
-from .models import Info, AttachmentFile, InfoComments, InfoTypeChoices
+from .models import AttachmentFile, InfoComments, InfoTypeChoices, InfoRelation
 from .forms import InfoForm, FileFormSet, InfoCommentsForm
 from accounts.views import addIsStaff, User_mail_config
 from addresses.models import Addresses, RoleInLocal
 from offices.models import Office
+from rise_info.choices import RegisterStatusChoices
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
 from rise_info.commonSend import addCommentSendMail, add_addresses
 
@@ -36,7 +37,7 @@ def exportInfo(request):
 
 
 class InfoList(ListView):
-    model = Info
+    model = InfoRelation
     template_name = 'infos/info_list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
@@ -118,13 +119,17 @@ def del_comment(request, info_id, comment_id):
 
 @login_required
 def info_detail(request, info_id):
-    info = Info.objects.get_or_none(pk=info_id)
+    relation_info = InfoRelation.objects.get_or_none(pk=info_id)
+    files = AttachmentFile.objects.filter(info=relation_info)
+    addresses = Addresses.objects.filter(created_by=request.user)
+    if request.user == relation_info.created_by:
+        info = relation_info
+    else:
+        info = relation_info.send_info
     if request.method == "POST":
         add_addresses(request=request, info=info)
         messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('info_list')
-    files = AttachmentFile.objects.filter(info=info)
-    addresses = Addresses.objects.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
@@ -141,7 +146,7 @@ def info_detail(request, info_id):
 @login_required
 def info_del(request, info_id):
     if request.user.is_staff:
-        info = Info.objects.get_or_none(pk=info_id)
+        info = InfoRelation.objects.get_or_none(pk=info_id)
         if info:
             title = info.title
             info.delete()
@@ -159,7 +164,7 @@ def info_del(request, info_id):
 def info_update(request, info_id=None):
     if request.user.is_staff:
         if info_id:
-            info = Info.objects.get_or_none(pk=info_id)
+            info = InfoRelation.objects.get_or_none(pk=info_id)
             form = InfoForm(request.POST or None, instance=info)
             formset = FileFormSet(request.POST or None,
                                   files=request.FILES or None, instance=info)
@@ -224,7 +229,7 @@ def info_edit(request, info_id):
 
 @login_required
 def sendmail(request, info_id):
-    info = Info.objects.get_or_none(pk=info_id)
+    info = InfoRelation.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     roles = RoleInLocal.objects.filter(
         info_type_relations__info_type=info.info_type)
@@ -277,11 +282,37 @@ def sendmail(request, info_id):
                     fail_silently=False,
                 )
                 messages.add_message(request, messages.INFO, '送信されました。')
-                return redirect('info_list')
             except Exception as e:
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
-                return redirect('info_list')
+            if info.send_info:
+                info.send_info.title = info.title
+                info.send_info.content = info.content
+                info.send_info.created_by = info.created_by
+                info.send_info.created_at = info.created_at
+                info.send_info.updated_at = info.updated_at
+                info.send_info.updated_by = info.updated_by
+                info.send_info.info_type = info.info_type
+                info.send_info.is_rich_text = info.is_rich_text
+                info.send_info.managerID = info.managerID
+                info.send_info.sammary = info.sammary
+                info.send_info.is_add_eqtypes = info.is_add_eqtypes
+                info.send_info.is_add_offices = info.is_add_offices
+                info.send_info.offices = info.offices
+                info.send_info.disclosure_date = info.disclosure_date
+                info.send_info.addresses = info.addresses
+                info.send_info.select_register = RegisterStatusChoices.REGISTER
+            else:
+                send_info = info.info_ptr
+                send_info.id = None
+                send_info.pk = None
+                send_info.pk = RegisterStatusChoices.REGISTER
+                send_info.save()
+                info.send_info = send_info
+            info.select_register = RegisterStatusChoices.UNDER_RENEWAL
+            info.save()
+
+            return redirect('info_list')
         else:
             context = addIsStaff(context, request.user)
             return render(request, 'infos/mail_form.html', context)

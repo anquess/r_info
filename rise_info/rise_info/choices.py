@@ -38,6 +38,7 @@ class RegisterStatusChoices(models.TextChoices):
 class RegisterStatusChoicesFailuer(models.TextChoices):
     TEMP = 'temporaty', '一時保存'
     SENDED = 'sended', '送信済み'
+    DONE = 'done', '解決済'
 
 
 class RegisterStatusChoicesSupo(models.TextChoices):

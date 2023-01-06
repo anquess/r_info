@@ -1,7 +1,7 @@
 from django import forms
 from django.urls import reverse_lazy
 
-from infos.models import Info, AttachmentFile, InfoComments
+from infos.models import AttachmentFile, InfoComments, InfoRelation
 from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 from eqs.widgets import SuggestWidget
 from offices.widgets import OfficeSuggestWidget
@@ -15,7 +15,7 @@ class InfoCommentsForm(forms.ModelForm):
             value.widget.attrs['class'] = 'form-control'
 
     info = forms.ModelChoiceField(
-        queryset=Info.objects.all(),
+        queryset=InfoRelation.objects.all(),
         error_messages={'required': 'infoは必須です', },
     )
     comment_txt = forms.CharField(
@@ -52,7 +52,7 @@ class InfoForm(forms.ModelForm):
                     value.widget.attrs['class'] = 'form-control'
 
     class Meta(MetaCommonInfo):
-        model = Info
+        model = InfoRelation
         fields = MetaCommonInfo.fields + \
             ('info_type', 'managerID', 'sammary', 'is_rich_text',
              'is_add_eqtypes', 'is_add_offices', 'eqtypes', 'offices',
@@ -114,5 +114,5 @@ class AttachmentFileForm(forms.ModelForm):
 
 
 FileFormSet = forms.inlineformset_factory(
-    Info, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
+    InfoRelation, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
 )

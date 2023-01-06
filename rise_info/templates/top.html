@@ -6,7 +6,7 @@
     <h1>ようこそ信頼性ホームページへ！</h1>
     <div class="card">
         <div class="card-body">
-            <div class="card-title">新着　信頼性情報</div>
+            <div class="card-title">新着　TMC発信情報</div>
             <div class="card-text">
                 <div class="row">
                     <div class="col-2">公開日</div>
@@ -39,38 +39,7 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div class="card-title">新着　コンテンツ</div>
-            <div class="card-text">
-                <div class="row">
-                    <div class="col-2">更新日時</div>
-                    <div class="col-2">更新者</div>
-                    <div class="col-8">件名</div>
-                </div>
-                {% for content in contents %}
-                {% if forloop.counter == 6 %}
-                <a href="#" onclick="ChangeHidden('new_content', this);">残りを表示</a>
-                <div id='new_content' class="d-none">
-                    {%endif%}
-
-                    <div class="row">
-                        <div class="col-2">{{content.updated_at|date:"Y年m月d日"}}</div>
-                        <div class="col-2">{{content.updated_by.first_name}}</div>
-                        <div class="col-8"><a href="{% url 'content_detail' content.id %}">{{ content.title }}</a></div>
-                    </div>
-
-                    {%if forloop.last %}
-                    {%if forloop.counter > 5 %}
-                </div>
-                {%endif%}
-                {%endif%}
-                {%endfor%}
-            </div>
-            <div class="card-subtitle">直近{{list_num}}件を表示</div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="card-title">新着　技術支援</div>
+            <div class="card-title">新着　官署発信情報</div>
             <div class="card-text">
                 <div class="row">
                     <div class="col-2">更新日時</div>
@@ -99,6 +68,37 @@
                 {%endfor%}
                 <div class="card-subtitle">直近{{list_num}}件を表示</div>
             </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">新着　周知掲示板</div>
+            <div class="card-text">
+                <div class="row">
+                    <div class="col-2">更新日時</div>
+                    <div class="col-2">更新者</div>
+                    <div class="col-8">件名</div>
+                </div>
+                {% for content in contents %}
+                {% if forloop.counter == 6 %}
+                <a href="#" onclick="ChangeHidden('new_content', this);">残りを表示</a>
+                <div id='new_content' class="d-none">
+                    {%endif%}
+
+                    <div class="row">
+                        <div class="col-2">{{content.updated_at|date:"Y年m月d日"}}</div>
+                        <div class="col-2">{{content.updated_by.first_name}}</div>
+                        <div class="col-8"><a href="{% url 'content_detail' content.id %}">{{ content.title }}</a></div>
+                    </div>
+
+                    {%if forloop.last %}
+                    {%if forloop.counter > 5 %}
+                </div>
+                {%endif%}
+                {%endif%}
+                {%endfor%}
+            </div>
+            <div class="card-subtitle">直近{{list_num}}件を表示</div>
         </div>
     </div>
 </div>

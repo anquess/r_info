@@ -63,3 +63,17 @@ class InfoComments(BaseCommnets):
         if not self.pk:
             self.info.save()
         super(InfoComments, self).save(*args, **kwargs)
+
+
+class InfoRelation(Info):
+    send_info = models.OneToOneField(
+        Info, on_delete=models.DO_NOTHING, related_name='sended',
+        verbose_name='送信ログ', null=True, blank=True)
+
+    def delete(self, *args, **kwargs):
+        if self.send_info:
+            self.send_info.delete()
+        return super().delete(*args, **kwargs)
+
+    class Meta:
+        db_table = 'info_list'
