@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
 
 
-from .models import FailuerReport, FailuerReportRelation, AttachmentFile, Circumstances
+from .models import FailuerReportRelation, AttachmentFile, Circumstances
 from rise_info.baseForms import MetaCommonInfo
 
 

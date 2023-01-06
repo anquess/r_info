@@ -113,6 +113,7 @@
 <div class="h5 pt-2 mt-2">経緯</div>
 <div class="pb-2 mb-2 border-bottom">
     {%for event in events%}
+    {%if info.updated_at >= event.updated_at%}
     <div class="row">
         <div class="col-2">
             {%if event.date%}{{event.date}}{%endif%}
@@ -124,6 +125,7 @@
             {{event.event|linebreaksbr}}
         </div>
     </div>
+    {%endif%}
     {%endfor%}
 </div>
 {% if relation_info.mail_footer %}

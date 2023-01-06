@@ -113,7 +113,10 @@ def sendmail(request, info_id):
                 messages.add_message(
                     request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) +
                     '\n' + str(e) + '\n' + str(is_send_list))
-
+            if info.recovery_time:
+                select_register = RegisterStatusChoicesFailuer.SENDED
+            else:
+                select_register = RegisterStatusChoicesFailuer.DONE
             if info.send_repo:
                 info.send_repo.title = info.title
                 info.send_repo.content = info.content
@@ -137,12 +140,13 @@ def sendmail(request, info_id):
                 info.send_repo.flight_impact = info.flight_impact
                 info.send_repo.is_press = info.is_press
                 info.send_repo.press_contents = info.press_contents
+                info.send_repo.select_register = select_register
                 info.send_repo.save()
             else:
                 send_repo = info.failuerreport_ptr
                 send_repo.id = None
                 send_repo.pk = None
-                send_repo.select_register = RegisterStatusChoicesFailuer.SENDED
+                send_repo.select_register = select_register
                 send_repo.save()
                 info.send_repo = send_repo
             info.dest_list.all().delete()
@@ -311,8 +315,9 @@ def failuer_report_detail(request, info_id):
         info = relation_info
     else:
         info = relation_info.send_repo
-    files = AttachmentFile.objects.filter(info=info)
-    events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
+    files = AttachmentFile.objects.filter(info=relation_info)
+    events = Circumstances.objects.filter(
+        info=relation_info).order_by('-date', '-time')
     if info:
         context = {
             'info': info,
