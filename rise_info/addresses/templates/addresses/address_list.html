@@ -6,46 +6,44 @@
 {% endblock %}
 
 {% block main %}
-<div class="welcome">
-    <h1>配信先一覧</h1>
+<div class="row py-3">
+    <div class="col-11">
+        <h1>配信先一覧</h1>
+    </div>
+    <div class="col-1">
+        <a class="btn btn-primary float-end" href="{% url 'address_new' %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="登録">＋</a>
+    </div>
 </div>
-<a class="btn btn-primary float-end" href="{% url 'address_new' %}" data-bs-toggle="tooltip" data-bs-placement="bottom"
-    title="登録">＋</a>
-{% if addresses %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>登録官署</th>
-            <th>役職</th>
-            <th>氏名</th>
-            <th>メールアドレス</th>
-            <th>編集</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for address in addresses %}
-        <tr>
-            <th>{{address.created_by}}</th>
-            <th>{{address.position}}</th>
-            <th>{{address.name}}</th>
-            <th>{{address.mail}}</th>
-            <th>
-                {% if user == address.created_by %}
-                <a class="btn btn-primary" href="{% url 'address_edit' address.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'address_del' address.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="削除" onclick='return confirm("よろしいですか？");'>
-                    {% bs_icon 'trash' %}
-                </a>
 
-                {% endif %}
-            </th>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if addresses %}
+<div class="row border-bottom border-secondary">
+    <div class="col-3 h5">登録官署</div>
+    <div class="col-2 h5">役職</div>
+    <div class="col-2 h5">氏名</div>
+    <div class="col-3 h5">メールアドレス</div>
+    <div class="col-2 h5">編集</div>
+</div>
+{% for address in addresses %}
+<div class="row border-bottom border-secondary py-2">
+    <div class="col-3">{{address.created_by.last_name}}</div>
+    <div class="col-2">{{address.position}}</div>
+    <div class="col-2">{{address.name}}</div>
+    <div class="col-3">{{address.mail}}</div>
+    <div class="col-2">
+        {% if user == address.created_by %}
+        <a class="btn btn-primary" href="{% url 'address_edit' address.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        <a class="btn btn-danger" href="{% url 'address_del' address.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="削除" onclick='return confirm("よろしいですか？");'>
+            {% bs_icon 'trash' %}
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
 {% else %}
 <p>配信先一覧はまだ登録されていません。</p>
 {% endif %}

@@ -7,7 +7,7 @@
 
 {% block main %}
 
-<div class="welcome">
+<div class="row py-2">
     <h1>障害通報一覧</h1>
 </div>
 
@@ -55,79 +55,75 @@
     {% include "pagination.html" %}
 </div>
 {% if infos %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>タイトル</th>
-            <th>障害発生場所</th>
-            <th>障害概要</th>
-            <th>障害発生日時</th>
-            <th>障害復旧日時</th>
-            <th>登録官署</th>
-            <th>編集</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for info in infos %}
-        <tr>
-            {% if info.send_repo %}
-            <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.send_repo.title }}</a></th>
-            <th>{{ info.send_repo.failuer_place }}&nbsp;{{ info.send_repo.eq }}</th>
-            <th>{{ info.send_repo.sammary | linebreaksbr }}</th>
-            <th>{{ info.send_repo.failuer_date | date:"y/n/j" }}&nbsp;{{ info.send_repo.failuer_time | date:"H:i" }}
-            </th>
-            <th>{{ info.send_repo.recovery_date | date:"y/n/j" }}&nbsp;{{ info.send_repo.recovery_time | date:"H:i" }}
-            </th>
-            <th>{{ info.send_repo.created_by.last_name }}</th>
-            <th>
-                {% if user == info.created_by %}
-                <a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
-                <a class="btn btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="メール送信画面へ">
-                    {% bs_icon 'send' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}"
-                    onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="削除">
-                    {% bs_icon 'trash' %}
-                </a>
-                {% endif %}
-            </th>
-            {% else %}
-            <th><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.failuer_place }}&nbsp;{{ info.eq }}</th>
-            <th>{{ info.sammary | linebreaksbr }}</th>
-            <th>{{ info.failuer_date | date:"y/n/j" }}&nbsp;{{ info.failuer_time | date:"H:i" }}
-            </th>
-            <th>{{ info.recovery_date | date:"y/n/j" }}&nbsp;{{ info.recovery_time | date:"H:i" }}
-            </th>
-            <th>{{ info.created_by.last_name }}</th>
-            <th>
-                {% if user == info.created_by %}
-                <a class="btn btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
-                <a class="btn btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="メール送信画面へ">
-                    {% bs_icon 'send' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'failuer_report_del' info.id %}"
-                    onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="削除">
-                    {% bs_icon 'trash' %}
-                </a>
-                {% endif %}
-            </th>
-            {% endif %}
+<div class="row border-bottom border-secondary">
+    <div class="col-2 h5">タイトル</div>
+    <div class="col-2 h5">障害発生場所</div>
+    <div class="col-4 h5">障害概要</div>
+    <div class="col-1 h5">障害発生日時</div>
+    <div class="col-1 h5">障害復旧日時</div>
+    <div class="col-1 h5">登録官署</div>
+    <div class="col-1 h5">編集</div>
+</div>
+{% for info in infos %}
+<div class="row border-bottom border-secondary py-2">
+    {% if info.send_repo %}
+    <div class="col-2"><a href="{% url 'failuer_report_detail' info.id %}">{{ info.send_repo.title }}</a></div>
+    <div class="col-2">{{ info.send_repo.failuer_place }}&nbsp;{{ info.send_repo.eq }}</div>
+    <div class="col-4">{{ info.send_repo.sammary | linebreaksbr }}</div>
+    <div class="col-1">{{ info.send_repo.failuer_date | date:"y/n/j" }}&nbsp;
+        {{ info.send_repo.failuer_time | date:"H:i"}}
+    </div>
+    <div class="col-1">{{ info.send_repo.recovery_date | date:"y/n/j" }}&nbsp;
+        {{ info.send_repo.recovery_time | date:"H:i" }}
+    </div>
+    <div class="col-1">{{ info.send_repo.created_by.last_name }}</div>
+    <div class="col-1">
+        {% if user == info.created_by %}
+        <a class="btn-sm btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        <a class="btn-sm btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="メール送信画面へ">
+            {% bs_icon 'send' %}
+        </a>
+        <a class="btn-sm btn-danger" href="{% url 'failuer_report_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="col-2"><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></div>
+    <div class="col-2">{{ info.failuer_place }}&nbsp;{{ info.eq }}</div>
+    <div class="col-4">{{ info.sammary | linebreaksbr }}</div>
+    <div class="col-1">{{ info.failuer_date | date:"y/n/j" }}&nbsp;
+        {{ info.failuer_time | date:"H:i" }}
+    </div>
+    <div class="col-1">{{ info.recovery_date | date:"y/n/j" }}&nbsp;
+        {{ info.recovery_time | date:"H:i" }}
+    </div>
+    <div class="col-1">{{ info.created_by.last_name }}</div>
+    <div class="col-1">
+        {% if user == info.created_by %}
+        <a class="btn-sm btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        <a class="btn-sm btn-primary" href="{% url 'send_mail' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="メール送信画面へ">
+            {% bs_icon 'send' %}
+        </a>
+        <a class="btn-sm btn-danger" href="{% url 'failuer_report_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
 
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+</div>
+{% endfor %}
 {% else %}
 <p>障害通報はまだ登録されていません。</p>
 {% endif %}

@@ -85,48 +85,38 @@
 
 </div>
 
-</div>
-
-</div>
-
 {% if infos %}
-<table class="table">
-    <thead>
-        <tr>
-            <th class="col-1">情報種別</th>
-            <th class="col-2">タイトル</th>
-            <th class="col-7">概要</th>
-            <th>更新日</th>
-            <th>編集</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for info in infos %}
-        <tr>
-            <th>{{ info.get_info_type_display }}</th>
-            <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
-            <th>{{ info.sammary }}</th>
-            <th>{{ info.updated_at | date:"y/n/j" }}</th>
-            {% if auth %}
-            <th>
-                <a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
-                <a class="btn btn-primary" href="{% url 'info_send' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="メール送信画面へ">
-                    {% bs_icon 'send' %}
-                </a>
-                <a class="btn btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
-                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
-                    {% bs_icon 'trash' %}
-                </a>
-            </th>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row border-bottom border-secondary">
+    <div class="col-1 h5">情報種別</div>
+    <div class="col-2 h5">タイトル</div>
+    <div class="col-7 h5">概要</div>
+    <div class="col-1 h5">更新日</div>
+    <div class="col-1 h5">編集</div>
+</div>
+{% for info in infos %}
+<div class="row border-bottom border-secondary py-2">
+    <div class="col-1">{{ info.get_info_type_display }}</div>
+    <div class="col-2"><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></div>
+    <div class="col-7">{{ info.sammary }}</div>
+    <div class="col-1">{{ info.updated_at | date:"y/n/j" }}</div>
+    {% if auth %}
+    <div class="col-1">
+        <a class="btn-sm btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        <a class="btn-sm btn-primary" href="{% url 'info_send' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="メール送信画面へ">
+            {% bs_icon 'send' %}
+        </a>
+        <a class="btn-sm btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
 {% else %}
 <p>信頼性情報はまだ投稿されていません。</p>
 {% endif %}
