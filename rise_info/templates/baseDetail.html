@@ -44,7 +44,11 @@
         <div class="col-3">投稿者:{{ info.updated_by.last_name }}</div>
     </div>
 </div>
-{% block btn %}{% endblock %}
+<div class="row">
+    <div class="col-2 offset-10">
+        {% block btn %}{% endblock %}
+    </div>
+</div>
 </div>
 {% endblock %}
 {% block add_js %}

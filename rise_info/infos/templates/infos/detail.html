@@ -29,9 +29,14 @@
 {% endblock %}
 
 {% block commnets %}
-<button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
-    コメント追加
-</button>
+<div class="row">
+    <div class="col-2 offset-10">
+        <button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
+            コメント追加
+        </button>
+    </div>
+</div>
+
 {% for comment in info.infoComment.all|dictsortreversed:"created_at"%}
 {% include "../baseComment.html" %}
 {% endfor %}

@@ -33,7 +33,11 @@
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
     {% block register %}{% endblock %}
-    {% block btn %}{% endblock %}
+    <div class="row pt-2">
+        <div class="col-1 offset-11">
+            {% block btn %}{% endblock %}
+        </div>
+    </div>
 </form>
 {% endblock %}
 

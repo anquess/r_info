@@ -96,7 +96,6 @@
             <th class="col-1">情報種別</th>
             <th class="col-2">タイトル</th>
             <th class="col-7">概要</th>
-            <th>公開日</th>
             <th>更新日</th>
             <th>編集</th>
         </tr>
@@ -107,7 +106,6 @@
             <th>{{ info.get_info_type_display }}</th>
             <th><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></th>
             <th>{{ info.sammary }}</th>
-            <th>{{ info.disclosure_date | date:"y/n/j" }}</th>
             <th>{{ info.updated_at | date:"y/n/j" }}</th>
             {% if auth %}
             <th>

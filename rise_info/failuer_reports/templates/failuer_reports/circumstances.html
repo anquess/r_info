@@ -17,8 +17,8 @@
     </div>
 </div>
 <div id="event-area">
-<hr class="mt-1 mb-1">
-{%for event_form in formset2%}
+    <hr class="mt-1 mb-1">
+    {%for event_form in formset2%}
     <div class="row">
         <div class="col-2">
             {{event_form.date}}
@@ -37,6 +37,10 @@
     </div>
 
     <hr class="mt-1 mb-1">
-{%endfor%}
+    {%endfor%}
 </div>
-<button id="add_event" type="button" class="btn btn-primary">事象の追加</button></br>
+<div class="row pt-2">
+    <div class="col-1 offset-11">
+        <button id="add_event" type="button" class="btn btn-primary">事象の追加</button>
+    </div>
+</div>

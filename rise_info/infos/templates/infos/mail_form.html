@@ -77,16 +77,18 @@
                         value="{{mail_config.default_email_footer}}"></textarea>
                 </div>
             </div>
-
-            <div class="col-1">
-                <button id="send" type="submit" class="btn btn-secondary" onclick='return confirm("メール送信をして、よろしいですか？");'
-                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="メール送信">
-                    {% bs_icon 'send' %}
-                </button>
-                <a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
+            <div class="row pt-2">
+                <div class="col-1 offset-11">
+                    <button id="send" type="submit" class="btn btn-secondary"
+                        onclick='return confirm("メール送信をして、よろしいですか？");' data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="メール送信">
+                        {% bs_icon 'send' %}
+                    </button>
+                    <a class="btn btn-primary" href="{% url 'info_edit' info.id %}" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="編集">
+                        {% bs_icon 'pencil-square' %}
+                    </a>
+                </div>
             </div>
     </form>
 </div>

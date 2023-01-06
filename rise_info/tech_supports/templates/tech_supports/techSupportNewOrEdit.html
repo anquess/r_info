@@ -45,13 +45,17 @@
             {{form.select_register}}
         </div>
     </div>
-    <button class="btn btn-primary" type="submit" value="post">
-        {%if info_id%}
-        更新
-        {%else%}
-        登録
-        {%endif%}
-    </button>
+    <div class="row pt-2">
+        <div class="col-1 offset-11">
+            <button class="btn btn-primary" type="submit" value="post">
+                {%if info_id%}
+                更新
+                {%else%}
+                登録
+                {%endif%}
+            </button>
+        </div>
+    </div>
 
 
 </form>
