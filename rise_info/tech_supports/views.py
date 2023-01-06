@@ -5,17 +5,18 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from .models import TechSupports, AttachmentFile, TechSupportComments
+from .models import AttachmentFile, TechSupportComments, TechSupportsRelation
 from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
 from accounts.views import addIsStaff
 from addresses.models import Addresses
 from offices.models import Office
 from rise_info.commonSend import addCommentSendMail, add_addresses,\
     notifyRegistration
+from rise_info.choices import RegisterStatusChoicesSupo
 
 
 class TechSupportList(ListView):
-    model = TechSupports
+    model = TechSupportsRelation
     template_name = 'tech_supports/tech_support_list.html'
     context_object_name = 'infos'
     ordering = 'updated_at'
@@ -26,8 +27,8 @@ class TechSupportList(ListView):
         return super(TechSupportList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
-        q_default = Q(select_register__in=['register', 'doing', 'done']) | \
-            Q(created_by__username__contains=self.request.user)
+        q_default = Q(created_by__username__contains=self.request.user) | \
+            Q(send_info__isnull=False)
         queryset = super().get_queryset(**kwargs).filter(q_default)
         key_keyword = self.request.GET.get('keyword')
         key_eqtype = self.request.GET.get('eqtype')
@@ -59,7 +60,7 @@ class TechSupportList(ListView):
 
 def get_form_context(request, info_id=None):
     if info_id:
-        info = TechSupports.objects.get_or_none(pk=info_id)
+        info = TechSupportsRelation.objects.get_or_none(pk=info_id)
         if info:
             form = TechSupportsForm(request.POST or None, instance=info)
             formset = FileFormSet(request.POST or None,
@@ -97,15 +98,37 @@ def support_update(request, info_id=None):
                     info.addresses.add(address)
                 info.save()
                 messages.add_message(request, messages.INFO, '更新されました。')
-                if info.select_register == 'register':
+                if request.POST.get("sendMailFLG"):
                     e = notifyRegistration(info=info, request=request)
                     if e == 1:
                         messages.add_message(request, messages.INFO, '通知しました。')
-                        messages.add_message(
-                            request, messages.INFO, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                        if info.send_info:
+                            info.send_info.title = info.title
+                            info.send_info.content = info.content
+                            info.send_info.created_by = info.created_by
+                            info.send_info.created_at = info.created_at
+                            info.send_info.updated_at = info.updated_at
+                            info.send_info.updated_by = info.updated_by
+                            info.send_info.info_type = info.info_type
+                            info.send_info.is_rich_text = info.is_rich_text
+                            info.send_info.inquiry = info.inquiry
+                            info.send_info.addresses = info.addresses
+                            info.send_info.select_register = \
+                                RegisterStatusChoicesSupo.REGISTER
+                        else:
+                            send_info = info.techsupports_ptr
+                            send_info.id = None
+                            send_info.pk = None
+                            send_info.select_register = \
+                                RegisterStatusChoicesSupo.REGISTER
+                            send_info.save()
+                            info.send_info = send_info
+                        info.select_register = RegisterStatusChoicesSupo.TEMP
+                        info.save()
                     else:
                         messages.add_message(
-                            request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))
+                            request, messages.ERROR, '送信されませんでした。\n' +
+                            str(type(e)) + '\n' + str(e))
                 return redirect('support_list')
             else:
                 for ele in context['formset']:
@@ -134,13 +157,18 @@ def support_new(request):
 
 @login_required
 def support_detail(request, info_id):
-    info = TechSupports.objects.get_or_none(pk=info_id)
+    relation_info = TechSupportsRelation.objects.get_or_none(pk=info_id)
+    files = AttachmentFile.objects.filter(info=relation_info)
+    addresses = Addresses.objects.filter(created_by=request.user)
+    if request.user == relation_info.created_by:
+        info = relation_info
+    else:
+        info = relation_info.send_info
+
     if request.method == "POST":
         add_addresses(request=request, info=info)
         messages.add_message(request, messages.INFO, "配信先を変更しました")
         return redirect('support_list')
-    files = AttachmentFile.objects.filter(info=info)
-    addresses = Addresses.objects.filter(created_by=request.user)
     if info:
         context = {
             'info': info,
@@ -159,7 +187,7 @@ def support_detail(request, info_id):
 @login_required
 def support_del(request, info_id):
     if request.user.is_staff:
-        info = TechSupports.objects.get_or_none(pk=info_id)
+        info = TechSupportsRelation.objects.get_or_none(pk=info_id)
         if info:
             title = info.title
             info.delete()

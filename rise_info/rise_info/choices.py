@@ -44,5 +44,6 @@ class RegisterStatusChoicesFailuer(models.TextChoices):
 class RegisterStatusChoicesSupo(models.TextChoices):
     NOT_REGISTERED = 'not_registered', '未登録'
     REGISTER = 'register', '登録依頼中'
+    TEMP = 'temporaty', '一時保存'
     DOING = 'doing', '登録受付完了 対応中'
     DONE = 'done', '解決済'

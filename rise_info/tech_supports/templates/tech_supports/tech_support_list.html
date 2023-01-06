@@ -51,44 +51,36 @@
     {% include "pagination.html" %}
 </div>
 {% if infos %}
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" colspan="1">解決済</th>
-            <th scope="col" colspan="1">情報種別</th>
-            <th scope="col" colspan="3">タイトル</th>
-            <th scope="col" colspan="3">問い合わせ内容</th>
-            <th scope="col" colspan="1">更新日</th>
-            <th scope="col" colspan="1">官署</th>
-            <th scope="col" colspan="1">編集</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for info in infos %}
-        <tr>
-            <th colspan="1">{{info.get_select_register_display}}</th>
-            <th colspan="1">{{ info.get_info_type_display }}</th>
-            <th colspan="3"><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></th>
-            <th colspan="3">{{ info.inquiry }}</th>
-            <th colspan="1">{{ info.updated_at | date:"y/n/j" }}</th>
-            <th colspan="1">{{ info.created_by.last_name }}</th>
-            {% if auth or user == info.created_by %}
-            <th colspan="1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}" data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" title="編集">
-                    {% bs_icon 'pencil-square' %}
-                </a>
-                {% endif %}
-                {% if auth %}
-                <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'
-                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
-                    {% bs_icon 'trash' %}
-                </a>
-            </th>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row border-bottom border-secondary">
+    <div class="col-1 h5">情報種別</div>
+    <div class="col-3 h5">タイトル</div>
+    <div class="col-5 h5">問い合わせ内容</div>
+    <div class="col-1 h5">更新日</div>
+    <div class="col-1 h5">官署</div>
+    <div class="col-1 h5">編集</div>
+</div>
+{% for info in infos %}
+<div class="row border-bottom border-secondary py-2">
+    <div class="col-1">{{ info.get_info_type_display }}</div>
+    <div class="col-3"><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></div>
+    <div class="col-5">{{ info.inquiry | linebreaksbr }}</div>
+    <div class="col-1">{{ info.updated_at | date:"y/n/j" }}</div>
+    <div class="col-1">{{ info.created_by.last_name }}</div>
+    {% if auth or user == info.created_by %}
+    <div class="col-1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        {% endif %}
+        {% if auth %}
+        <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
 {% else %}
 <p>技術支援はまだ投稿されていません。</p>
 {% endif %}

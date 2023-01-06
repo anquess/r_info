@@ -6,7 +6,7 @@ from rise_info.settings import TOP_PAGE_LIST_NUM
 from accounts.views import addIsStaff
 from infos.models import InfoRelation
 from contents.models import Contents
-from tech_supports.models import TechSupports
+from tech_supports.models import TechSupportsRelation
 
 
 @login_required
@@ -17,8 +17,8 @@ def top(request):
         Q(send_info__isnull=False)
     ).order_by('-updated_at')[:10]
     contents = Contents.objects.order_by('-updated_at')[:10]
-    tech_supports = TechSupports.objects.filter(
-        Q(select_register__in=['register', 'doing', 'done'])
+    tech_supports = TechSupportsRelation.objects.filter(
+        Q(send_info__isnull=False)
     ).order_by('-updated_at')[:10]
     context['list_num'] = list_num
     context['infos'] = infos

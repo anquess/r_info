@@ -37,17 +37,13 @@
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
     {% include "addAddressesForm.html" %}
-    <div class="row mt-2">
-        <div class="col-1">
-            <label for="id_select_register" class="form-label">{{form.select_register.label}}</label>
-        </div>
-        <div class="col-2">
-            {{form.select_register}}
-        </div>
-    </div>
+    {{form.select_register}}
     <div class="row pt-2">
-        <div class="col-1 offset-11">
+        <div class="col-2 offset-10">
             <button class="btn btn-primary" type="submit" value="post">
+                一時保存
+            </button>
+            <button class="btn btn-primary" onclick='addSendMailFLG()'>
                 {%if info_id%}
                 更新
                 {%else%}
@@ -67,6 +63,16 @@
 <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script>
+    <!-- メール送信フラグ追加 -->
+    function addSendMailFLG() {
+        var sendMailFLG = document.createElement('input');
+        sendMailFLG.type = "hidden";
+        sendMailFLG.name = "sendMailFLG";
+        sendMailFLG.value = false;
+        document.forms[0].appendChild(sendMailFLG);
+    }
+</script>
 <script>
     <!-- エンターによる送信不可(誤送信対策) -->
     $(function () {

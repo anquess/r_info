@@ -1,4 +1,3 @@
-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -18,8 +17,6 @@ from rise_info.choices import RegisterStatusChoices
 from rise_info.settings import EMAIL_HOST_USER, DEBUG
 from rise_info.commonSend import addCommentSendMail, add_addresses
 
-from datetime import datetime
-from re import T
 from functools import reduce
 import operator
 import openpyxl

@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
-from .models import TechSupports, AttachmentFile, TechSupportComments
+from .models import AttachmentFile, TechSupportComments, TechSupportsRelation
 from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 from eqs.widgets import SuggestWidget
 
@@ -14,7 +14,7 @@ class TechSupportCommentsForm(forms.ModelForm):
             value.widget.attrs['placeholder'] = value.help_text
             value.widget.attrs['class'] = 'form-control'
     info = forms.ModelChoiceField(
-        queryset=TechSupports.objects.all(),
+        queryset=TechSupportsRelation.objects.all(),
         error_messages={'required': 'infoは必須です', },
     )
     comment_txt = forms.CharField(
@@ -62,7 +62,7 @@ class TechSupportsForm(forms.ModelForm):
         return eqtypes
 
     class Meta(MetaCommonInfo):
-        model = TechSupports
+        model = TechSupportsRelation
         fields = MetaCommonInfo.fields + \
             ('info_type', 'inquiry', 'is_rich_text', 'eqtypes')
         error_messages = {**MetaCommonInfo.error_messages, **{
@@ -84,6 +84,11 @@ class TechSupportsForm(forms.ModelForm):
             'eqtypes': SuggestWidget(attrs={
                 'data-url': reverse_lazy('eqs:api_posts_get')
             }),
+            "select_register": forms.TextInput(attrs={
+                "type": "hidden",
+                "value": "temporaty",
+            })
+
         }}
 
 
@@ -99,5 +104,5 @@ class AttachmentFileForm(forms.ModelForm):
 
 
 FileFormSet = forms.inlineformset_factory(
-    TechSupports, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
+    TechSupportsRelation, AttachmentFile, form=AttachmentFileForm, fields='__all__', extra=1,
 )

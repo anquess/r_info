@@ -1,26 +1,31 @@
 from django.db import models
 
 from addresses.models import Addresses
-from eqs.models import Eqtype, DepartmentForEq
+from eqs.models import Eqtype
 from rise_info.baseModels import CommonInfo, BaseAttachment, BaseCommnets
 from rise_info.choices import RegisterStatusChoicesSupo, InfoTypeChoicesSupo
-# Create your models here.
 
 
 class TechSupports(CommonInfo):
     info_type = models.CharField(
-        verbose_name='情報種別', max_length=16, choices=InfoTypeChoicesSupo.choices,
-        default=InfoTypeChoicesSupo.SUPPORT, null=False, blank=False)
+        verbose_name='情報種別', max_length=16,
+        choices=InfoTypeChoicesSupo.choices,
+        default=InfoTypeChoicesSupo.SUPPORT,
+        null=False, blank=False)
     is_rich_text = models.BooleanField(
-        verbose_name='リッチテキスト有効', default=False, help_text='内容のリッチテキスト有効/無効')
+        verbose_name='リッチテキスト有効', default=False,
+        help_text='内容のリッチテキスト有効/無効')
     inquiry = models.TextField(
-        verbose_name='問い合わせ内容', default="", null=False, blank=True, max_length=2048)
+        verbose_name='問い合わせ内容', default="", null=False, blank=True,
+        max_length=2048)
     eqtypes = models.ManyToManyField(
-        Eqtype, verbose_name='装置型式', null=True, blank=True, related_name='tech_supo')
+        Eqtype, verbose_name='装置型式', null=True, blank=True,
+        related_name='tech_supo')
     select_register = models.CharField(
         verbose_name='登録状態', max_length=16,
         choices=RegisterStatusChoicesSupo.choices,
-        default=RegisterStatusChoicesSupo.NOT_REGISTERED, null=False, blank=False
+        default=RegisterStatusChoicesSupo.NOT_REGISTERED,
+        null=False, blank=False
     )
     addresses = models.ManyToManyField(
         Addresses, verbose_name='受信アドレス', null=True, blank=True,
@@ -49,7 +54,8 @@ class AttachmentFile(BaseAttachment):
 
 class TechSupportComments(BaseCommnets):
     info = models.ForeignKey(
-        TechSupports, related_name='techSupportComment', on_delete=models.CASCADE)
+        TechSupports, related_name='techSupportComment',
+        on_delete=models.CASCADE)
     upload_path = 'tech_support_comments'
 
     class Meta:
@@ -59,3 +65,17 @@ class TechSupportComments(BaseCommnets):
         if not self.pk:
             self.info.save()
         super(TechSupportComments, self).save(*args, **kwargs)
+
+
+class TechSupportsRelation(TechSupports):
+    send_info = models.OneToOneField(
+        TechSupports, on_delete=models.DO_NOTHING, related_name='sended',
+        verbose_name='送信ログ', null=True, blank=True)
+
+    def delete(self, *args, **kwargs):
+        if self.send_info:
+            self.send_info.delete()
+        return super().delete(*args, **kwargs)
+
+    class Meta:
+        db_table = 'techSupport_list'
