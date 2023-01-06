@@ -55,8 +55,7 @@ class InfoList(ListView):
             queryset = super().get_queryset(
                 **kwargs).filter(
                     Q(select_register='under_renewal') |
-                    Q(select_register='register')
-            ).filter(disclosure_date__lte=datetime.today())
+                    Q(select_register='register'))
 
         q_info_type = self.request.GET.get('info_type')
         q_keyword = self.request.GET.get('keyword')
@@ -78,7 +77,7 @@ class InfoList(ListView):
                 Q(sammary__contains=q_keyword) |
                 Q(content__contains=q_keyword)
             ).distinct()
-        return queryset.order_by('-disclosure_date')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -299,7 +298,6 @@ def sendmail(request, info_id):
                 info.send_info.is_add_eqtypes = info.is_add_eqtypes
                 info.send_info.is_add_offices = info.is_add_offices
                 info.send_info.offices = info.offices
-                info.send_info.disclosure_date = info.disclosure_date
                 info.send_info.addresses = info.addresses
                 info.send_info.select_register = RegisterStatusChoices.REGISTER
             else:

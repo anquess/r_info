@@ -9,7 +9,6 @@
             <div class="card-title">新着　TMC発信情報</div>
             <div class="card-text">
                 <div class="row">
-                    <div class="col-2">公開日</div>
                     <div class="col-2">更新日時</div>
                     <div class="col-2">更新者</div>
                     <div class="col-6">件名</div>
@@ -22,7 +21,6 @@
                     {%endif%}
 
                     <div class="row">
-                        <div class="col-2">{{info.disclosure_date|date:"Y年m月d日"}}</div>
                         <div class="col-2">{{info.updated_at}}</div>
                         <div class="col-2">{{info.updated_by.first_name}}</div>
                         <div class="col-6"><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></div>

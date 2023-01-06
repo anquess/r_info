@@ -55,8 +55,7 @@ class InfoForm(forms.ModelForm):
         model = InfoRelation
         fields = MetaCommonInfo.fields + \
             ('info_type', 'managerID', 'sammary', 'is_rich_text',
-             'is_add_eqtypes', 'is_add_offices', 'eqtypes', 'offices',
-             'disclosure_date')
+             'is_add_eqtypes', 'is_add_offices', 'eqtypes', 'offices')
         error_messages = {**MetaCommonInfo.error_messages, **{
             'info_type': {
                 'required': '情報種別は必須です',
@@ -67,9 +66,6 @@ class InfoForm(forms.ModelForm):
             },
             'sammary': {
                 'max_length': '概要は512文字以内です',
-            },
-            'disclosure_date': {
-                'required': '公開日は必須です',
             },
         }}
         widgets = {**MetaCommonInfo.widgets, **{
@@ -87,12 +83,13 @@ class InfoForm(forms.ModelForm):
             'is_rich_text': forms.CheckboxInput(attrs={
                 'onclick': 'simplemde = makeSimplemde(this.checked)',
             }),
-            'disclosure_date': forms.DateInput(attrs={
-                'type': 'date',
-            }),
             'eqtypes': SuggestWidget(
                 attrs={'data-url': reverse_lazy('eqs:api_posts_get')}),
             'offices': OfficeSuggestWidget(attrs={'data-url': reverse_lazy('api_posts_get')}),
+            "select_register": forms.TextInput(attrs={
+                "type": "hidden",
+                "value": "not_registered",
+            })
         }}
 
 

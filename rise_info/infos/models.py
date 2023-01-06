@@ -24,8 +24,6 @@ class Info(CommonInfo):
     eqtypes = models.ManyToManyField(Eqtype, verbose_name='装置型式', blank=True)
     is_add_offices = models.BooleanField(verbose_name='官署特定', default=True)
     offices = models.ManyToManyField(Office, verbose_name='官署', blank=True)
-    disclosure_date = models.DateField(
-        verbose_name='公開日', default=date.today())
     addresses = models.ManyToManyField(
         Addresses, verbose_name='受信アドレス', null=True, blank=True,
         related_name='infos')
