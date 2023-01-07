@@ -6,7 +6,11 @@
 
 {% endblock %}
 {% block main %}
-{% block title %}{% endblock %}
+{%if info_id%}
+<h1>Wikiの更新</h1>
+{%else%}
+<h1>Wikiの登録</h1>
+{%endif%}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.media}}
@@ -16,8 +20,16 @@
     <div class="row mt-1">
         {{ form.title }}
     </div>
-
-    {% block sammary %}{% endblock %}
+    <div class="row mt-2">
+        <div class="col-1">
+            <label for="id_menu" class="form-label">{{form.menu.label}}</label>
+        </div>
+        <div class="col-4">
+            {{form.menu}}
+        </div>
+    </div>
+    {% include "baseAddAttachment.html" %}
+    {% include "base_info_add_new_sammary.html" %}
     <div class="row mt-1">
         <div class="col-2">
             <label for="id_content" class="form-label">
@@ -32,10 +44,19 @@
         <script src="/static/simplemde/simplemde.min.js"></script>
         <script src="/static/infos/js/addSimpleMDE.js"></script>
     </div>
-    {% block register %}{% endblock %}
+    {{form.select_register}}
     <div class="row pt-2">
-        <div class="col-1 offset-11">
-            {% block btn %}{% endblock %}
+        <div class="col-2 offset-10">
+            <button class="btn btn-primary" type="submit" value="post">
+                一時保存
+            </button>
+            <button class="btn btn-primary" onclick='addRegistrationFLG()'>
+                {%if info_id%}
+                更新
+                {%else%}
+                登録
+                {%endif%}
+            </button>
         </div>
     </div>
 </form>
@@ -47,7 +68,19 @@
 <script src="/static/jquery/ui/js/jquery-ui.min.js"></script>
 <script src="/static/bootstrap-maxlength/jquery-3.6.0.min.js"></script>
 <script src="/static/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="/static/infos/js/addAttachmentButton.js"></script>
 <script>
+    <!-- メール送信フラグ追加 -->
+    function addRegistrationFLG() {
+        var sendMailFLG = document.createElement('input');
+        sendMailFLG.type = "hidden";
+        sendMailFLG.name = "registration";
+        sendMailFLG.value = true;
+        document.forms[0].appendChild(sendMailFLG);
+    }
+</script>
+<script>
+    <!-- エンターによる送信不可(誤送信対策) -->
     $(function () {
         $("input").on("keydown", function (e) {
             if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
@@ -57,7 +90,9 @@
             }
         });
     });
-
+</script>
+<script>
+    <!-- maxlength設定用 -->
     function setMaxlength(id) {
         $(id).maxlength({
             alwaysShow: true,
@@ -67,7 +102,7 @@
     }
     $(document).ready(setMaxlength('#id_title'));
     $(document).ready(setMaxlength('#id_content'));
+    $(document).ready(setMaxlength('#id_managerID'));
+    $(document).ready(setMaxlength('#id_sammary'));
 </script>
-{% block add_js2 %}
-{% endblock %}
 {% endblock %}

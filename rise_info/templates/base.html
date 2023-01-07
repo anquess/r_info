@@ -23,7 +23,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            周知掲示板
+                            管制技術Wiki
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for menu in menus %}
@@ -32,10 +32,12 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     {% for content in menu.related_content.all|dictsort:"sort_num" %}
+                                    {%if content.send_info %}
                                     <li>
                                         <a class="dropdown-item" href="{% url 'content_detail' content.id %}">
                                             {{ content }}</a>
                                     </li>
+                                    {%endif%}
                                     {% endfor %}
                                 </ul>
                             </li>

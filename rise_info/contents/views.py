@@ -2,17 +2,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from contents.models import ContentComments, Menu, Contents, AttachmentFile
-from contents.forms import ContentsForm, FileFormSet, MenuForm, ContentCommentsForm
-
+from .models import Menu, ContentsRelation, AttachmentFile  # , ContentComments
+from .forms import ContentsForm, FileFormSet, MenuForm  # , ContentCommentsForm
 from accounts.views import addIsStaff
+from rise_info.choices import RegisterStatusChoices
 
 
 def content_updown(request, content_id, order):
     if request.user.is_staff:
-        menu = Contents.objects.get_or_none(pk=content_id).menu
+        menu = ContentsRelation.objects.get_or_none(pk=content_id).menu
         subject = None
-        for content in Contents.objects.filter(menu=menu).order_by(order).all():
+        for content in ContentsRelation.objects.filter(menu=menu).order_by(order).all():
             if content.id == content_id:
                 try:
                     content.replace_sort_num(subject)
@@ -31,8 +31,13 @@ def content_updown(request, content_id, order):
 
 @login_required
 def content_detail(request, content_id):
-    info = Contents.objects.get_or_none(pk=content_id)
-    files = AttachmentFile.objects.filter(info=info)
+    relation_info = ContentsRelation.objects.get_or_none(pk=content_id)
+    files = AttachmentFile.objects.filter(info=relation_info)
+    if request.user == relation_info.created_by:
+        info = relation_info
+    else:
+        info = relation_info.send_info
+
     if info:
         context = {
             'info': info,
@@ -42,89 +47,98 @@ def content_detail(request, content_id):
         context = addIsStaff(context, request.user)
         return render(request, 'contents/content_detail.html', context)
     else:
-        messages.add_message(request, messages.WARNING, "該当Contentsはありません。")
-        return redirect('top')
-
-
-@login_required
-def content_edit(request, content_id):
-    if request.user.is_staff:
-        info = Contents.objects.get_or_none(pk=content_id)
-        if info:
-            form = ContentsForm(request.POST or None, instance=info)
-            formset = FileFormSet(request.POST or None,
-                                  files=request.FILES or None, instance=info)
-            if (request.method == "POST" and form.is_valid()):
-                if (request.FILES or None) is not None:
-                    if not formset.is_valid():
-                        context = addIsStaff({
-                            'form': form,
-                            'formset': formset,
-                        }, request.user)
-                        for ele in formset:
-                            messages.add_message(
-                                request, messages.WARNING, str(ele))
-                        return render(request, 'contents/content_edit.html', context)
-                form.save()
-                formset.save()
-                messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('menu_list')
-            context = addIsStaff({
-                'form': form,
-                'formset': formset,
-            },
-                request.user)
-            return render(request, 'contents/content_edit.html', context)
-    else:
-        messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
+        messages.add_message(request, messages.WARNING, "該当周知掲示板はありません。")
         return redirect('top')
 
 
 @login_required
 def content_del(request, content_id):
     if request.user.is_staff:
-        info = Contents.objects.get_or_none(pk=content_id)
+        info = ContentsRelation.objects.get_or_none(pk=content_id)
         if info:
             title = info.title
             info.delete()
             messages.add_message(request, messages.INFO, '%sは削除されました。' % title)
         else:
-            messages.add_message(request, messages.WARNING, "該当Infoはありません。")
+            messages.add_message(request, messages.WARNING, "該当周知掲示板はありません。")
         return redirect('menu_list')
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
         return redirect('top')
 
 
-@login_required
-def content_new(request):
-    if request.user.is_staff:
+def get_form_context(request, content_id=None):
+    if content_id:
+        info = ContentsRelation.objects.get_or_none(pk=content_id)
+        if info:
+            form = ContentsForm(request.POST or None, instance=info)
+            formset = FileFormSet(request.POST or None,
+                                  files=request.FILES or None, instance=info)
+        else:
+            return None
+    else:
         form = ContentsForm(request.POST or None)
-        context = addIsStaff({'form': form}, request.user)
-        if request.method == "POST" and form.is_valid():
+        if (request.method == "POST" and form.is_valid()):
             info = form.save(commit=False)
             formset = FileFormSet(request.POST, request.FILES, instance=info)
-            if formset.is_valid():
-                info.save()
-                formset.save()
-                messages.add_message(request, messages.INFO, '更新されました。')
-                return redirect('menu_list')
-            else:
-                context['formset'] = formset
         else:
-            menu_id = request.GET.get('menu')
-            if Menu.objects.filter(id=menu_id).exists:
-                menu = Menu.objects.get(id=menu_id)
-                form = ContentsForm(request.POST or None,
-                                    initial={'menu': menu, })
-                context = addIsStaff({'form': form}, request.user)
+            info = None
+            formset = FileFormSet()
+    return addIsStaff({
+        'form': form, 'formset': formset, 'info': info, 'info_id': content_id, },
+        request.user)
 
-            context['menu_id'] = menu
-            context['formset'] = FileFormSet()
-        return render(request, "contents/content_new.html", context)
+
+def content_update(request, content_id=None):
+    if request.user.is_staff:
+        context = get_form_context(request=request, content_id=content_id)
+        if context:
+            if (request.method == "POST" and context['form'].is_valid()):
+                if context['formset'].is_valid():
+                    info = context['form'].save()
+                    context['formset'].save()
+                    info.save()
+                if request.POST.get("registration"):
+                    if info.send_info:
+                        info.send_info.title = info.title
+                        info.send_info.content = info.content
+                        info.send_info.created_by = info.created_by
+                        info.send_info.created_at = info.created_at
+                        info.send_info.updated_at = info.updated_at
+                        info.send_info.updated_by = info.updated_by
+                        info.send_info.menu = info.menu
+                        info.send_info.select_register = \
+                            RegisterStatusChoices.REGISTER
+                    else:
+                        send_info = info.contents_ptr
+                        send_info.id = None
+                        send_info.pk = None
+                        send_info.select_register = \
+                            RegisterStatusChoices.REGISTER
+                        send_info.save()
+                        info.send_info = send_info
+                    info.select_register = RegisterStatusChoices.UNDER_RENEWAL
+                    info.save()
+                    messages.add_message(request, messages.INFO, '登録されました。')
+                else:
+                    messages.add_message(request, messages.INFO, '一時保存されました。')
+                return redirect('menu_list')
+            return render(request, 'contents/contentNewOrEdit.html', context)
+        else:
+            messages.add_message(request, messages.WARNING, "該当周知掲示板はありません。")
     else:
         messages.add_message(request, messages.WARNING, "この権限では編集は許可されていません。")
-        return redirect('top')
+    return redirect('top')
+
+
+@login_required
+def content_edit(request, content_id):
+    return content_update(request=request, content_id=content_id)
+
+
+@login_required
+def content_new(request):
+    return content_update(request=request)
 
 
 @login_required
@@ -230,25 +244,25 @@ def menu_down(request, menu_id):
     return menu_updown(request, menu_id, '-sort_num')
 
 
-@login_required
-def add_comment(request, content_id):
-    form = ContentCommentsForm(request.POST or None, request.FILES)
-    if request.method == "POST" and form.is_valid():
-        comment = form.save(commit=False)
-        comment.save()
-        messages.add_message(request, messages.INFO, '更新されました。')
-    else:
-        messages.add_message(request, messages.INFO, '値がおかしいです。')
-    return redirect('/contents/' + str(content_id) + '/')
+# @login_required
+# def add_comment(request, content_id):
+#    form = ContentCommentsForm(request.POST or None, request.FILES)
+#    if request.method == "POST" and form.is_valid():
+#        comment = form.save(commit=False)
+#        comment.save()
+#        messages.add_message(request, messages.INFO, '更新されました。')
+#    else:
+#        messages.add_message(request, messages.INFO, '値がおかしいです。')
+#    return redirect('/contents/' + str(content_id) + '/')
 
 
-@login_required
-def del_comment(request, content_id, comment_id):
-    comment = ContentComments.objects.get_or_none(pk=comment_id)
-    if comment:
-        comment.delete()
-        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
-        return redirect('/contents/' + str(content_id) + '/')
-    else:
-        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
-        return redirect('/contents/' + str(content_id) + '/')
+# @login_required
+# def del_comment(request, content_id, comment_id):
+#    comment = ContentComments.objects.get_or_none(pk=comment_id)
+#    if comment:
+#        comment.delete()
+#        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
+#        return redirect('/contents/' + str(content_id) + '/')
+#    else:
+#        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
+#        return redirect('/contents/' + str(content_id) + '/')

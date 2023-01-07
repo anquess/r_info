@@ -72,7 +72,6 @@ def notifyRegistration(info, request):
             recipient_list,
             fail_silently=False,
         )
-        messages.add_message(request, messages.INFO, '配信されました')
     except Exception as e:
         messages.add_message(
             request, messages.ERROR, '送信されませんでした。\n' + str(type(e)) + '\n' + str(e))

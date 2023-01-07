@@ -72,7 +72,7 @@ class ContentsViewTest(TestCase):
     def test_contents_new_uses_expected_template(self):
         response = self.client.get(
             "/contents/new/?menu=" + str(self.menu_1.id))
-        self.assertTemplateUsed(response, "contents/content_new.html")
+        self.assertTemplateUsed(response, "contents/contentNewOrEdit.html")
 
     def test_contents_edit_return_200_and_include_title(self) -> None:
         response = self.client.get(
@@ -82,7 +82,7 @@ class ContentsViewTest(TestCase):
     def test_contents_edit_uses_expected_template(self) -> None:
         response = self.client.get(
             '/contents/' + str(self.content_1_1.id) + '/edit/')
-        self.assertTemplateUsed(response, "contents/content_edit.html")
+        self.assertTemplateUsed(response, "contents/contentNewOrEdit.html")
 
     def test_content_down(self) -> None:
         response = self.client.get(

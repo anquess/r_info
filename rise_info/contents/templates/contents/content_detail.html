@@ -9,8 +9,9 @@
     {% endfor %}
 </ul>
 {% endblock %}
-
+<!--
 {% block commnets %}
+
 <div class="row pt-2">
     <div class="col-2 offset-10">
         <button type="button" class="btn btn-primary" onclick="showModal({{info.id}})">
@@ -18,17 +19,19 @@
         </button>
     </div>
 </div>
+
 {% for comment in info.contentComment.all|dictsortreversed:"created_at"%}
 {% include "../baseComment.html" %}
 {% endfor %}
 {% endblock %}
-
+-->
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
 {% if auth %}
 <th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}" data-bs-toggle="tooltip"
         data-bs-placement="bottom" title="編集">{% bs_icon 'pencil-square' %}</a></th>
 {% endif %}
-
+<!--
 {% include "contents/comment_add_modal.html" %}
+-->
 {% endblock %}

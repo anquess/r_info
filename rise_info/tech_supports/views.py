@@ -112,7 +112,8 @@ def support_update(request, info_id=None):
                             info.send_info.info_type = info.info_type
                             info.send_info.is_rich_text = info.is_rich_text
                             info.send_info.inquiry = info.inquiry
-                            info.send_info.addresses = info.addresses
+                            for dest in info.addresses.all():
+                                info.send_info.addresses.add(dest)
                             info.send_info.select_register = \
                                 RegisterStatusChoicesSupo.REGISTER
                         else:
@@ -127,7 +128,7 @@ def support_update(request, info_id=None):
                         info.save()
                     else:
                         messages.add_message(
-                            request, messages.ERROR, '送信されませんでした。\n' +
+                            request, messages.ERROR, '通知されませんでした。\n' +
                             str(type(e)) + '\n' + str(e))
                 return redirect('support_list')
             else:
