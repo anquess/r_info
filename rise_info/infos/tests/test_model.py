@@ -22,7 +22,6 @@ class InfoModelTest(TestCase):
             managerID='test-00',
             sammary='概要',
             select_register='register',
-            disclosure_date=datetime.date(2017, 11, 12),
             created_by=user,
         )
         actual = Info.objects.get_or_none(pk=expected.pk)
@@ -39,7 +38,6 @@ class InfoModelTest(TestCase):
             managerID='test-00',
             sammary='概要',
             select_register='register',
-            disclosure_date=datetime.date(2017, 11, 12),
             created_by=user,
         )
         actual = Info.objects.get_or_none(pk=dummy.pk + 1)

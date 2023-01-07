@@ -1,8 +1,36 @@
 from django.test import TestCase
 
 from contents.views import addMenus
+from contents.models import ContentsRelation
 from contents.tests.test_model import mock_menu, mock_content
 from accounts.tests.com_setup import login
+
+
+def addMockContent(testCase):
+    login(testCase)
+    mock_menu(testCase)
+    params_1_1 = {"title": 'title1_1', "menu": testCase.menu_1}
+    params_1_2 = {"title": 'title1_2', "menu": testCase.menu_1}
+    params_2_1 = {"title": 'title2_1', "menu": testCase.menu_2}
+    params_2_2 = {"title": 'title2_2', "menu": testCase.menu_2}
+    testCase.client.post("contents/new/?menu=" +
+                         str(testCase.menu_1.id), params_1_1)
+    testCase.client.post("contents/new/?menu=" +
+                         str(testCase.menu_1.id), params_1_2)
+    testCase.client.post("contents/new/?menu=" +
+                         str(testCase.menu_2.id), params_2_1)
+    testCase.client.post("contents/new/?menu=" +
+                         str(testCase.menu_2.id), params_2_2)
+
+    testCase.content_1_1 = ContentsRelation.objects.get_or_none(
+        title='title1_1')
+    testCase.content_1_2 = ContentsRelation.objects.get_or_none(
+        title='title1_2')
+    testCase.content_2_1 = ContentsRelation.objects.get_or_none(
+        title='title2_1')
+    testCase.content_2_2 = ContentsRelation.objects.get_or_none(
+        title='title2_2')
+    return testCase
 
 
 class MenuViewTest(TestCase):
@@ -51,8 +79,9 @@ class MenuViewTest(TestCase):
 
 class ContentsViewTest(TestCase):
     def setUp(self) -> None:
-        mock_content(self)
-        login(self)
+        user = login(self)
+        mock_content(self, user)
+        addMockContent(self)
 
     def test_contents_detail_return_200_and_include_title(self) -> None:
         response = self.client.get(
@@ -67,7 +96,7 @@ class ContentsViewTest(TestCase):
     def test_contents_new_return_200_and_include_title(self):
         response = self.client.get(
             "/contents/new/?menu=" + str(self.menu_1.id))
-        self.assertContains(response, "周知掲示板の登録", status_code=200)
+        self.assertContains(response, "Wikiの登録", status_code=200)
 
     def test_contents_new_uses_expected_template(self):
         response = self.client.get(

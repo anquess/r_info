@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from contents.models import Contents, Menu, ContentComments
+from accounts.tests.com_setup import login
+from contents.models import ContentsRelation, Menu  # , ContentComments
 
 
 def mock_menu(testCase: TestCase):
@@ -11,16 +12,16 @@ def mock_menu(testCase: TestCase):
     return testCase
 
 
-def mock_content(testCase: TestCase):
+def mock_content(testCase: TestCase, user):
     testCase = mock_menu(testCase)
-    testCase.content_1_1 = Contents.objects.create(
-        title='title1_1', menu=testCase.menu_1)
-    testCase.content_1_2 = Contents.objects.create(
-        title='title1_2', menu=testCase.menu_1)
-    testCase.content_2_1 = Contents.objects.create(
-        title='title2_1', menu=testCase.menu_2)
-    testCase.content_2_2 = Contents.objects.create(
-        title='title2_2', menu=testCase.menu_2)
+    testCase.content_1_1 = ContentsRelation.objects.create(
+        title='title1_1', menu=testCase.menu_1, created_by=user)
+    testCase.content_1_2 = ContentsRelation.objects.create(
+        title='title1_2', menu=testCase.menu_1, created_by=user)
+    testCase.content_2_1 = ContentsRelation.objects.create(
+        title='title2_1', menu=testCase.menu_2, created_by=user)
+    testCase.content_2_2 = ContentsRelation.objects.create(
+        title='title2_2', menu=testCase.menu_2, created_by=user)
     return testCase
 
 
@@ -47,17 +48,19 @@ class MenuModelTest(TestCase):
 
 class ContensModelTest(TestCase):
     def test_is_empty(self) -> None:
-        contents = Contents.objects.all()
+        contents = ContentsRelation.objects.all()
         self.assertEqual(contents.count(), 0)
 
     def test_contents_create(self):
-        mock_content(self)
-        contents = Contents.objects.all()
+        user = login(self)
+        mock_content(self, user)
+        contents = ContentsRelation.objects.all()
         self.assertEqual(contents.count(), 4)
 
     def test_contents_replace_sort_num(self):
-        mock_content(self)
-        contents = Contents.objects.all()
+        user = login(self)
+        mock_content(self, user)
+        contents = ContentsRelation.objects.all()
         contents[0].replace_sort_num(contents[1])
         self.assertEqual(contents[0].title, 'title1_1')
         self.assertEqual(contents[0].sort_num, 2)
@@ -65,7 +68,7 @@ class ContensModelTest(TestCase):
         self.assertEqual(contents[1].sort_num, 1)
 
 
-class ContentsCommentTest(TestCase):
-    def test_is_empty(self) -> None:
-        comment = ContentComments.objects.all()
-        self.assertEqual(comment.count(), 0)
+# class ContentsCommentTest(TestCase):
+#    def test_is_empty(self) -> None:
+#        comment = ContentComments.objects.all()
+#        self.assertEqual(comment.count(), 0)

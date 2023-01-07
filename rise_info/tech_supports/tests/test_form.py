@@ -5,6 +5,7 @@ from ..models import TechSupports, TechSupportComments
 from accounts.tests.com_setup import login
 from eqs.tests.test_model import make_mock_eqtypes
 from infos.tests.test_form import randomfile
+from rise_info.choices import RegisterStatusChoices
 
 import os
 import random
@@ -31,7 +32,7 @@ def make_mock_right_param(testCase: TestCase):
         'is_rich_text': True,
         'inquiry': text_len_2048,
         'eqtypes': eq_types,
-        'select_register': 'not_registered',
+        'select_register': RegisterStatusChoices.REGISTER,
         'info_type': 'support',
     }
 
@@ -115,6 +116,8 @@ class TechSupportCommentsFormTests(TestCase):
         comment = TechSupportComments()
         form = TechSupportCommentsForm(params, data, instance=comment)
         result = form.is_valid()
+        for k, v in form.errors.items():
+            print(k, v)
         self.assertTrue(result)
 
     def test_valid_when_param_is_none(self):

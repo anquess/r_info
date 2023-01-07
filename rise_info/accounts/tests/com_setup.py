@@ -26,10 +26,11 @@ def rootAcountCreate(testCase):
     )
 
 
-def login(testCase) -> None:
+def login(testCase):
     if not hasattr(testCase, 'user'):
         testTMCAcountCreate(testCase)
     testCase.client.force_login(testCase.user)
+    return testCase.user
 
 
 def loginTestAccount(testCase) -> None:

@@ -68,8 +68,10 @@ class InfoFormTests(TestCase):
         form = InfoForm(params, instance=info)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['title'][0], 'タイトルは必須です')
+        self.assertEqual(form.errors['select_register'][0], 'この項目は必須です。')
+        self.assertEqual(form.errors['managerID'][0], '管理番号は必須です')
         self.assertEqual(form.errors['info_type'][0], '情報種別は必須です')
-        self.assertEqual(form.errors['disclosure_date'][0], '公開日は必須です')
+        self.assertEqual(len(form.errors), 4)
 
     def test_valid_when_too_long(self):
         text_len_33 = randomname(33)

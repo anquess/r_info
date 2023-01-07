@@ -88,14 +88,14 @@ class ContentsRelation(Contents):
         verbose_name='並び順', default=1, db_index=True)
 
     def save(self, *args, **kwargs):
-        self.sort_nums = self.assign_sort_num()
+        self.sort_num = self.assign_sort_num()
         return super(Contents, self).save(self, *args, **kwargs)
 
     def replace_sort_num(self, subject: 'ContentsRelation', *args, **kwargs):
         if subject:
-            self.sort_nums, subject.sort_nums = subject.sort_nums, self.sort_nums
+            self.sort_num, subject.sort_num = subject.sort_num, self.sort_num
             ContentsRelation.objects.bulk_update(
-                [self, subject], fields=['sort_nums'])
+                [self, subject], fields=['sort_num'])
         else:
             raise ValueError('対象が空です')
 
