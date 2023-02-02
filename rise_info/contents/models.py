@@ -2,8 +2,7 @@ from django.db import models
 from django.db.models import Max
 
 from addresses.models import Addresses
-from rise_info.baseModels import CommonInfo, BaseAttachment, BaseManager  # ,\
-# BaseCommnets
+from rise_info.baseModels import CommonInfo, BaseAttachment, BaseManager, BaseCommnets
 
 
 class Menu(models.Model):
@@ -63,18 +62,16 @@ class AttachmentFile(BaseAttachment):
         db_table = 'content_attachment'
 
 
-# class ContentComments(BaseCommnets):
-#    content = models.ForeignKey(
-#        Contents, related_name='contentComment', on_delete=models.CASCADE)
-#    upload_path = 'content_comments'
-#
-#    class Meta:
-#        db_table = 'content_comments'
-#
-#    def save(self, *args, **kwargs):
-#        if not self.pk:
-#            self.content.save()
-#        super(ContentComments, self).save(*args, **kwargs)
+class ContentComments(BaseCommnets):
+   content = models.ForeignKey(
+       Contents, related_name='contentComment', on_delete=models.CASCADE)
+   upload_path = 'content_comments'
+   class Meta:
+       db_table = 'content_comments'
+   def save(self, *args, **kwargs):
+       if not self.pk:
+           self.content.save()
+       super(ContentComments, self).save(*args, **kwargs)
 
 
 class ContentsRelation(Contents):

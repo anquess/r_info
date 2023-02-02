@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from contents.models import ContentsRelation, Menu, Contents, AttachmentFile  # ,\
-# , ContentComments
+from contents.models import ContentsRelation, Menu, Contents, AttachmentFile, ContentComments
 
 
 class ContentsAdmin(admin.ModelAdmin):
@@ -18,4 +17,4 @@ admin.site.register(Menu)
 admin.site.register(Contents, ContentsAdmin)
 admin.site.register(ContentsRelation, ContentsRelationAdmin)
 admin.site.register(AttachmentFile)
-# admin.site.register(ContentComments)
+admin.site.register(ContentComments)

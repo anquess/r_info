@@ -16,8 +16,8 @@ urlpatterns = [
     path("menu/up/<int:menu_id>/", views.menu_up, name="menu_up"),
     path("menu/down/<int:menu_id>/", views.menu_down, name="menu_down"),
     path("menu/del/<int:menu_id>/", views.menu_del, name="menu_del"),
-    # path("<int:content_id>/comment/", views.add_comment, name="content_comment"),
-    # path("<int:content_id>/comment_del/<int:comment_id>/",
-    #     views.del_comment, name="content_del_comment"),
+    path("<int:content_id>/comment/", views.add_comment, name="content_comment"),
+    path("<int:content_id>/comment_del/<int:comment_id>/",
+          views.del_comment, name="content_del_comment"),
 
 ]
