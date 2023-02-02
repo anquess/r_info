@@ -5,14 +5,14 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 
-from .models import AttachmentFile, TechSupportComments, TechSupportsRelation
+from .models import AttachmentFile, TechSupportComments, TechSupportsRelation, TechSupports
 from .forms import TechSupportCommentsForm, TechSupportsForm, FileFormSet
 from accounts.views import addIsStaff
 from addresses.models import Addresses
 from offices.models import Office
 from rise_info.commonSend import addCommentSendMail, add_addresses,\
     notifyRegistration
-from rise_info.choices import RegisterStatusChoicesSupo
+from rise_info.choices import RegisterStatusChoices
 
 
 class TechSupportList(ListView):
@@ -83,6 +83,10 @@ def get_form_context(request, info_id=None):
 
 
 def support_update(request, info_id=None):
+    info = TechSupports.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('info_edit', info.sended.id)
+
     context = get_form_context(request=request, info_id=info_id)
     if context:
         if (request.method == "POST" and context['form'].is_valid()):
@@ -115,17 +119,24 @@ def support_update(request, info_id=None):
                             for dest in info.addresses.all():
                                 info.send_info.addresses.add(dest)
                             info.send_info.select_register = \
-                                RegisterStatusChoicesSupo.REGISTER
+                                RegisterStatusChoices.REGISTER
                         else:
                             send_info = info.techsupports_ptr
                             send_info.id = None
                             send_info.pk = None
                             send_info.select_register = \
-                                RegisterStatusChoicesSupo.REGISTER
+                                RegisterStatusChoices.REGISTER
                             send_info.save()
                             info.send_info = send_info
-                        info.select_register = RegisterStatusChoicesSupo.TEMP
                         info.save()
+                        attachments = AttachmentFile.objects.filter(info__id = info.send_info.pk)
+                        for attachment in attachments:
+                            attachment.delete()
+                        attachments = AttachmentFile.objects.filter(info__id = info.pk)
+                        for attachment in attachments:
+                            attachment.id = None
+                            attachment.info = info.send_info
+                            attachment.save()
                     else:
                         messages.add_message(
                             request, messages.ERROR, '通知されませんでした。\n' +
@@ -158,13 +169,16 @@ def support_new(request):
 
 @login_required
 def support_detail(request, info_id):
-    relation_info = TechSupportsRelation.objects.get_or_none(pk=info_id)
-    files = AttachmentFile.objects.filter(info=relation_info)
-    addresses = Addresses.objects.filter(created_by=request.user)
-    if request.user == relation_info.created_by:
-        info = relation_info
+    info = TechSupportsRelation.objects.get_or_none(pk=info_id)
+    if info:
+        if info.send_info:
+            return redirect('support_detail', info.send_info.id)
     else:
-        info = relation_info.send_info
+        info = TechSupports.objects.get_or_none(pk=info_id)
+    files = AttachmentFile.objects.filter(info=info)
+    addresses = Addresses.objects.filter(created_by=request.user)
+    if info.select_register == RegisterStatusChoices.TEMP:
+        return redirect('support_detail', info.send_info.id)
 
     if request.method == "POST":
         add_addresses(request=request, info=info)
@@ -187,6 +201,9 @@ def support_detail(request, info_id):
 
 @login_required
 def support_del(request, info_id):
+    info = TechSupports.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('support_del', info.sended.id)
     if request.user.is_staff:
         info = TechSupportsRelation.objects.get_or_none(pk=info_id)
         if info:

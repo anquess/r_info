@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
-from .models import AttachmentFile, TechSupportComments, TechSupportsRelation
+from .models import AttachmentFile, TechSupportComments, TechSupportsRelation, TechSupports
 from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 from eqs.widgets import SuggestWidget
 
@@ -14,7 +14,7 @@ class TechSupportCommentsForm(forms.ModelForm):
             value.widget.attrs['placeholder'] = value.help_text
             value.widget.attrs['class'] = 'form-control'
     info = forms.ModelChoiceField(
-        queryset=TechSupportsRelation.objects.all(),
+        queryset=TechSupports.objects.all(),
         error_messages={'required': 'infoは必須です', },
     )
     comment_txt = forms.CharField(

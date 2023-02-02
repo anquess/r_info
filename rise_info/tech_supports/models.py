@@ -3,7 +3,7 @@ from django.db import models
 from addresses.models import Addresses
 from eqs.models import Eqtype
 from rise_info.baseModels import CommonInfo, BaseAttachment, BaseCommnets
-from rise_info.choices import RegisterStatusChoicesSupo, InfoTypeChoicesSupo
+from rise_info.choices import RegisterStatusChoices, InfoTypeChoicesSupo
 
 
 class TechSupports(CommonInfo):
@@ -21,12 +21,6 @@ class TechSupports(CommonInfo):
     eqtypes = models.ManyToManyField(
         Eqtype, verbose_name='装置型式', null=True, blank=True,
         related_name='tech_supo')
-    select_register = models.CharField(
-        verbose_name='登録状態', max_length=16,
-        choices=RegisterStatusChoicesSupo.choices,
-        default=RegisterStatusChoicesSupo.NOT_REGISTERED,
-        null=False, blank=False
-    )
     addresses = models.ManyToManyField(
         Addresses, verbose_name='受信アドレス', null=True, blank=True,
         related_name='tech_support')
