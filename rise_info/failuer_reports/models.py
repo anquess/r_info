@@ -35,8 +35,12 @@ class FailuerReport(CommonInfo):
         help_text="必須"
     )
     department = models.ManyToManyField(
-        DepartmentForEq, verbose_name='関係装置分類', blank=True,
-        help_text='関係官署と関係装置分類から配信先を自動判定(必須)',
+        DepartmentForEq, verbose_name='影響装置の分類', blank=True,
+        help_text='\
+ctrlにより複数選択可能。\n\
+電源障害時やCas.net障害時等に、影響を受けた分類の全てを選択\n\
+本登録により局・本省等の配信先候補を自動判定\n\
+必須入力',
     )
     sammary = models.TextField(
         verbose_name='障害概要', default="確認中", null=False, blank=True,

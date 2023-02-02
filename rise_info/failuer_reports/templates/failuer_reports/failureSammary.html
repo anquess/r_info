@@ -1,15 +1,15 @@
 <div class="row mt-2 mb-0">
     <div class="col-2">
-        <label for="id_failuer_date" class="form-label">{{form.failuer_date.label}}</label>
+        <label for="id_failuer_date" class="form-label fw-bold">{{form.failuer_date.label}}</label>
     </div>
     <div class="col-2">
-        <label for="id_failuer_time" class="form-label">{{form.failuer_time.label}}</label>
+        <label for="id_failuer_time" class="form-label fw-bold">{{form.failuer_time.label}}</label>
     </div>
     <div class="col-3">
-        <label for="id_date_time_confirmation" class="form-label">{{form.date_time_confirmation.label}}</label>
+        <label for="id_date_time_confirmation" class="form-label fw-bold">{{form.date_time_confirmation.label}}</label>
     </div>
     <div class="col-5">
-        <label for="id_failuer_place" class="form-label">{{form.failuer_place.label}}</label>
+        <label for="id_failuer_place" class="form-label fw-bold">{{form.failuer_place.label}}</label>
     </div>
 </div>
 <div class="row mt-0">
@@ -33,36 +33,40 @@
 </div>
 <div class="row mt-2 mb-0">
     <div class="col-1">
-        <label for="id_eq" class="form-label">{{form.eq.label}}</label>
+        <label for="id_eq" class="form-label fw-bold">{{form.eq.label}}</label>
     </div>
-    <div class="col-5">
+    <div class="col-4">
         {{form.eq}}
     </div>
     <div class="col-1">
-        <label for="id_department" class="form-label">{{form.department.label}}</label>
+        <label for="id_department" class="form-label fw-bold">{{form.department.label}}</label>
     </div>
-    <div class="col-5">
+    <div class="col-3">
         {{form.department}}
     </div>
+    <div class="col-3 form-text">
+        {{form.department.help_text | safe | linebreaksbr}}
+    </div>
 </div>
+
 <div class="row mt-1">
-    <label for="id_sammary" class="form-label">{{form.sammary.label}}</label>
+    <label for="id_sammary" class="form-label fw-bold">{{form.sammary.label}}</label>
 </div>
 <div class="row mt-0">
     {{form.sammary}}
 </div>
 <div class="row mt-1">
-    <label for="id_cause" class="form-label">{{form.cause.label}}</label>
+    <label for="id_cause" class="form-label fw-bold">{{form.cause.label}}</label>
 </div>
 <div class="row mt-0">
     {{form.cause}}
 </div>
 <div class="row mt-2 mb-0">
     <div class="col-2">
-        <label for="id_recovery_date" class="form-label">{{form.recovery_date.label}}</label>
+        <label for="id_recovery_date" class="form-label fw-bold">{{form.recovery_date.label}}</label>
     </div>
     <div class="col-2">
-        <label for="id_recovery_time" class="form-label">{{form.recovery_time.label}}</label>
+        <label for="id_recovery_time" class="form-label fw-bold">{{form.recovery_time.label}}</label>
     </div>
 </div>
 <div class="row mt-0">
@@ -74,14 +78,14 @@
     </div>
 </div>
 <div class="row mt-1">
-    <label for="id_recovery_propects" class="form-label">{{form.recovery_propects.label}}</label>
+    <label for="id_recovery_propects" class="form-label fw-bold">{{form.recovery_propects.label}}</label>
 </div>
 <div class="row mt-0">
     {{form.recovery_propects}}
 </div>
 <div class="row mt-1">
     <div class="col-1">
-        <label for="id_is_flight_impact" class="form-label">{{form.is_flight_impact.label}}</label>
+        <label for="id_is_flight_impact" class="form-label fw-bold">{{form.is_flight_impact.label}}</label>
     </div>
     <div class="col-2">
         {{form.is_flight_impact}}
@@ -92,7 +96,7 @@
 </div>
 <div class="row mt-1">
     <div class="col-1">
-        <label for="id_notam" class="form-label">{{form.notam.label}}</label>
+        <label for="id_notam" class="form-label fw-bold">{{form.notam.label}}</label>
     </div>
     <div class="col-11">
         {{form.notam}}
@@ -101,7 +105,7 @@
 </div>
 <div class="row mt-1">
     <div class="col-1">
-        <label for="id_is_press" class="form-label">{{form.is_press.label}}</label>
+        <label for="id_is_press" class="form-label fw-bold">{{form.is_press.label}}</label>
     </div>
     <div class="col-2">
         {{form.is_press}}
