@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .models import Menu, ContentsRelation, AttachmentFile  # , ContentComments
-from .forms import ContentsForm, FileFormSet, MenuForm  # , ContentCommentsForm
+from .models import Menu, ContentsRelation, AttachmentFile, ContentComments, Contents
+from .forms import ContentsForm, FileFormSet, MenuForm, ContentCommentsForm
 from accounts.views import addIsStaff
 from rise_info.choices import RegisterStatusChoices
 
@@ -32,11 +32,15 @@ def content_updown(request, content_id, order):
 @login_required
 def content_detail(request, content_id):
     relation_info = ContentsRelation.objects.get_or_none(pk=content_id)
-    files = AttachmentFile.objects.filter(info=relation_info)
-    if request.user == relation_info.created_by:
-        info = relation_info
+    if relation_info:
+        if relation_info.send_info:
+            return redirect('content_detail', relation_info.send_info.id)
     else:
-        info = relation_info.send_info
+        relation_info = Contents.objects.get_or_none(pk=content_id)
+
+    files = AttachmentFile.objects.filter(info=relation_info)
+
+    info = relation_info
 
     if info:
         context = {
@@ -53,6 +57,10 @@ def content_detail(request, content_id):
 
 @login_required
 def content_del(request, content_id):
+    info = Contents.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('content_del', info.sended.id)
+
     if request.user.is_staff:
         info = ContentsRelation.objects.get_or_none(pk=content_id)
         if info:
@@ -90,6 +98,10 @@ def get_form_context(request, content_id=None):
 
 
 def content_update(request, content_id=None):
+    info = Contents.objects.get_or_none(pk=content_id)
+    if hasattr(info, 'sended'):
+        return redirect('content_edit', info.sended.id)
+
     if request.user.is_staff:
         context = get_form_context(request=request, content_id=content_id)
         if context:
@@ -109,6 +121,7 @@ def content_update(request, content_id=None):
                         info.send_info.menu = info.menu
                         info.send_info.select_register = \
                             RegisterStatusChoices.REGISTER
+                        info.send_info.save()
                     else:
                         send_info = info.contents_ptr
                         send_info.id = None
@@ -117,8 +130,15 @@ def content_update(request, content_id=None):
                             RegisterStatusChoices.REGISTER
                         send_info.save()
                         info.send_info = send_info
-                    info.select_register = RegisterStatusChoices.UNDER_RENEWAL
                     info.save()
+                    attachments = AttachmentFile.objects.filter(info__id = info.send_info.pk)
+                    for attachment in attachments:
+                        attachment.delete()
+                    attachments = AttachmentFile.objects.filter(info__id = info.pk)
+                    for attachment in attachments:
+                        attachment.id = None
+                        attachment.info = info.send_info
+                        attachment.save()
                     messages.add_message(request, messages.INFO, '登録されました。')
                 else:
                     messages.add_message(request, messages.INFO, '一時保存されました。')
@@ -244,25 +264,27 @@ def menu_down(request, menu_id):
     return menu_updown(request, menu_id, '-sort_num')
 
 
-# @login_required
-# def add_comment(request, content_id):
-#    form = ContentCommentsForm(request.POST or None, request.FILES)
-#    if request.method == "POST" and form.is_valid():
-#        comment = form.save(commit=False)
-#        comment.save()
-#        messages.add_message(request, messages.INFO, '更新されました。')
-#    else:
-#        messages.add_message(request, messages.INFO, '値がおかしいです。')
-#    return redirect('/contents/' + str(content_id) + '/')
+@login_required
+def add_comment(request, content_id):
+   form = ContentCommentsForm(request.POST or None, request.FILES)
+   if request.method == "POST" and form.is_valid():
+       comment = form.save(commit=False)
+       comment.save()
+       messages.add_message(request, messages.INFO, '更新されました。')
+   else:
+       for k, v in form.errors.items():
+          messages.add_message(request, messages.ERROR, str(k) + str(v[0]))     
+       messages.add_message(request, messages.ERROR, '値がおかしいです。')
+   return redirect('/contents/' + str(content_id) + '/')
 
 
-# @login_required
-# def del_comment(request, content_id, comment_id):
-#    comment = ContentComments.objects.get_or_none(pk=comment_id)
-#    if comment:
-#        comment.delete()
-#        messages.add_message(request, messages.INFO, 'コメントは削除されました。')
-#        return redirect('/contents/' + str(content_id) + '/')
-#    else:
-#        messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
-#        return redirect('/contents/' + str(content_id) + '/')
+@login_required
+def del_comment(request, content_id, comment_id):
+   comment = ContentComments.objects.get_or_none(pk=comment_id)
+   if comment:
+       comment.delete()
+       messages.add_message(request, messages.INFO, 'コメントは削除されました。')
+       return redirect('/contents/' + str(content_id) + '/')
+   else:
+       messages.add_message(request, messages.WARNING, '該当コメントは既に削除されてありません。')
+       return redirect('/contents/' + str(content_id) + '/')

@@ -2,14 +2,21 @@
 {% load bootstrap_icons %}
 {% block sammary %}
 <ul>
-    {% for error in form.title.errors %}
+    {% for error in form.comment_txt.errors %}
+    <li>
+        {{ error }}
+    </li>
+    {% endfor %}
+</ul>
+<ul>
+    {% for error in form.file.errors %}
     <li>
         {{ error }}
     </li>
     {% endfor %}
 </ul>
 {% endblock %}
-<!--
+
 {% block commnets %}
 
 <div class="row pt-2">
@@ -24,14 +31,14 @@
 {% include "../baseComment.html" %}
 {% endfor %}
 {% endblock %}
--->
+
 {% block btn %}
 <th><a class="btn btn-primary" href="{% url 'top' %}">戻る</a></th>
 {% if auth %}
 <th><a class="btn btn-primary" href="{% url 'content_edit' info.id %}" data-bs-toggle="tooltip"
         data-bs-placement="bottom" title="編集">{% bs_icon 'pencil-square' %}</a></th>
 {% endif %}
-<!--
+
 {% include "contents/comment_add_modal.html" %}
--->
+
 {% endblock %}
