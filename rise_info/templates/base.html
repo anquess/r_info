@@ -34,8 +34,8 @@
                                     {% for content in menu.related_content.all|dictsort:"sort_num" %}
                                     {%if content.send_info %}
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'content_detail' content.id %}">
-                                            {{ content }}</a>
+                                        <a class="dropdown-item" href="{% url 'content_detail' content.send_info.id %}">
+                                            {{ content.send_info }}</a>
                                     </li>
                                     {%endif%}
                                     {% endfor %}
