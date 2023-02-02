@@ -4,23 +4,24 @@ from django.shortcuts import render
 
 from rise_info.settings import TOP_PAGE_LIST_NUM
 from accounts.views import addIsStaff
-from infos.models import InfoRelation
-from contents.models import ContentsRelation
-from tech_supports.models import TechSupportsRelation
+from infos.models import Info
+from contents.models import Contents
+from tech_supports.models import TechSupports
+from rise_info.choices import RegisterStatusChoices, RegisterStatusChoicesSupo
 
 
 @login_required
 def top(request):
     list_num = TOP_PAGE_LIST_NUM
     context = addIsStaff({}, request.user)
-    infos = InfoRelation.objects.filter(
-        Q(send_info__isnull=False)
+    infos = Info.objects.filter(
+        Q(select_register=RegisterStatusChoices.REGISTER)
     ).order_by('-updated_at')[:10]
-    contents = ContentsRelation.objects.filter(
-        Q(send_info__isnull=False)
+    contents = Contents.objects.filter(
+        Q(select_register=RegisterStatusChoices.REGISTER)
     ).order_by('-updated_at')[:10]
-    tech_supports = TechSupportsRelation.objects.filter(
-        Q(send_info__isnull=False)
+    tech_supports = TechSupports.objects.filter(
+        Q(select_register=RegisterStatusChoices.REGISTER)
     ).order_by('-updated_at')[:10]
     context['list_num'] = list_num
     context['infos'] = infos
