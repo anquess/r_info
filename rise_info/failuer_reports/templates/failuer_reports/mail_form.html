@@ -17,6 +17,7 @@
                     <th>登録官署</th>
                     <th>役職</th>
                     <th>氏名</th>
+                    <th>形式</th>
                     <th>
                         配信&nbsp;
                         <input id="checkAll" type="checkbox" name="lang" value="checkall"
@@ -30,6 +31,7 @@
                     <td>{{send_required.created_by}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
+                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_required.id}}"></td>
                 </tr>
@@ -39,27 +41,34 @@
                     <td>{{send_required.created_by}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
+                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_required.id}}"></td>
                 </tr>
                 {% endfor%}
                 {% for send_any in send_HTML_any_list %}
+                {%if not send_any in send_HTML_required_list%}
                 <tr>
                     <td>{{send_any.created_by}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
+                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_any.id}}"></td>
                 </tr>
+                {%endif%}
                 {% endfor%}
                 {% for send_any in send_Text_any_list %}
+                {%if not send_any in send_Text_required_list%}
                 <tr>
                     <td>{{send_any.created_by}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
+                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_any.id}}"></td>
                 </tr>
+                {%endif%}
                 {% endfor%}
             </tbody>
         </table>
@@ -95,7 +104,7 @@
             </div>
             <div class="row pt-2">
                 <div class="col-1 offset-11">
-                    <button id=" send" type="submit" class="btn btn-secondary"
+                    <button id=" send" type="submit" class="btn btn-primary"
                         onclick='return confirm("メール送信をして、よろしいですか？");' data-bs-toggle="tooltip"
                         data-bs-placement="bottom" title="メール送信">
                         {% bs_icon 'send' %}
