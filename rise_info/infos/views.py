@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from .exportInfo import makeInfoSheet
-from .models import AttachmentFile, InfoComments, InfoTypeChoices, InfoRelation
+from .models import AttachmentFile, InfoComments, InfoTypeChoices, InfoRelation, Info
 from .forms import InfoForm, FileFormSet, InfoCommentsForm
 from accounts.views import addIsStaff, User_mail_config
 from addresses.models import Addresses, RoleInLocal
@@ -34,7 +34,7 @@ def exportInfo(request):
 
 
 class InfoList(ListView):
-    model = InfoRelation
+    model = Info
     template_name = 'infos/info_list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
@@ -51,7 +51,6 @@ class InfoList(ListView):
         else:
             queryset = super().get_queryset(
                 **kwargs).filter(
-                    Q(select_register='under_renewal') |
                     Q(select_register='register'))
 
         q_info_type = self.request.GET.get('info_type')
@@ -89,6 +88,7 @@ class InfoList(ListView):
 @login_required
 def add_comment(request, info_id):
     form = InfoCommentsForm(request.POST or None, request.FILES)
+
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)
         comment.save()
@@ -115,13 +115,14 @@ def del_comment(request, info_id, comment_id):
 
 @login_required
 def info_detail(request, info_id):
-    relation_info = InfoRelation.objects.get_or_none(pk=info_id)
-    files = AttachmentFile.objects.filter(info=relation_info)
-    addresses = Addresses.objects.filter(created_by=request.user)
-    if request.user == relation_info.created_by:
-        info = relation_info
+    info = InfoRelation.objects.get_or_none(pk=info_id)
+    if info:
+        if info.send_info:
+            return redirect('info_detail', info.send_info.id)
     else:
-        info = relation_info.send_info
+        info = Info.objects.get_or_none(pk=info_id)
+    files = AttachmentFile.objects.filter(info=info)
+    addresses = Addresses.objects.filter(created_by=request.user)
     if request.method == "POST":
         add_addresses(request=request, info=info)
         messages.add_message(request, messages.INFO, "配信先を変更しました")
@@ -141,6 +142,10 @@ def info_detail(request, info_id):
 
 @login_required
 def info_del(request, info_id):
+    info = Info.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('info_del', info.sended.id)
+
     if request.user.is_staff:
         info = InfoRelation.objects.get_or_none(pk=info_id)
         if info:
@@ -158,6 +163,9 @@ def info_del(request, info_id):
 
 
 def info_update(request, info_id=None):
+    info = Info.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('info_edit', info.sended.id)
     if request.user.is_staff:
         if info_id:
             info = InfoRelation.objects.get_or_none(pk=info_id)
@@ -225,6 +233,9 @@ def info_edit(request, info_id):
 
 @login_required
 def sendmail(request, info_id):
+    info = Info.objects.get_or_none(pk=info_id)
+    if hasattr(info, 'sended'):
+        return redirect('info_send', info.sended.id)
     info = InfoRelation.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
     roles = RoleInLocal.objects.filter(
@@ -294,18 +305,34 @@ def sendmail(request, info_id):
                 info.send_info.sammary = info.sammary
                 info.send_info.is_add_eqtypes = info.is_add_eqtypes
                 info.send_info.is_add_offices = info.is_add_offices
-                info.send_info.offices = info.offices
-                info.send_info.addresses = info.addresses
+                if info.offices.all():
+                    info.send_info.offices = info.offices
+                if info.eqtypes.all():
+                    info.send_info.eqtypes = info.eqtypes
+                if info.addresses.all():
+                    info.send_info.addresses = info.addresses
                 info.send_info.select_register = RegisterStatusChoices.REGISTER
+                info.send_info.save()
             else:
                 send_info = info.info_ptr
                 send_info.id = None
                 send_info.pk = None
-                send_info.pk = RegisterStatusChoices.REGISTER
+                send_info.created_by = info.created_by
+                send_info.created_at = info.created_at
+                send_info.updated_by = info.updated_by
+                send_info.updated_at = info.updated_at
+                send_info.select_register = RegisterStatusChoices.REGISTER
                 send_info.save()
                 info.send_info = send_info
-            info.select_register = RegisterStatusChoices.UNDER_RENEWAL
             info.save()
+            attachments = AttachmentFile.objects.filter(info__id = info.send_info.pk)
+            for attachment in attachments:
+                attachment.delete()
+            attachments = AttachmentFile.objects.filter(info__id = info.pk)
+            for attachment in attachments:
+                attachment.id = None
+                attachment.info = info.send_info
+                attachment.save()
 
             return redirect('info_list')
         else:

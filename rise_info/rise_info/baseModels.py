@@ -46,7 +46,7 @@ class CommonInfo(models.Model):
     select_register = models.CharField(
         verbose_name='登録状態', max_length=16,
         choices=RegisterStatusChoices.choices,
-        default=RegisterStatusChoices.NOT_REGISTERED, null=False, blank=False
+        default=RegisterStatusChoices.TEMP, null=False, blank=False
     )
     created_by = CurrentUserField(verbose_name='登録者', on_update=True,
                                   related_name='%(app_label)s_%(class)s_create', null=False, blank=False)

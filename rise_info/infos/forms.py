@@ -1,7 +1,7 @@
 from django import forms
 from django.urls import reverse_lazy
 
-from infos.models import AttachmentFile, InfoComments, InfoRelation
+from infos.models import AttachmentFile, InfoComments, InfoRelation, Info
 from rise_info.baseForms import MetaCommonInfo, FileSizeValidator
 from eqs.widgets import SuggestWidget
 from offices.widgets import OfficeSuggestWidget
@@ -15,7 +15,7 @@ class InfoCommentsForm(forms.ModelForm):
             value.widget.attrs['class'] = 'form-control'
 
     info = forms.ModelChoiceField(
-        queryset=InfoRelation.objects.all(),
+        queryset=Info.objects.all(),
         error_messages={'required': 'infoは必須です', },
     )
     comment_txt = forms.CharField(
