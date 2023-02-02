@@ -117,38 +117,7 @@ def sendmail(request, info_id):
                 select_register = RegisterStatusChoicesFailuer.SENDED
             else:
                 select_register = RegisterStatusChoicesFailuer.DONE
-            if info.send_repo:
-                info.send_repo.title = info.title
-                info.send_repo.content = info.content
-                info.send_repo.created_by = info.created_by
-                info.send_repo.created_at = info.created_at
-                info.send_repo.updated_at = info.updated_at
-                info.send_repo.updated_by = info.updated_by
-                info.send_repo.failuer_date = info.failuer_date
-                info.send_repo.failuer_time = info.failuer_time
-                info.send_repo.date_time_confirmation = \
-                    info.date_time_confirmation
-                info.send_repo.failuer_place = info.failuer_place
-                info.send_repo.eq = info.eq
-                info.send_repo.notam = info.notam
-                info.send_repo.cause = info.cause
-                info.send_repo.sammary = info.sammary
-                info.send_repo.recovery_date = info.recovery_date
-                info.send_repo.recovery_time = info.recovery_time
-                info.send_repo.recovery_propects = info.recovery_propects
-                info.send_repo.is_flight_impact = info.is_flight_impact
-                info.send_repo.flight_impact = info.flight_impact
-                info.send_repo.is_press = info.is_press
-                info.send_repo.press_contents = info.press_contents
-                info.send_repo.select_register = select_register
-                info.send_repo.save()
-            else:
-                send_repo = info.failuerreport_ptr
-                send_repo.id = None
-                send_repo.pk = None
-                send_repo.select_register = select_register
-                send_repo.save()
-                info.send_repo = send_repo
+            info.set_send_repo(select_register)
             info.dest_list.clear()
             for adr in dist_list:
                 info.dest_list.add(adr)
@@ -156,15 +125,7 @@ def sendmail(request, info_id):
             info.mail_header = context['mail_header']
             info.mail_footer = context['mail_footer']
             info.save()
-            attachments = AttachmentFile.objects.filter(info__id = info.send_repo.pk)
-            for attachment in attachments:
-                attachment.delete()
-            attachments = AttachmentFile.objects.filter(info__id = info.pk)
-            for attachment in attachments:
-                attachment.id = None
-                attachment.info = info.send_repo
-                attachment.save()
-
+#
             messages.add_message(request, messages.INFO, '送信されました。')
             return redirect('failuer_report_list')
 
