@@ -48,7 +48,7 @@ class CommonInfo(models.Model):
         choices=RegisterStatusChoices.choices,
         default=RegisterStatusChoices.TEMP, null=False, blank=False
     )
-    created_by = CurrentUserField(verbose_name='登録者', on_update=True,
+    created_by = CurrentUserField(verbose_name='登録者', on_update=False,
                                   related_name='%(app_label)s_%(class)s_create', null=False, blank=False)
     created_at = models.DateTimeField(
         verbose_name='投稿日', auto_now_add=True, null=False, blank=False)
