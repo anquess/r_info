@@ -1,7 +1,11 @@
 {% load bootstrap_icons %}
 <th>
     <div class="ms-3">
+        {%if content.send_info%}
         <a href="{% url 'content_detail' content.send_info.id %}">{{content.send_info.title}}</a>
+        {%else%}
+        <a href="{% url 'content_detail' content.id %}">{{content.title}}</a>
+        {%endif%}
     </div>
 </th>
 <th>
@@ -23,14 +27,25 @@
             {%endif%}
         </div>
         <div class="col-4">
+            {%if content.send_info%}
             <a class="btn btn-primary" href="{% url 'content_edit' content.send_info.id %}" data-bs-toggle="tooltip"
                 data-bs-placement="bottom" title="編集">
                 {% bs_icon 'pencil-square' %}
             </a>
-            <a class="btn btn-danger" href="{% url 'content_del' content.send_info.id %}" onclick='return confirm("よろしいですか？");'
+            <a class="btn btn-danger" href="{% url 'content_del' content.send_info.id %}"
+                onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+                {% bs_icon 'trash' %}
+            </a>
+            {%else%}
+            <a class="btn btn-primary" href="{% url 'content_edit' content.id %}" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="編集">
+                {% bs_icon 'pencil-square' %}
+            </a>
+            <a class="btn btn-danger" href="{% url 'content_del' content.id %}" onclick='return confirm("よろしいですか？");'
                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
                 {% bs_icon 'trash' %}
             </a>
+            {%endif%}
 
         </div>
     </div>
