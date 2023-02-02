@@ -14,6 +14,7 @@ class InfoTypeChoices(models.TextChoices):
     EVENT = 'event', 'イベント情報'
     MANUAL = 'manual', '完成図書差替'
     APPS = 'apps', 'APPS'
+    FOLLOW = 'follow', '整備フォロー体制'
 
 
 class InfoTypeChoicesSupo(models.TextChoices):
@@ -33,6 +34,7 @@ class RegisterStatusChoices(models.TextChoices):
     NOT_REGISTERED = 'not_registered', '未登録'
     UNDER_RENEWAL = 'under_renewal', '更新中'
     REGISTER = 'register', '登録済'
+    TEMP = 'temp', '仮登録'
 
 
 class RegisterStatusChoicesFailuer(models.TextChoices):
