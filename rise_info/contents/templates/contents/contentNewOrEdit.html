@@ -15,14 +15,14 @@
     {% csrf_token %}
     {{form.media}}
     <div class="row mt-1">
-        <label for="id_title" class="form-label">{{ form.title.label }}</label>
+        <label for="id_title" class="form-label fw-bold">{{ form.title.label }}</label>
     </div>
     <div class="row mt-1">
         {{ form.title }}
     </div>
     <div class="row mt-2">
         <div class="col-1">
-            <label for="id_menu" class="form-label">{{form.menu.label}}</label>
+            <label for="id_menu" class="form-label fw-bold">{{form.menu.label}}</label>
         </div>
         <div class="col-4">
             {{form.menu}}
@@ -32,12 +32,12 @@
     {% include "base_info_add_new_sammary.html" %}
     <div class="row mt-1">
         <div class="col-2">
-            <label for="id_content" class="form-label">
+            <label for="id_content" class="form-label fw-bold">
                 {{form.content.label}}
             </label>
         </div>
         <div class="col-2">
-            <label for="id_is_rich_text" class="form-label">{{form.is_rich_text.label}}</label>
+            <label for="id_is_rich_text" class="form-label fw-bold">{{form.is_rich_text.label}}</label>
             {{form.is_rich_text}}
         </div>
         {{form.content}}

@@ -9,10 +9,10 @@
                 <form method="post" id="modalForm" action="/tech_supports/comment_new/" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label" for="id_comment_txt">コメント</label>
+                        <label class="form-label fw-bold" for="id_comment_txt">コメント</label>
                         <textarea class="form-control" name="comment_txt" maxlength="512"
                             id="id_comment_txt"></textarea>
-                        <label class="form-label" for="id_file">ファイル</label>
+                        <label class="form-label fw-bold" for="id_file">ファイル</label>
                         <input class="form-control" type="file" name="file" id="id_file">
                         <input type="hidden" name="info" maxlength="24" class="form-control" required="" id="id_info">
                     </div>

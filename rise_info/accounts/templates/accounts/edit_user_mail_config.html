@@ -12,7 +12,7 @@
     <input type="text" name="user" required="" id="id_user" value="{{user.pk}}" hidden>
     <div class="row mt-2">
         <div class="col-2">
-            <label for="id_email_address">{{form.email_address.label}}:</label>
+            <label class="form-label fw-bold" for="id_email_address">{{form.email_address.label}}:</label>
         </div>
         <div class="col-10">
             {{form.email_address}}
@@ -20,7 +20,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-2">
-            <label for="id_default_email_header">{{form.default_email_header.label}}:</label>
+            <label class="form-label fw-bold" for="id_default_email_header">{{form.default_email_header.label}}:</label>
         </div>
         <div class="col-10">
             {{form.default_email_header}}
@@ -28,7 +28,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-2">
-            <label for="id_default_email_footer">{{form.default_email_footer.label}}:</label>
+            <label class="form-label fw-bold" for="id_default_email_footer">{{form.default_email_footer.label}}:</label>
         </div>
         <div class="col-10">
             {{form.default_email_footer}}

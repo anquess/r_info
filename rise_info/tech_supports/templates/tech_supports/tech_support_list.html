@@ -12,19 +12,19 @@
 </div>
 <form class="row g-3" method="get" action="" name="filter_form">
     <div class="col-auto">
-        <label for="keyword" class="form-label">キーワード:</label>
+        <label for="keyword" class="form-label fw-bold">キーワード:</label>
     </div>
     <div class="col-auto">
         <input class="form-control" type="search" id="keyword" name="keyword" value={{ request.GET|keyword }}>
     </div>
     <div class="col-auto">
-        <label for="eqtype" class="form-label">装置型式:</label>
+        <label for="eqtype" class="form-label fw-bold">装置型式:</label>
     </div>
     <div class="col-auto">
         <input class="form-control" type="search" id="eqtype" name="eqtype" value={{ request.GET|eqtype }}>
     </div>
     <div class="col-auto">
-        <label for="office" class="form-label">官署</label>
+        <label for="office" class="form-label fw-bold">官署</label>
     </div>
     <div class="col-auto">
         <select class="form-select" type="search" id="office" name="office">
