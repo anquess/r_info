@@ -145,6 +145,32 @@ class FailuerReportRelation(FailuerReport):
     mail_footer = models.TextField(
         verbose_name='メールフッター', max_length=512, null=True, blank=True)
 
+    def set_send_repo(self,select_register):
+        if self.send_repo:
+            attachments = AttachmentFile.objects.filter(info__id = self.send_repo.pk)
+            for attachment in attachments:
+                attachment.delete()
+            self.send_repo.delete()
+
+        send_repo = self.failuerreport_ptr
+        send_repo.id = None
+        send_repo.pk = None
+        send_repo.select_register = select_register
+        send_repo.save()
+        self.send_repo = send_repo
+        self.save()
+        attachments = AttachmentFile.objects.filter(info__id = self.pk)
+        for attachment in attachments:
+            attachment.id = None
+            attachment.info = send_repo
+            attachment.save()
+        circumstances = Circumstances.objects.filter(info__id = self.pk)
+        for circumstance in circumstances:
+            circumstance.id = None
+            circumstance.info = send_repo
+            circumstance.save()
+
+
     def delete(self, *args, **kwargs):
         if self.send_repo:
             self.send_repo.delete()
