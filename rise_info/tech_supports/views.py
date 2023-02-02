@@ -177,8 +177,6 @@ def support_detail(request, info_id):
         info = TechSupports.objects.get_or_none(pk=info_id)
     files = AttachmentFile.objects.filter(info=info)
     addresses = Addresses.objects.filter(created_by=request.user)
-    if info.select_register == RegisterStatusChoices.TEMP:
-        return redirect('support_detail', info.send_info.id)
 
     if request.method == "POST":
         add_addresses(request=request, info=info)
