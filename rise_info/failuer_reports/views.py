@@ -149,13 +149,22 @@ def sendmail(request, info_id):
                 send_repo.select_register = select_register
                 send_repo.save()
                 info.send_repo = send_repo
-            info.dest_list.all().delete()
+            info.dest_list.clear()
             for adr in dist_list:
                 info.dest_list.add(adr)
             info.mail_title = subject
             info.mail_header = context['mail_header']
             info.mail_footer = context['mail_footer']
             info.save()
+            attachments = AttachmentFile.objects.filter(info__id = info.send_repo.pk)
+            for attachment in attachments:
+                attachment.delete()
+            attachments = AttachmentFile.objects.filter(info__id = info.pk)
+            for attachment in attachments:
+                attachment.id = None
+                attachment.info = info.send_repo
+                attachment.save()
+
             messages.add_message(request, messages.INFO, '送信されました。')
             return redirect('failuer_report_list')
 
