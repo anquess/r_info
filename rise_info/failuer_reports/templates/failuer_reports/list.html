@@ -56,13 +56,13 @@
 </div>
 {% if infos %}
 <div class="row border-bottom border-secondary">
-    <div class="col-2 h5">タイトル</div>
-    <div class="col-2 h5">障害発生場所</div>
-    <div class="col-4 h5">障害概要</div>
-    <div class="col-1 h5">障害発生日時</div>
-    <div class="col-1 h5">障害復旧日時</div>
-    <div class="col-1 h5">登録官署</div>
-    <div class="col-1 h5">編集</div>
+    <div class="col-2 h6">タイトル</div>
+    <div class="col-2 h6">障害発生場所</div>
+    <div class="col-4 h6">障害概要</div>
+    <div class="col-1 h6">障害発生日時</div>
+    <div class="col-1 h6">障害復旧日時</div>
+    <div class="col-1 h6">登録官署</div>
+    <div class="col-1 h6">編集</div>
 </div>
 {% for info in infos %}
 <div class="row border-bottom border-secondary py-2">
@@ -104,7 +104,7 @@
         {{ info.recovery_time | date:"H:i" }}
     </div>
     <div class="col-1">{{ info.created_by.last_name }}</div>
-    <div class="col-1">
+    <div class="col-1 px-0 mx-0">
         {% if user == info.created_by %}
         <a class="btn-sm btn-primary" href="{% url 'failuer_report_edit' info.id %}" data-bs-toggle="tooltip"
             data-bs-placement="bottom" title="編集">
