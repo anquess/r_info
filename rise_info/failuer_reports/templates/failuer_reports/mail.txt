@@ -1,7 +1,7 @@
 {{mail_header}}
 {%if info.send_repo%}※がついている箇所は前回送信時({{info.send_repo.updated_at}})からの変更箇所{%endif%}
 
-【障害通報通報】{{info.title}}{%if info.title != info.send_repo.title%}※{%endif%}
+【障害通報】{{info.title}}{%if info.title != info.send_repo.title%}※{%endif%}
 
 1.障害発生日時
 {{info.failuer_date}}{%if info.failuer_date != info.send_repo.failuer_date%}※{%endif%} {%if info.date_time_confirmation == "checking_now" %}概ね{%endif%} {{info.failuer_time}}{%if info.failuer_time != info.send_repo.failuer_time%}※{%endif%}
@@ -23,7 +23,7 @@
     {{info.recovery_date}}{%if info.recovery_date != info.send_repo.recovery_date%}※{%endif%} {{info.recovery_time}}{%if info.recovery_time != info.send_repo.recovery_time%}※{%endif%}
 {%endif%}
 
-6.運航への影響:{% if info.is_flight_impact %}あり{% else %}なし{% endif %}{%if info.is_flight_impact != info.send_repo.is_flight_impact%}※{%endif%}
+6.運航への影響:{{info.get_is_flight_impact_display}}
     {{ info.flight_impact }}{%if info.flight_impact != info.send_repo.flight_impact%}※{%endif%}
 
 7.取材の有無：{{ info.get_is_press_display }}{%if info.get_is_press_display != info.send_repo.get_is_press_display%}※{%endif%}
@@ -39,3 +39,4 @@
 備考
 {{ info.content }}{%if info.content != info.send_repo.content%}※{%endif%}
 {{mail_footer}}
+＞＜＝＝＝＞＜＝＝＝＞＜＝＝＝＞＜＝＝＝＞＜
