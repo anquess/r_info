@@ -35,7 +35,7 @@ $(function () {
         rowElement.append(col2Element);
         $('div#file-area').append(rowElement);
         currentFileCount += 1;
-        totalManageElement.attr('value', currentFileCount);
+        totalManageElement.attr('value', currentFileCount + 1);
     });
 });
 
@@ -97,7 +97,7 @@ $(function () {
         rowElement.append(col7_Element);
         rowElement.append(col1_Element);
         $('div#event-area').append(rowElement);
-        totalManageElement.attr('value', currentEventCount);
+        totalManageElement.attr('value', currentEventCount + 1);
         $(document).ready(setMaxlength('#id_circumstances_set-' + currentEventCount + '-event'));
         document.getElementById('id_circumstances_set-' + currentEventCount + '-event').setAttribute("maxlength", "256");
         currentEventCount += 1;
