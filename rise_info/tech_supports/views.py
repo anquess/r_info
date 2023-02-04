@@ -85,7 +85,7 @@ def get_form_context(request, info_id=None):
 def support_update(request, info_id=None):
     info = TechSupports.objects.get_or_none(pk=info_id)
     if hasattr(info, 'sended'):
-        return redirect('info_edit', info.sended.id)
+        return redirect('support_edit', info.sended.id)
 
     context = get_form_context(request=request, info_id=info_id)
     if context:
