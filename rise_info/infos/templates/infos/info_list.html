@@ -94,8 +94,40 @@
     <div class="col-1 h5">編集</div>
 </div>
 {% for info in infos %}
+{% if info.send_info %}
 <div class="row border-bottom border-secondary py-2">
-    <div class="col-1">{{ info.get_info_type_display }}</div>
+    <div class="col-1">
+        {{ info.send_info.get_info_type_display }}
+        </br>
+        <span class="badge bg-secondary">公開情報</span>
+    </div>
+    <div class="col-2"><a href="{% url 'info_detail' info.id %}">{{ info.send_info.title }}</a></div>
+    <div class="col-7">{{ info.send_info.sammary }}</div>
+    <div class="col-1">{{ info.send_info.updated_at | date:"y/n/j" }}</div>
+    {% if auth %}
+    <div class="col-1">
+        <a class="btn-sm btn-primary" href="{% url 'info_edit' info.send_info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        <a class="btn-sm btn-primary" href="{% url 'info_send' info.send_info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="メール送信画面へ">
+            {% bs_icon 'send' %}
+        </a>
+        <a class="btn-sm btn-danger" href="{% url 'info_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{%else%}
+<div class="row border-bottom border-secondary py-2">
+    <div class="col-1">
+        {{ info.get_info_type_display }}
+        </br>
+        <span class="badge bg-warning">非公開</span>
+    </div>
     <div class="col-2"><a href="{% url 'info_detail' info.id %}">{{ info.title }}</a></div>
     <div class="col-7">{{ info.sammary }}</div>
     <div class="col-1">{{ info.updated_at | date:"y/n/j" }}</div>
@@ -116,6 +148,7 @@
     </div>
     {% endif %}
 </div>
+{%endif%}
 {% endfor %}
 {% else %}
 <p>信頼性情報はまだ投稿されていません。</p>

@@ -60,8 +60,38 @@
     <div class="col-1 h5">編集</div>
 </div>
 {% for info in infos %}
+{% if info.send_info %}
 <div class="row border-bottom border-secondary py-2">
-    <div class="col-1">{{ info.get_info_type_display }}</div>
+    <div class="col-1">
+        {{ info.send_info.get_info_type_display }}
+        </br>
+        <span class="badge bg-secondary">公開情報</span>
+    </div>
+    <div class="col-3"><a href="{% url 'support_detail' info.send_info.id %}">{{ info.send_info.title }}</a></div>
+    <div class="col-5">{{ info.send_info.inquiry | linebreaksbr }}</div>
+    <div class="col-1">{{ info.send_info.updated_at | date:"y/n/j" }}</div>
+    <div class="col-1">{{ info.send_info.created_by.last_name }}</div>
+    {% if auth or user == info.created_by %}
+    <div class="col-1"><a class="btn btn-primary" href="{% url 'support_edit' info.id %}" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="編集">
+            {% bs_icon 'pencil-square' %}
+        </a>
+        {% endif %}
+        {% if auth %}
+        <a class="btn btn-danger" href="{% url 'support_del' info.id %}" onclick='return confirm("よろしいですか？");'
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            {% bs_icon 'trash' %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{%else%}
+<div class="row border-bottom border-secondary py-2">
+    <div class="col-1">
+        {{ info.get_info_type_display }}
+        </br>
+        <span class="badge bg-warning">非公開</span>
+    </div>
     <div class="col-3"><a href="{% url 'support_detail' info.id %}">{{ info.title }}</a></div>
     <div class="col-5">{{ info.inquiry | linebreaksbr }}</div>
     <div class="col-1">{{ info.updated_at | date:"y/n/j" }}</div>
@@ -80,6 +110,7 @@
     </div>
     {% endif %}
 </div>
+{%endif%}
 {% endfor %}
 {% else %}
 <p>技術支援はまだ投稿されていません。</p>

@@ -67,7 +67,10 @@
 {% for info in infos %}
 <div class="row border-bottom border-secondary py-2">
     {% if info.send_repo %}
-    <div class="col-2"><a href="{% url 'failuer_report_detail' info.id %}">{{ info.send_repo.title }}</a></div>
+    <div class="col-2">
+        <a href="{% url 'failuer_report_detail' info.id %}">{{ info.send_repo.title }}</a>
+        <span class="badge bg-secondary">公開情報</span>
+    </div>
     <div class="col-2">{{ info.send_repo.failuer_place }}&nbsp;{{ info.send_repo.eq }}</div>
     <div class="col-4">{{ info.send_repo.sammary | linebreaksbr }}</div>
     <div class="col-1">{{ info.send_repo.failuer_date | date:"y/n/j" }}&nbsp;
@@ -94,7 +97,10 @@
         {% endif %}
     </div>
     {% else %}
-    <div class="col-2"><a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a></div>
+    <div class="col-2">
+        <a href="{% url 'failuer_report_detail' info.id %}">{{ info.title }}</a>
+        <span class="badge bg-warning">非公開</span>
+    </div>
     <div class="col-2">{{ info.failuer_place }}&nbsp;{{ info.eq }}</div>
     <div class="col-4">{{ info.sammary | linebreaksbr }}</div>
     <div class="col-1">{{ info.failuer_date | date:"y/n/j" }}&nbsp;

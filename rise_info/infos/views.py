@@ -34,7 +34,7 @@ def exportInfo(request):
 
 
 class InfoList(ListView):
-    model = Info
+    model = InfoRelation
     template_name = 'infos/info_list.html'
     context_object_name = 'infos'
     ordering = '-updated_at'
@@ -51,7 +51,7 @@ class InfoList(ListView):
         else:
             queryset = super().get_queryset(
                 **kwargs).filter(
-                    Q(select_register='register'))
+                    Q(send_info__isnull=False))
 
         q_info_type = self.request.GET.get('info_type')
         q_keyword = self.request.GET.get('keyword')

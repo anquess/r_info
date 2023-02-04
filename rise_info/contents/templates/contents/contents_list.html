@@ -1,11 +1,9 @@
 {% load bootstrap_icons %}
+{%if content.send_info%}
 <th>
     <div class="ms-3">
-        {%if content.send_info%}
-        <a href="{% url 'content_detail' content.send_info.id %}">{{content.send_info.title}}</a>
-        {%else%}
-        <a href="{% url 'content_detail' content.id %}">{{content.title}}</a>
-        {%endif%}
+        <a href="{% url 'content_detail' content.send_info.id %}">{{content.send_info.title}}</a></br>
+        <span class="badge bg-secondary">公開情報</span>
     </div>
 </th>
 <th>
@@ -27,27 +25,53 @@
             {%endif%}
         </div>
         <div class="col-4">
-            {%if content.send_info%}
-            <a class="btn btn-primary" href="{% url 'content_edit' content.send_info.id %}" data-bs-toggle="tooltip"
-                data-bs-placement="bottom" title="編集">
-                {% bs_icon 'pencil-square' %}
-            </a>
-            <a class="btn btn-danger" href="{% url 'content_del' content.send_info.id %}"
-                onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
-                {% bs_icon 'trash' %}
-            </a>
-            {%else%}
             <a class="btn btn-primary" href="{% url 'content_edit' content.id %}" data-bs-toggle="tooltip"
                 data-bs-placement="bottom" title="編集">
                 {% bs_icon 'pencil-square' %}
             </a>
-            <a class="btn btn-danger" href="{% url 'content_del' content.id %}" onclick='return confirm("よろしいですか？");'
-                data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+            <a class="btn btn-danger" href="{% url 'content_del' content.id %}"
+                onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
                 {% bs_icon 'trash' %}
             </a>
-            {%endif%}
-
         </div>
     </div>
 </th>
+{%else%}
+<th>
+    <div class="ms-3">
+        <a href="{% url 'content_detail' content.id %}">{{content.title}}</a></br>
+        <span class="badge bg-warning">非公開</span>
+    </div>
+</th>
+<th>
+    <div class="row">
+        <div class="col-4">
+            {% if not forloop.first %}
+            <a class="btn btn-outline-dark" href="{% url 'content_up' content.id %}" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="上へ移動">
+                {% bs_icon 'chevron-compact-up' %}
+            </a>
+            {%endif%}
+        </div>
+        <div class="col-4">
+            {% if not forloop.last %}
+            <a class="btn btn-outline-dark" href="{% url 'content_down' content.id %}" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="下へ移動">
+                {% bs_icon 'chevron-compact-down' %}
+            </a>
+            {%endif%}
+        </div>
+        <div class="col-4">
+            <a class="btn btn-primary" href="{% url 'content_edit' content.id %}" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="編集">
+                {% bs_icon 'pencil-square' %}
+            </a>
+            <a class="btn btn-danger" href="{% url 'content_del' content.id %}"
+                onclick='return confirm("よろしいですか？");' data-bs-toggle="tooltip" data-bs-placement="bottom" title="削除">
+                {% bs_icon 'trash' %}
+            </a>
+         </div>
+    </div>
+</th>
+{%endif%}
 <th></th>
