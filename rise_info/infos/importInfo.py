@@ -1,8 +1,9 @@
 from django.db import connection
 from django.core.files import File
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
-from .models import Info, AttachmentFile, InfoTypeChoices
+from .models import Info, AttachmentFile, InfoTypeChoices, InfoRelation
 from eqs.models import Eqtype
 
 from openpyxl import load_workbook
@@ -20,6 +21,7 @@ def importInfo():
     ws_info = wb_info['info']
     infos = []
     Info.objects.all().delete()
+    is_new_sys = False
     if ws_info.cell(1, 5) == '内容':
         is_new_sys = True
     for row in ws_info.iter_rows(min_row=2):
@@ -28,8 +30,6 @@ def importInfo():
                 id = row[0].value
                 managerID = row[1].value
                 title = row[2].value
-                disclosure_date = row[6].value
-                is_disclosed = row[8].value
                 if is_new_sys:
                     sammary = row[3].value
                     content = row[4].value
@@ -42,18 +42,22 @@ def importInfo():
                         username=row[7].value)
                     updated_by = get_user_model().objects.get_or_create(
                         username=row[11].value)
-                    info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
-                                disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
-                                updated_at=updated_at, created_at=created_at, created_by=created_by, updated_by=updated_by)
                 else:
                     sammary = row[3].value[0:511]
                     content = row[3].value
                     info_type = infotype[row[5].value - 1]
-                    updated_at = disclosure_date.replace(
+                    updated_at = row[6].value.replace(
                         tzinfo=pytz.timezone('Asia/Tokyo'))
-                    info = Info(id=id, managerID=managerID, title=title, sammary=sammary, content=content,
-                                disclosure_date=disclosure_date, info_type=info_type, is_disclosed=is_disclosed,
-                                updated_at=updated_at)
+                    created_at = row[6].value.replace(
+                        tzinfo=pytz.timezone('Asia/Tokyo'))
+                    created_by = User.objects.get(username='A608')
+                    updated_by = User.objects.get(username='A608')
+
+                info = Info(id=id, managerID=managerID, title=title,
+                            sammary=sammary, content=content,
+                            info_type=info_type, updated_at=updated_at,
+                            created_at=created_at, created_by=created_by,
+                            updated_by=updated_by)
 
                 infos.append(info)
     Info.objects.bulk_create(infos)
