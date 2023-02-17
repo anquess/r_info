@@ -11,7 +11,6 @@ class MyPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for _, value in self.fields.items():
-            value.widget.attrs['placeholder'] = value.help_text
             value.widget.attrs['class'] = 'form-control'
 
 
