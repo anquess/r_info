@@ -28,7 +28,7 @@
             <tbody>
                 {% for send_required in send_HTML_required_list %}
                 <tr>
-                    <td>{{send_required.created_by}}</td>
+                    <td>{{send_required.created_by.last_name}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
                     <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
@@ -38,7 +38,7 @@
                 {% endfor%}
                 {% for send_required in send_Text_required_list %}
                 <tr>
-                    <td>{{send_required.created_by}}</td>
+                    <td>{{send_required.created_by.last_name}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
                     <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
@@ -49,7 +49,7 @@
                 {% for send_any in send_HTML_any_list %}
                 {%if not send_any in send_HTML_required_list%}
                 <tr>
-                    <td>{{send_any.created_by}}</td>
+                    <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
                     <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
@@ -61,7 +61,7 @@
                 {% for send_any in send_Text_any_list %}
                 {%if not send_any in send_Text_required_list%}
                 <tr>
-                    <td>{{send_any.created_by}}</td>
+                    <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
                     <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
@@ -72,7 +72,7 @@
                 {% endfor%}
             </tbody>
         </table>
-        <p>※本省・局・TMCにて送信先を事前登録澄</p>
+        <p>※本省・局・TMCにて送信先を事前登録済み</p>
 
         <div class="row">
             <div class="row mb-2">
@@ -90,7 +90,7 @@
                 </div>
                 <div class="col-9">
                     <textarea class="form-control" id="header" name="header" placeholder="メール本文の前に文章を入れたい場合は入力してください"
-                        maxlength="512" value="{{mail_config.default_email_header}}"></textarea>
+                        maxlength="512">{{mail_config.default_email_header}}</textarea>
                 </div>
             </div>
             <div class="row mb-2">
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-9">
                     <textarea class="form-control" id="footer" name="footer" placeholder="メール本文の後ろに文章を入れたい場合は入力してください"
-                        maxlength="512" value="{{mail_config.default_email_footer}}"></textarea>
+                        maxlength="512">{{mail_config.default_email_footer}}</textarea>
                 </div>
             </div>
             <div class="row pt-2">
