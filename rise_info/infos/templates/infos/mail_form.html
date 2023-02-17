@@ -28,7 +28,7 @@
             <tbody>
                 {% for send_any in send_HTML_list %}
                 <tr>
-                    <td>{{send_any.created_by.first_name}}</td>
+                    <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
                     <td>HTML形式</td>
@@ -38,7 +38,7 @@
                 {% endfor%}
                 {% for send_any in send_Text_list %}
                 <tr>
-                    <td>{{send_any.created_by.first_name}}</td>
+                    <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
                     <td>テキスト形式</td>
