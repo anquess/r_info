@@ -114,6 +114,7 @@ def content_update(request, content_id=None):
                     if info.send_info:
                         info.send_info.title = info.title
                         info.send_info.content = info.content
+                        info.send_info.is_rich_text = info.is_rich_text
                         info.send_info.created_by = info.created_by
                         info.send_info.created_at = info.created_at
                         info.send_info.updated_at = info.updated_at
