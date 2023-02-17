@@ -73,5 +73,16 @@ class InfoRelation(Info):
             self.send_info.delete()
         return super().delete(*args, **kwargs)
 
+    def setSendInfoAttachment(self):
+        if self.send_info:
+            attachments = AttachmentFile.objects.filter(info__id = self.send_info.pk)
+            for attachment in attachments:
+                attachment.delete()
+            attachments = AttachmentFile.objects.filter(info__id = self.pk)
+            for attachment in attachments:
+                attachment.id = None
+                attachment.info = self.send_info
+                attachment.save()
+
     class Meta:
         db_table = 'info_list'
