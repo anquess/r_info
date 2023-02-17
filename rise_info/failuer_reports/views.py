@@ -42,7 +42,7 @@ def get_addresses(fail_rep, is_HMTL: bool, grps):
 def sendmail(request, info_id):
     info = FailuerReportRelation.objects.get_or_none(pk=info_id)
     user_mail_config = User_mail_config.objects.get_or_none(user=request.user)
-    events = Circumstances.objects.filter(info=info).order_by('-date', '-time')
+    events = Circumstances.objects.filter(info=info).order_by('date', 'time')
 
     send_HTML_required = get_addresses(info, True, request.user.groups)
     send_Text_required = get_addresses(info, False, request.user.groups)
@@ -62,7 +62,7 @@ def sendmail(request, info_id):
             'mail_config': user_mail_config,
         }
         if request.method == "POST":
-            if user_mail_config.email_address and not DEBUG:
+            if hasattr(user_mail_config,"email_address") and not DEBUG:
                 email1 = user_mail_config.email_address
             else:
                 email1 = EMAIL_HOST_USER
@@ -287,7 +287,7 @@ def failuer_report_detail(request, info_id):
         info = relation_info.send_repo
     files = AttachmentFile.objects.filter(info=relation_info)
     events = Circumstances.objects.filter(
-        info=relation_info).order_by('-date', '-time')
+        info=relation_info).order_by('date', 'time')
     if info:
         context = {
             'info': info,
