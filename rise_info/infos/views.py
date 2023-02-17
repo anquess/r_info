@@ -253,7 +253,7 @@ def sendmail(request, info_id):
             'mail_config': user_mail_config,
         }
         if request.method == 'POST':
-            if user_mail_config.email_address and not DEBUG:
+            if hasattr(user_mail_config,"email_address") and not DEBUG:
                 sendmail_adr = user_mail_config.email_address
             else:
                 sendmail_adr = EMAIL_HOST_USER
@@ -325,14 +325,7 @@ def sendmail(request, info_id):
                 send_info.save()
                 info.send_info = send_info
             info.save()
-            attachments = AttachmentFile.objects.filter(info__id = info.send_info.pk)
-            for attachment in attachments:
-                attachment.delete()
-            attachments = AttachmentFile.objects.filter(info__id = info.pk)
-            for attachment in attachments:
-                attachment.id = None
-                attachment.info = info.send_info
-                attachment.save()
+            info.setSendInfoAttachment()
 
             return redirect('info_list')
         else:
