@@ -8,7 +8,7 @@ from eqs.models import Eqtype
 
 from openpyxl import load_workbook
 import pytz
-
+import os
 
 def importInfo():
     infotype = [
@@ -102,27 +102,34 @@ def importInfoFiles():
     cursor.execute('alter table info_attachment auto_increment = 1')
 
     attachmentFiles = []
-    wb_load_file_list = load_workbook('test_data/infoFileList.xlsx')
+    wb_load_file_list = load_workbook('test_data/infoFileList.xlsx', data_only=True)
     ws_file_lsit = wb_load_file_list['filelist']
     pk = 1
     for row in ws_file_lsit.iter_rows(min_row=2):
-        if row[3].value:
+        if not row[3].value:
+            if row[6].value == 1:
+                os.rename('/home/pi/django/rise_info/uploads/migratedData/info/' + str(row[2].value),'/home/pi/django/rise_info/uploads/migratedData/info/' + str(row[5].value))
+        if row[6].value:
             info_pk = row[1].value
-            flnm = row[2].value
-            print(row, flnm)
+            flnm = row[5].value
+            print(row, flnm, info_pk)
             attachmentFile = importInfoFile(id=pk, flnm=flnm, info_pk=info_pk)
-            attachmentFiles.append(attachmentFile)
-            pk = pk + 1
+            if attachmentFile:
+                attachmentFiles.append(attachmentFile)
+                pk = pk + 1
     AttachmentFile.objects.bulk_create(attachmentFiles)
 
 
 def importInfoFile(flnm: str, info_pk: int, id: int):
-    info = Info.objects.get_or_none(pk=info_pk)
-    file = getMigratedData(flnm)
-    attachmentFile = AttachmentFile(id=id, info=info, filename=flnm)
-    attachmentFile.file.save(flnm, file)
-    return attachmentFile
-
+    print('info_pk', info_pk)
+    info = Info.objects.get_or_none(pk=int(info_pk))
+    if info:
+        file = getMigratedData(flnm)
+        attachmentFile = AttachmentFile(id=id, info=info, filename=flnm)
+        attachmentFile.file.save(flnm, file)
+        return attachmentFile
+    else:
+        return None
 
 def getMigratedData(flnm: str):
     return File(open('/home/pi/django/rise_info/uploads/migratedData/info/' + flnm, 'rb'))
