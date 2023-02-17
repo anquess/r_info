@@ -106,28 +106,17 @@ def support_update(request, info_id=None):
                     e = notifyRegistration(info=info, request=request)
                     if e == 1:
                         messages.add_message(request, messages.INFO, '通知しました。')
+                        send_info = info.techsupports_ptr
+                        send_info.id = None
+                        send_info.pk = None
+                        send_info.select_register = \
+                            RegisterStatusChoices.REGISTER
+                        send_info.save()
                         if info.send_info:
-                            info.send_info.title = info.title
-                            info.send_info.content = info.content
-                            info.send_info.created_by = info.created_by
-                            info.send_info.created_at = info.created_at
-                            info.send_info.updated_at = info.updated_at
-                            info.send_info.updated_by = info.updated_by
-                            info.send_info.info_type = info.info_type
-                            info.send_info.is_rich_text = info.is_rich_text
-                            info.send_info.inquiry = info.inquiry
                             for dest in info.addresses.all():
-                                info.send_info.addresses.add(dest)
-                            info.send_info.select_register = \
-                                RegisterStatusChoices.REGISTER
-                        else:
-                            send_info = info.techsupports_ptr
-                            send_info.id = None
-                            send_info.pk = None
-                            send_info.select_register = \
-                                RegisterStatusChoices.REGISTER
-                            send_info.save()
-                            info.send_info = send_info
+                                send_info.addresses.add(dest)
+                            info.send_info.delete()
+                        info.send_info = send_info
                         info.save()
                         attachments = AttachmentFile.objects.filter(info__id = info.send_info.pk)
                         for attachment in attachments:
