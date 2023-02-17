@@ -10,7 +10,7 @@ class DepartmentForEqAdmin(admin.ModelAdmin):
 
 class EqtypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'slug']
-    fields = ['department', 'id', 'slug']
+    fields = ['eq_class', 'id', 'slug']
     readonly_fields = ['id', 'slug']
 
 
