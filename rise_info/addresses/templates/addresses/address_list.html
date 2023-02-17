@@ -21,7 +21,8 @@
     <div class="col-3 h5">登録官署</div>
     <div class="col-2 h5">役職</div>
     <div class="col-2 h5">氏名</div>
-    <div class="col-3 h5">メールアドレス</div>
+    <div class="col-2 h5">メールアドレス</div>
+    <div class="col-1 h5">形式</div>
     <div class="col-2 h5">編集</div>
 </div>
 {% for address in addresses %}
@@ -29,7 +30,14 @@
     <div class="col-3">{{address.created_by.last_name}}</div>
     <div class="col-2">{{address.position}}</div>
     <div class="col-2">{{address.name}}</div>
-    <div class="col-3">{{address.mail}}</div>
+    <div class="col-2">{{address.mail}}</div>
+    <div class="col-1">
+        {%if address.is_HTML_mail %}
+            HTML形式
+        {%else%}
+            Text形式
+        {%endif%}
+    </div>
     <div class="col-2">
         {% if user == address.created_by %}
         <a class="btn btn-primary" href="{% url 'address_edit' address.id %}" data-bs-toggle="tooltip"
