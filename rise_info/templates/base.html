@@ -14,77 +14,80 @@
 
 <body>
     <div class="container-fluid">
-        <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
-            <div class="d-flex container-fluid justify-content-between">
-                <a href="/" class="navbar-brand">信頼性ＨＰ</a>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">TMC発信情報</a> </li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'support_list' %}">官署発信機能</a> </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            管制技術Wiki
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% for menu in menus %}
-                            <li><a class="dropdown-item" href="#">
-                                    {{ menu.menu_title }} &raquo;
-                                </a>
-                                <ul class="dropdown-menu dropdown-submenu">
-                                    {% for content in menu.related_content.all|dictsort:"sort_num" %}
-                                    {%if content.send_info %}
-                                    <li>
-                                        <a class="dropdown-item" href="{% url 'content_detail' content.send_info.id %}">
-                                            {{ content.send_info }}</a>
-                                    </li>
-                                    {%endif%}
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endfor %}
-                            {% if auth %}
-                            <li><a class="dropdown-item" href="{% url 'menu_list' %}">メニュー管理</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'failuer_report_list' %}">障害通報</a> </li>
-                    <li class="nav-item"><a class="nav-link" href="/gyoumushien/index.html" target="new">業務支援</a> </li>
-                    {% if auth %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'office' %}">官署</a> </li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'eqs:eqtype' %}">装置型式</a> </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav mr-md-2">
-                    <li class="nav-item dropdown">
-                        {% if user %}
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="/media/user.png" class="avatar" width="30px" height="30px" />{{ user }}
-                        </a>
-                        {% else %}
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            ユーザ管理
-                        </a>
+        <div class='fixed-top'>
+            <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
+                <div class="d-flex container-fluid justify-content-between">
+                    <a href="/" class="navbar-brand">信頼性ＨＰ</a>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'info_list' %}">TMC発信情報</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'support_list' %}">官署発信機能</a> </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                管制技術Wiki
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% for menu in menus %}
+                                <li><a class="dropdown-item" href="#">
+                                        {{ menu.menu_title }} &raquo;
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-submenu">
+                                        {% for content in menu.related_content.all|dictsort:"sort_num" %}
+                                        {%if content.send_info %}
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'content_detail' content.send_info.id %}">
+                                                {{ content.send_info }}</a>
+                                        </li>
+                                        {%endif%}
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endfor %}
+                                {% if auth %}
+                                <li><a class="dropdown-item" href="{% url 'menu_list' %}">メニュー管理</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'failuer_report_list' %}">障害通報</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="/gyoumushien/index.html" target="new">業務支援</a> </li>
+                        {% if auth %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'office' %}">官署</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'eqs:eqtype' %}">装置型式</a> </li>
                         {% endif %}
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% if user.is_authenticated %}
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
-                            <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
-                            <li><a class="dropdown-item" href="{% url 'address_list' %}">配信先管理</a></li>
-                            <li><a class="dropdown-item" href="{% url 'userconfig' %}">メール設定</a></li>
-                            {% if user.username == 'root' %}
-                            <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
-                            {% endif %}
+                    </ul>
+                    <ul class="navbar-nav mr-md-2">
+                        <li class="nav-item dropdown">
+                            {% if user %}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/media/user.png" class="avatar" width="30px" height="30px" />{{ user.last_name }}
+                            </a>
                             {% else %}
-                            <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                ユーザ管理
+                            </a>
                             {% endif %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% if user.is_authenticated %}
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a></li>
+                                <li><a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a></li>
+                                <li><a class="dropdown-item" href="{% url 'address_list' %}">配信先管理</a></li>
+                                <li><a class="dropdown-item" href="{% url 'userconfig' %}">メール設定</a></li>
+                                {% if user.username == 'root' %}
+                                <li><a class="dropdown-item" href="{% url 'account_list' %}">ユーザ管理</a></li>
+                                {% endif %}
+                                {% else %}
+                                <li><a class="dropdown-item" href="{% url 'login' %}">ログイン</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </div>
+    <div class="row"><br/><br/><br/></div>
     <main>
         <div class="container-fluid">
             {% for message in messages %}
