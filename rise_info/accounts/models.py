@@ -42,4 +42,4 @@ class User_mail_config(models.Model):
     default_email_footer = models.TextField(
         verbose_name='デフォルト送信時メールフッター',
         null=True, blank=True, max_length=512,
-        help_text="メール本文前段に挿入されます。送信時に変更できます。")
+        help_text="メール本文後段に挿入されます。送信時に変更できます。")
