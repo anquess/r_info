@@ -41,7 +41,18 @@
     <div class="col-auto">
         <input type="checkbox" id="is_all" name="is_all" {{ request.GET|is_all }}>
     </div>
-
+    <div class="col-auto">
+        <label for="date_min" class="form-label fw-bold">障害発生日:</label>
+    </div>
+    <div class="col-auto">
+        <input type="date" name="date_min" id="date_min" class="form-control" value={{ request.GET|date_min }}>
+    </div>
+    <div class="col-auto">
+        <label for="date_max" class="form-label fw-bold">～</label>
+    </div>
+    <div class="col-auto">
+        <input type="date" name="date_max" id="date_max" class="form-control" value={{ request.GET|date_max }}>
+    </div>
     <div class="col-auto">
         <button id="filter" type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
             title="検索">{% bs_icon 'search' %}</button>
