@@ -31,7 +31,7 @@
                     <td>{{send_required.created_by.last_name}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
-                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
+                    <td>HTML形式</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_required.id}}"></td>
                 </tr>
@@ -41,7 +41,7 @@
                     <td>{{send_required.created_by.last_name}}</td>
                     <td>{{send_required.position}}</td>
                     <td>{{send_required.name}}</td>
-                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
+                    <td>Text形式</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_required.id}}"></td>
                 </tr>
@@ -52,7 +52,7 @@
                     <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
-                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
+                    <td>HTML形式</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_any.id}}"></td>
                 </tr>
@@ -64,7 +64,7 @@
                     <td>{{send_any.created_by.last_name}}</td>
                     <td>{{send_any.position}}</td>
                     <td>{{send_any.name}}</td>
-                    <td>{%if send_required.is_HTML_mail%}HTML形式{%else%}Text形式{%endif%}</td>
+                    <td>Text形式</td>
                     <td><input class="form-check-input checks" type="checkbox" id="is_send_list" name="is_send_list[]"
                             value="{{send_any.id}}"></td>
                 </tr>
