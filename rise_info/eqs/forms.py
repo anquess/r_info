@@ -20,7 +20,6 @@ class EqTypeCreateForm(forms.ModelForm):
         for key, value in self.fields.items():
             value.widget.attrs['class'] = 'form-select'
 
-    #eq_class = ModelChoiceField(label="装置分類", queryset=EQ_class.objects.all())
     class Meta:
         model = Eqtype
         fields = ('eq_class',)
@@ -30,7 +29,21 @@ class EqTypeCreateForm(forms.ModelForm):
             })
         }
 
+class EqClassCreateForm(forms.ModelForm):
+    class Meta:
+        model = EQ_class
+        fields = ('department', 'memo')
+        widgets = {
+            'memo' : forms.Textarea(attrs={
+                'class': 'form-control',
+                'row':3,
+            }),
+            'department': forms.SelectMultiple(attrs={
+                'class': 'form-select',
+                'mutiple': True,
+            }),
 
+        }
 
 
 class UploadFileForm(forms.Form):

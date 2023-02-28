@@ -7,8 +7,8 @@ from django.utils.text import slugify
 
 import sys
 
-from .forms import UploadFileForm, EqTypeCreateForm
-from .models import Eqtype, eqtypes_csv_import
+from .forms import UploadFileForm, EqTypeCreateForm, EqClassCreateForm
+from .models import Eqtype, eqtypes_csv_import, EQ_class
 from accounts.views import addIsStaff
 from histories.models import getLastUpdateAt
 
@@ -92,11 +92,11 @@ def eqtype_new(request):
     if request.method == 'POST':
         id = request.POST.get('id')
         slug = slugify(id)
-
+        eq_class = request.POST.get('eq_class')
         flg = True
         if len(id) > 24:
             messages.add_message(request, messages.ERROR, '装置型式は24文字以内')
-            flg = False            
+            flg = False
         eqtype = Eqtype.objects.get_or_none(id=id)
         if eqtype:
             messages.add_message(request, messages.ERROR, '当該装置型式は既に登録されています')
@@ -104,6 +104,7 @@ def eqtype_new(request):
         if flg:
             eqtype = Eqtype.objects.create(id=id)
             eqtype.slug = slug
+            eqtype.eq_class = eq_class
             eqtype.save()
             messages.add_message(request, messages.INFO, slug + 'は登録されました')
 
@@ -111,3 +112,32 @@ def eqtype_new(request):
     else:
         form = EqTypeCreateForm()
     return render(request, "eqs/eqTypesNew.html",{'form':form})
+
+@login_required
+def eq_class_new(request):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'この権限では許可されていません。')
+        return redirect('top')
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        departments = request.POST.getlist('department')
+        memo = request.POST.get('memo')
+        flg = True
+        if len(id) > 16:
+            messages.add_message(request, messages.ERROR, '装置分類は16文字以内')
+            flg = False
+        eq_class = EQ_class.objects.get_or_none(id=id)
+        if eq_class:
+            messages.add_message(request, messages.ERROR, '当該装置分類は既に登録されています')
+            flg = False
+        if flg:
+            eq_class = EQ_class.objects.create(id=id)
+            for department in departments:
+                eq_class.department.add(department)
+            eq_class.memo = memo
+            eq_class.save()
+            messages.add_message(request, messages.INFO, '登録されました')
+        return redirect('eqs:eqtype_new')
+    else:
+        form = EqClassCreateForm()
+    return render(request, "eqs/eq_classNew.html",{'form':form})
