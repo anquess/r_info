@@ -82,7 +82,7 @@ class Eqtype(models.Model):
     eq_class = models.ForeignKey(
         EQ_class, verbose_name='装置分類', null=True, blank=True,
         related_name='eqtype', on_delete=models.CASCADE)
-    create_at = models.DateTimeField(verbose_name='登録日時')
+    create_at = models.DateTimeField(verbose_name='登録日時', auto_now_add=True)
 
     def __str__(self):
         return self.id

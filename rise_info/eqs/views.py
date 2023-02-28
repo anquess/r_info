@@ -3,10 +3,11 @@ from django.http import HttpResponseRedirect, FileResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.http import JsonResponse
+from django.utils.text import slugify
 
 import sys
 
-from .forms import UploadFileForm
+from .forms import UploadFileForm, EqTypeCreateForm
 from .models import Eqtype, eqtypes_csv_import
 from accounts.views import addIsStaff
 from histories.models import getLastUpdateAt
@@ -82,3 +83,31 @@ def handle_uploaded_file(file_obj):
 @login_required
 def file_downnload(request):
     return FileResponse(open('uploads/documents/EQTypes.csv', 'rb'), filename='EQTypes.csv', as_attachment=True)
+
+@login_required
+def eqtype_new(request):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'この権限では許可されていません。')
+        return redirect('top')
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        slug = slugify(id)
+
+        flg = True
+        if len(id) > 24:
+            messages.add_message(request, messages.ERROR, '装置型式は24文字以内')
+            flg = False            
+        eqtype = Eqtype.objects.get_or_none(id=id)
+        if eqtype:
+            messages.add_message(request, messages.ERROR, '当該装置型式は既に登録されています')
+            flg = False
+        if flg:
+            eqtype = Eqtype.objects.create(id=id)
+            eqtype.slug = slug
+            eqtype.save()
+            messages.add_message(request, messages.INFO, slug + 'は登録されました')
+
+        return redirect('top')
+    else:
+        form = EqTypeCreateForm()
+    return render(request, "eqs/eqTypesNew.html",{'form':form})

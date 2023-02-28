@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block extraheader %}
+<script src="/static/infos/js/clickCheck.js"></script>
+{% endblock %}
+{% block main %}
+<h1>装置型式の新規登録</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="eq_class" class="form-label fw-bold">装置分類:</label>
+        </div>
+        <div class="col-10">
+            {{form.eq_class}}
+        </div>
+    </div>    
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="id" class="form-label fw-bold">装置型式:</label>
+        </div>
+        <div class="col-10">
+            <input class="form-control" id="id" name="id" maxlength="24">
+        </div>
+        <div class="col-1">
+            <button class="btn btn-primary" type="submit">登録</button>
+        </div>
+    
+    </div>
+</form>
+{% endblock %}
