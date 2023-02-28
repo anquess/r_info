@@ -92,7 +92,7 @@ def sendmail(request, info_id):
                 if adr.is_HTML_mail:
                     dist_HTML_list.append(adr.mail)
                 else:
-                    dist_HTML_list.append(adr.mail)
+                    dist_Text_list.append(adr.mail)
             try:
                 send_mail(
                     subject=subject,
@@ -150,6 +150,8 @@ class FailuerReportRelationList(ListView):
 
     def get_queryset(self, **kwargs):
         is_all = self.request.GET.get('is_all')
+        date_min = self.request.GET.get('date_min')
+        date_max = self.request.GET.get('date_max')
         if is_all:
             queryset = super().get_queryset(**kwargs).filter(
                 Q(created_by__username__contains=self.request.user))
@@ -157,6 +159,13 @@ class FailuerReportRelationList(ListView):
             queryset = super().get_queryset(**kwargs).filter(
                 Q(created_by__username__contains=self.request.user) |
                 Q(send_repo__isnull=False))
+        if date_min and date_max:
+            queryset = queryset.filter(failuer_date__range=[date_min, date_max])
+        elif date_min:
+            queryset = queryset.filter(failuer_date__gte=date_min)
+        elif date_max:
+            queryset = queryset.filter(failuer_date__lte=date_max)
+
         q_created_by = self.request.GET.get('created_by')
         q_keyword = self.request.GET.get('keyword')
         if q_created_by is not None:
@@ -169,7 +178,7 @@ class FailuerReportRelationList(ListView):
                 Q(sammary__contains=q_keyword) |
                 Q(content__contains=q_keyword)
             ).distinct()
-        return queryset
+        return queryset.order_by('-failuer_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
