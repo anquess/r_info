@@ -4,8 +4,13 @@
 {% load markdown_extras %}
 <div class="row">
   <div class="col-5">
-    <h1>装置型式一括更新</h1>
+    <h1>装置型式一覧</h1>
   </div>
+  <div class="col-7">
+    <a class="btn btn-primary" href="{% url 'eqs:eqtype_new' %}">新規登録</a>
+  </div>
+</div>
+<!--
   <div class="col-5">
     <h3>最新更新日:{{last_update_at}}</h3>
   </div>
@@ -32,7 +37,7 @@
     </div>
   </div>
 </form>
-<a class="btn btn-primary" href="{% url 'eqs:eqtype_new' %}">新規登録</a>
+-->
 {% if eqtypes %}
 <table class="table">
   <thead>
