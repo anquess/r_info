@@ -6,7 +6,8 @@
 
 {% endblock %}
 {% block main %}
-<p class="h2">ユーザメール設定</p>
+<p class="h2">ユーザーメール設定</p>
+<p>※本設定は障害通報機能のみに有効</p>
 <form method="post">
     {% csrf_token %}
     <input type="text" name="user" required="" id="id_user" value="{{user.pk}}" hidden>
