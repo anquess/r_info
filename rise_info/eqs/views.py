@@ -111,7 +111,8 @@ def eqtype_new(request):
         return redirect('top')
     else:
         form = EqTypeCreateForm()
-    return render(request, "eqs/eqTypesNew.html",{'form':form})
+        context = addIsStaff({'form': form}, request.user)
+    return render(request, "eqs/eqTypesNew.html", context)
 
 @login_required
 def eq_class_new(request):
@@ -140,4 +141,5 @@ def eq_class_new(request):
         return redirect('eqs:eqtype_new')
     else:
         form = EqClassCreateForm()
-    return render(request, "eqs/eq_classNew.html",{'form':form})
+        context = addIsStaff({'form': form}, request.user)
+    return render(request, "eqs/eq_classNew.html", context)
