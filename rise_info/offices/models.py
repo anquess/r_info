@@ -111,7 +111,7 @@ class Office(models.Model):
         verbose_name='官署略称', null=False, blank=False, max_length=8)
     offices_group = models.ManyToManyField(
         OfficesGroup, verbose_name='所属官署グループ', related_name='Offices')
-    update_at = models.DateTimeField(verbose_name='更新日時')
+    update_at = models.DateTimeField(verbose_name='更新日時', auto_now_add=True)
 
     def __str__(self):
         return self.shortcut_name

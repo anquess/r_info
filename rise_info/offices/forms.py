@@ -4,7 +4,7 @@ from django.http import Http404
 import csv
 
 from rise_info.baseForms import csvFormatCheck
-
+from .models import Office
 
 def formatCheck(offices):
     csvFormatCheck(
@@ -46,3 +46,16 @@ class UploadFileForm(forms.Form):
             except Exception as e:
                 raise Http404(e, str(header))
         return file
+
+class OfficeCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.fields.items():
+            if key != 'unyo_sts':
+                value.widget.attrs['class'] = 'form-control'
+            else:
+                value.widget.attrs['class'] = 'form-check-input'
+
+    class Meta:
+        model = Office
+        fields = ('unyo_sts', 'name', 'shortcut_name')

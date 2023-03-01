@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block extraheader %}
+<script src="/static/infos/js/clickCheck.js"></script>
+{% endblock %}
+{% block main %}
+<h1>官署の新規登録</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="id" class="form-label fw-bold">官署コード:</label>
+        </div>
+        <div class="col-10">
+            <input class="form-control" id="id" name="id" maxlength="4">
+        </div>
+    </div>
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="name" class="form-label fw-bold">官署名:</label>
+        </div>
+        <div class="col-10">
+            {{form.name}}
+        </div>    
+    </div>
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="shortcut_name" class="form-label fw-bold">官署略称:</label>
+        </div>
+        <div class="col-10">
+            {{form.shortcut_name}}
+        </div>    
+    </div>
+    <div class="row py-2">
+        <div class="col-1">
+            <label for="unyo_sts" class="form-label fw-bold">運用状態:</label>
+        </div>
+        <div class="col-10">
+            {{form.unyo_sts}}
+        </div>
+        <div class="col-1">
+            <button class="btn btn-primary" type="submit">登録</button>
+        </div>
+    </div>    
+</form>
+{% endblock %}

@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 
 import sys
 
-from .forms import UploadFileForm
+from .forms import UploadFileForm, OfficeCreateForm
 from .models import Office, offices_csv_import
 from accounts.views import addIsStaff
 from histories.models import getLastUpdateAt
@@ -81,3 +81,34 @@ def handle_uploaded_file(file_obj):
 @login_required
 def file_downnload(request):
     return FileResponse(open('uploads/documents/Offices.csv', 'rb'), filename='office.csv', as_attachment=True)
+
+@login_required
+def office_new(request):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'この権限では許可されていません。')
+        return redirect('top')
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        unyo_sts = request.POST.get('unyo_sts')
+        name = request.POST.get('name')
+        shortcut_name = request.POST.get('shortcut_name')
+        flg = True
+        if len(id) > 4:
+            messages.add_message(request, messages.ERROR, '官署コードは4文字以内')
+            flg = False
+        office = Office.objects.get_or_none(id=id)
+        if office:
+            messages.add_message(request, messages.ERROR, '当該官署は既に登録されています')
+            flg = False
+        if flg:
+            office = Office.objects.create(id=id)
+            office.unyo_sts = (unyo_sts == 'on')
+            office.name = name
+            office.shortcut_name = shortcut_name
+            office.save()
+            messages.add_message(request, messages.INFO, '登録されました')
+        return redirect('office')
+    else:
+        form = OfficeCreateForm()
+        context = addIsStaff({'form': form}, request.user)
+    return render(request, "offices/officeNew.html", context)
