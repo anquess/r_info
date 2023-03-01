@@ -108,7 +108,8 @@ ctrlにより複数選択可能。\n\
 
     class Meta:
         db_table = 'failuer_reports'
-
+        verbose_name = '障害通報書(全データ)'
+        verbose_name_plural = '障害通報書一覧(全データ)'
 
 class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(FailuerReport, on_delete=models.CASCADE)
@@ -116,6 +117,8 @@ class AttachmentFile(BaseAttachment):
 
     class Meta:
         db_table = 'failuer_report_attachments'
+        verbose_name = '障害通報書添付ファイル'
+        verbose_name_plural = '障害通報書添付ファイル一覧'
 
 
 class Circumstances(models.Model):
@@ -128,6 +131,8 @@ class Circumstances(models.Model):
 
     class Meta:
         db_table = 'circumstance'
+        verbose_name = '障害通報書内事象'
+        verbose_name_plural = '障害通報書内事象一覧'
 
 
 class FailuerReportRelation(FailuerReport):
@@ -178,3 +183,5 @@ class FailuerReportRelation(FailuerReport):
 
     class Meta:
         db_table = 'failuer_repo_list'
+        verbose_name = '障害通報書(一時保存)'
+        verbose_name_plural = '障害通報書一覧(一時保存)'

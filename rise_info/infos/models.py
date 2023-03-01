@@ -38,7 +38,8 @@ class Info(CommonInfo):
 
     class Meta:
         db_table = 'infos'
-
+        verbose_name = 'TMC発信情報(全データ)'
+        verbose_name_plural = 'TMC発信情報一覧(全データ)'
 
 class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(
@@ -47,7 +48,8 @@ class AttachmentFile(BaseAttachment):
 
     class Meta:
         db_table = 'info_attachment'
-
+        verbose_name = 'TMC発信情報添付ファイル'
+        verbose_name_plural = 'TMC発信情報添付ファイル一覧'
 
 class InfoComments(BaseCommnets):
     info = models.ForeignKey(
@@ -56,6 +58,8 @@ class InfoComments(BaseCommnets):
 
     class Meta:
         db_table = 'info_comments'
+        verbose_name = 'TMC発信情報コメント'
+        verbose_name_plural = 'TMC発信情報コメント一覧'
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -86,3 +90,5 @@ class InfoRelation(Info):
 
     class Meta:
         db_table = 'info_list'
+        verbose_name = 'TMC発信情報(一時保存)'
+        verbose_name_plural = 'TMC発信情報一覧(一時保存)'

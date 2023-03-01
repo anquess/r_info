@@ -16,6 +16,8 @@ class HistoryDB(models.Model):
 
     class Meta:
         db_table = 'histories'
+        verbose_name = 'インポート用履歴管理'
+        verbose_name_plural = 'インポート用履歴管理'
 
 
 def getLastUpdateAt(slug) -> dt:

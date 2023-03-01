@@ -35,7 +35,8 @@ class TechSupports(CommonInfo):
 
     class Meta:
         db_table = 'tech_supports'
-
+        verbose_name = '官署発信(全データ)'
+        verbose_name_plural = '官署発信一覧(全データ)'
 
 class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(
@@ -44,6 +45,8 @@ class AttachmentFile(BaseAttachment):
 
     class Meta:
         db_table = 'tech_support_attachment'
+        verbose_name = '官署発信添付ファイル'
+        verbose_name_plural = '官署発信添付ファイル一覧'
 
 
 class TechSupportComments(BaseCommnets):
@@ -54,6 +57,8 @@ class TechSupportComments(BaseCommnets):
 
     class Meta:
         db_table = 'tech_support_comments'
+        verbose_name = '官署発信コメント'
+        verbose_name_plural = '官署発信コメント一覧'
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -73,3 +78,5 @@ class TechSupportsRelation(TechSupports):
 
     class Meta:
         db_table = 'techSupport_list'
+        verbose_name = '官署発信(一時保存)'
+        verbose_name_plural = '官署発信一覧(一時保存)'

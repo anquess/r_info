@@ -19,10 +19,11 @@ class RoleInLocal(models.Model):
         verbose_name='現地担当補足説明', null=True, blank=False, max_length=128,
         help_text='例：信頼性担当者は本信頼性ホームページの配信先管理をお願いします。'
     )
-
     def __str__(self):
         return self.name
-
+    class Meta:
+        verbose_name = '現地担当名'
+        verbose_name_plural = '現地担当名一覧'
 
 class InfoTypeRelationRole(models.Model):
     info_type = models.CharField(
@@ -32,7 +33,9 @@ class InfoTypeRelationRole(models.Model):
     role = models.ForeignKey(
         RoleInLocal,
         verbose_name='現地担当名', related_name='info_type_relations', on_delete=models.CASCADE)
-
+    class Meta:
+        verbose_name = '情報種別'
+        verbose_name_plural = '情報種別一覧'
 
 class Addresses(models.Model):
     objects = BaseManager()
@@ -77,3 +80,5 @@ class Addresses(models.Model):
 
     class Meta:
         db_table = 'addresses'
+        verbose_name = '配信先'
+        verbose_name_plural = '配信先一覧'

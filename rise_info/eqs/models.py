@@ -54,6 +54,9 @@ class DepartmentForEq(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = '装置担当部署'
+        verbose_name_plural = '装置担当部署一覧'
 
 class EQ_class(models.Model):
     objects = BaseManager()
@@ -70,6 +73,8 @@ class EQ_class(models.Model):
 
     class Meta:
         db_table = 'eqclass'
+        verbose_name = '装置分類'
+        verbose_name_plural = '装置分類一覧'
 
 
 class Eqtype(models.Model):
@@ -92,3 +97,5 @@ class Eqtype(models.Model):
 
     class Meta:
         db_table = 'eqtypes'
+        verbose_name = '装置型式'
+        verbose_name_plural = '装置型式一覧'

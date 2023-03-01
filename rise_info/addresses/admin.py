@@ -10,12 +10,12 @@ class RoleInLocalAdmin(admin.ModelAdmin):
     inlines = [
         InfoTypeRelationRoleInline,
     ]
+    list_display = ('name', 'helpTXT')
 
 @admin.register(Addresses)
 class AddressesAdmin(admin.ModelAdmin):
     model = Addresses
     list_display = ('created_by', 'name', 'position', 'mail')
-
 
 admin.site.register(RoleInLocal, RoleInLocalAdmin)
 

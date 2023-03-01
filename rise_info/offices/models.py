@@ -96,7 +96,8 @@ class OfficesGroup(models.Model):
 
     class Meta:
         db_table = 'offices_groups'
-
+        verbose_name = '官署グループ(未使用)'
+        verbose_name_plural = '官署グループ一覧(未使用)'
 
 class Office(models.Model):
     objects = BaseManager()
@@ -120,3 +121,5 @@ class Office(models.Model):
 
     class Meta:
         db_table = 'offices'
+        verbose_name = '官署'
+        verbose_name_plural = '官署一覧'

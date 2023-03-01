@@ -6,13 +6,17 @@ class TechSupportsAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_by', 'created_at',
                     'updated_by', 'updated_at')
 
-
 class TechSupportsRelationAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_by', 'created_at',
                     'updated_by', 'updated_at')
 
+class AttachmentFileAdmin(admin.ModelAdmin):
+    list_display = ('info', 'filename')
+
+class TechSupportCommentsAdmin(admin.ModelAdmin):
+    list_display = ('info', 'comment_txt', 'created_by')
 
 admin.site.register(TechSupports, TechSupportsAdmin)
 admin.site.register(TechSupportsRelation, TechSupportsRelationAdmin)
-admin.site.register(AttachmentFile)
-admin.site.register(TechSupportComments)
+admin.site.register(AttachmentFile, AttachmentFileAdmin)
+admin.site.register(TechSupportComments, TechSupportCommentsAdmin)

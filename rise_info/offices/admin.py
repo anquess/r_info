@@ -1,5 +1,8 @@
 from django.contrib import admin
 from .models import Office, OfficesGroup
 
-admin.site.register(Office)
+class OfficesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'unyo_sts', 'name', 'shortcut_name', 'offices_group')
+
+admin.site.register(Office, OfficesAdmin)
 admin.site.register(OfficesGroup)

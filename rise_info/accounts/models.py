@@ -43,3 +43,6 @@ class User_mail_config(models.Model):
         verbose_name='デフォルト送信時メールフッター',
         null=True, blank=True, max_length=512,
         help_text="メール本文後段に挿入されます。送信時に変更できます。")
+    class Meta:
+        verbose_name = '配信先一覧'
+        verbose_name_plural = '配信先一覧'

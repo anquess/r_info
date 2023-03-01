@@ -33,7 +33,8 @@ class Menu(models.Model):
 
     class Meta:
         db_table = 'menus'
-
+        verbose_name = 'メニュー'
+        verbose_name_plural = 'メニュー一覧'
 
 class Contents(CommonInfo):
     is_rich_text = models.BooleanField(
@@ -52,7 +53,8 @@ class Contents(CommonInfo):
 
     class Meta:
         db_table = 'contents'
-
+        verbose_name = '管技wikiコンテンツ(全データ)'
+        verbose_name_plural = '管技wikiコンテンツ一覧(全データ)'
 
 class AttachmentFile(BaseAttachment):
     info = models.ForeignKey(Contents, on_delete=models.CASCADE)
@@ -60,6 +62,8 @@ class AttachmentFile(BaseAttachment):
 
     class Meta:
         db_table = 'content_attachment'
+        verbose_name = '管技wiki添付ファイル'
+        verbose_name_plural = '管技wiki添付ファイル一覧'
 
 
 class ContentComments(BaseCommnets):
@@ -68,6 +72,9 @@ class ContentComments(BaseCommnets):
    upload_path = 'content_comments'
    class Meta:
        db_table = 'content_comments'
+       verbose_name = '管技wikiコメント'
+       verbose_name_plural = '管技wikiコメント一覧'
+
    def save(self, *args, **kwargs):
        if not self.pk:
            self.content.save()
@@ -117,3 +124,5 @@ class ContentsRelation(Contents):
 
     class Meta:
         db_table = 'contents_list'
+        verbose_name = '管技wikiコンテンツ(一時保存のみ)'
+        verbose_name_plural = '管技wikiコンテンツ一覧(一時保存のみ)'
