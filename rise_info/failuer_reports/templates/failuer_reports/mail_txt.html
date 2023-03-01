@@ -36,10 +36,11 @@
 7.取材の有無：{{ info.get_is_press_display }}
 {%if info.get_is_press_display != info.send_repo.get_is_press_display%}※{%endif%}<br />
 {{ info.press_contents | linebreaksbr }}{%if info.press_contents != info.send_repo.press_contents%}※{%endif%}<br />
-
+<br />
 経緯<br />
 {%for event in events%}
-{%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}
+{% ifchanged  event.date %}{%if event.date%}{{event.date}}<br />{%endif%}{% endifchanged %}
+{%if event.time%}{{event.time}}{%endif%}
 {% if event.updated_at > info.send_repo.updated_at %}※{%endif%}<br />
 {{event.event|linebreaksbr}}<br />
 <br />

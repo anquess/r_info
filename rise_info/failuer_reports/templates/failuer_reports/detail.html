@@ -112,7 +112,9 @@
     {%if info.updated_at >= event.updated_at%}
     <div class="row">
         <div class="col-2">
+            {% ifchanged  event.date %}
             {%if event.date%}{{event.date}}{%endif%}
+            {% endifchanged %}
         </div>
         <div class="col-1">
             {%if event.time%}{{event.time}}{%endif%}

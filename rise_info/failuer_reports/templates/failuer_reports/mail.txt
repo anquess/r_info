@@ -31,7 +31,8 @@
 
 経緯
 {%for event in events%}
-{%if event.date%}{{event.date}}{%endif%} {%if event.time%}{{event.time}}{%endif%}{% if event.updated_at > info.send_repo.updated_at %}※{%endif%}
+{% ifchanged  event.date %}{%if event.date%}{{event.date}}{%endif%}
+{% endifchanged %}{%if event.time%}{{event.time}}{%endif%}{% if event.updated_at > info.send_repo.updated_at %}※{%endif%}
 {{event.event}}
 
 {%endfor%}

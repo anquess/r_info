@@ -238,7 +238,9 @@
                     <tr
                         style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0; background-color: lightcoral;">
                         <td style="padding: 0 20px 0 0;" valign="top">
+                            {% ifchanged  event.date %}
                             {{event.date|date:"m/d"}}<br />
+                            {% endifchanged %}
                             {{event.time}}
                         </td>
                         <td style="padding: 0 20px 0 0;" valign="top">
@@ -248,7 +250,9 @@
                     {%else%}
                     <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:20px 0;">
                         <td style="padding: 0 20px 0 0; " valign="top">
+                            {% ifchanged  event.date %}
                             {{event.date|date:"m/d"}}<br />
+                            {% endifchanged %}
                             {{event.time}}
                         </td>
                         <td style="padding: 0 20px 0 0;" valign="top">
