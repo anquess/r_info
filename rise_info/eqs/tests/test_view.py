@@ -25,7 +25,7 @@ class EqtypeListTest(TestCase):
 
     def test_eqtype_list_return_200_and_expected_title(self) -> None:
         response = self.client.get("/eqs/eqtypes/")
-        self.assertContains(response, "装置型式一括更新", status_code=200)
+        self.assertContains(response, "装置型式一覧", status_code=200)
 
     def test_eqtype_list_uses_expected_template(self):
         response = self.client.get("/eqs/eqtypes/")
