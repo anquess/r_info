@@ -164,7 +164,7 @@ def support_detail(request, info_id):
             return redirect('support_detail', info.send_info.id)
     else:
         info = TechSupports.objects.get_or_none(pk=info_id)
-    files = AttachmentFile.objects.filter(info=info)
+    files = AttachmentFile.objects.filter(info=info.sended)
     addresses = Addresses.objects.filter(created_by=request.user)
 
     if request.method == "POST":
@@ -176,6 +176,7 @@ def support_detail(request, info_id):
             'info': info,
             'files': files,
             'addresses': addresses,
+            'eqtypes': info.sended.eqtypes,
             'tech_supo': True,
         }
         context = addIsStaff(context, request.user)

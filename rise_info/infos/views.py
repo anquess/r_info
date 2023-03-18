@@ -121,7 +121,7 @@ def info_detail(request, info_id):
             return redirect('info_detail', info.send_info.id)
     else:
         info = Info.objects.get_or_none(pk=info_id)
-    files = AttachmentFile.objects.filter(info=info)
+    files = AttachmentFile.objects.filter(info=info.sended.id)
     addresses = Addresses.objects.filter(created_by=request.user)
     if request.method == "POST":
         add_addresses(request=request, info=info)
@@ -132,6 +132,8 @@ def info_detail(request, info_id):
             'info': info,
             'files': files,
             'addresses': addresses,
+            'offices': info.sended.offices,
+            'eqtypes': info.sended.eqtypes,
         }
         context = addIsStaff(context, request.user)
         return render(request, 'infos/detail.html', context)

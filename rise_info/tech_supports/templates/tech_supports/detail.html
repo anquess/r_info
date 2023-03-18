@@ -10,7 +10,7 @@
 </ul>
 <div class="h5 pt-2 mt-2">装置型式</div>
 <div class="pb-2 mb-2 border-bottom">
-    {% for eqtype in info.eqtypes.all %}
+    {% for eqtype in eqtypes.all %}
     <button type="button" class="btn btn-outline-secondary">{{ eqtype }}</button>
     {% endfor %}
 </div>
