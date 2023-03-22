@@ -307,12 +307,12 @@ def sendmail(request, info_id):
                 info.send_info.sammary = info.sammary
                 info.send_info.is_add_eqtypes = info.is_add_eqtypes
                 info.send_info.is_add_offices = info.is_add_offices
-                if info.offices.all():
-                    info.send_info.offices = info.offices
-                if info.eqtypes.all():
-                    info.send_info.eqtypes = info.eqtypes
-                if info.addresses.all():
-                    info.send_info.addresses = info.addresses
+                for src_offices in info.offices.all():
+                    info.send_info.offices.add(src_offices)
+                for src_eqtype in info.eqtypes.all():
+                    info.send_info.eqtypes.add(src_eqtype)
+                for src_address in info.addresses.all():
+                    info.send_info.addresses.add(src_address)
                 info.send_info.select_register = RegisterStatusChoices.REGISTER
                 info.send_info.save()
             else:
