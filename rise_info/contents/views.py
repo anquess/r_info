@@ -57,7 +57,7 @@ def content_detail(request, content_id):
 
 @login_required
 def content_del(request, content_id):
-    info = Contents.objects.get_or_none(pk=info_id)
+    info = Contents.objects.get_or_none(pk=content_id)
     if hasattr(info, 'sended'):
         return redirect('content_del', info.sended.id)
 
