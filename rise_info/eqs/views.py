@@ -102,9 +102,8 @@ def eqtype_new(request):
             messages.add_message(request, messages.ERROR, '当該装置型式は既に登録されています')
             flg = False
         if flg:
-            eqtype = Eqtype.objects.create(id=id)
-            eqtype.slug = slug
-            eqtype.eq_class = eq_class
+            eqtype = Eqtype.objects.create(id=id, slug=slug)
+            eqtype.eq_class = EQ_class.objects.get(id=eq_class)
             eqtype.save()
             messages.add_message(request, messages.INFO, slug + 'は登録されました')
 
